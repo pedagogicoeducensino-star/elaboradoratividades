@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal do Colaborador - Criador</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root { 
+      --primaria: #F97316; 
+      --primaria-hover: #EA580C;
+      --secundaria: #F59E0B; 
+      --marrom-suave: #78350F;
+      --marrom-claro: #D97706;
+      --cinza-fundo: #F8FAFC;
+      --cinza-card: #FFFFFF;
+      --cinza-texto: #334155;
+      --cinza-borda: #E2E8F0;
+      --sucesso: #10B981; 
+      --erro: #EF4444; 
+      --fonte-padrao: 15.5px;
+    }
+    
+    body { background-color: var(--cinza-fundo); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--cinza-texto); font-size: var(--fonte-padrao); line-height: 1.6; }
+    
+    .fs-1, .fs-2, .fs-3, .fs-4, .fs-5, .fs-6 { font-size: var(--fonte-padrao) !important; }
+    span, label, input, select, button, li, div, textarea, p { font-size: var(--fonte-padrao); }
+    
+    h1.titulo-topo { font-size: 24px !important; font-weight: 800; color: var(--marrom-suave); letter-spacing: -0.5px;}
+    h2 { font-size: 20px !important; font-weight: 700; }
+    h3, h4, h5 { font-size: 16px !important; font-weight: 700; margin-bottom: 12px; color: #475569; }
+    
+    .card-3d { background: var(--cinza-card); border-radius: 16px; padding: 28px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03); border: 1px solid var(--cinza-borda); border-top: 5px solid var(--primaria); margin-bottom: 24px; }
+    
+    .menu-card { background: var(--cinza-card); border-radius: 16px; padding: 35px 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); border: 1px solid var(--cinza-borda); text-align: center; cursor: pointer; transition: all 0.3s; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .menu-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(249, 115, 22, 0.1); border-color: var(--secundaria); }
+    .menu-card i { font-size: 48px; margin-bottom: 18px; }
+    .menu-card-1 { border-bottom: 4px solid var(--primaria); color: var(--primaria); }
+    .menu-card-2 { border-bottom: 4px solid var(--secundaria); color: var(--secundaria); }
+    .menu-card-3 { border-bottom: 4px solid var(--marrom-claro); color: var(--marrom-claro); }
+    .menu-card-title { font-size: 17px; font-weight: 700; color: var(--marrom-suave); margin-top: 10px; line-height: 1.3;}
+
+    .btn { font-weight: 600; padding: 10px 20px; border-radius: 8px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;}
+    .btn-ouro { background: linear-gradient(135deg, var(--secundaria), #FBBF24); color: var(--marrom-suave); border: none; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2); }
+    .btn-ouro:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3); color: var(--marrom-suave); }
+    .btn-primario { background-color: var(--primaria); color: white; border: none; box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2); }
+    .btn-primario:hover { background-color: var(--primaria-hover); color: white; transform: translateY(-2px); }
+    
+    .badge-tipo { background-color: #FFF7ED; color: var(--primaria); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 13px !important; }
+    .badge-tempo { background-color: #FEF3C7; color: var(--marrom-claro); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 13px !important; }
+    
+    .escondido { display: none !important; }
+    
+    .preview-questao { background: #ffffff; border: 1px solid var(--cinza-borda); border-left: 4px solid var(--secundaria); border-radius: 12px; padding: 24px; margin-bottom: 20px; text-align: left; overflow: hidden; }
+    .estudo-caso-box { background-color: #FFFBEB; border-left: 4px solid var(--secundaria); padding: 18px; border-radius: 8px; margin-bottom: 18px; font-style: italic; color: var(--marrom-suave); }
+    
+    .relogio-teste { font-size: 26px !important; font-weight: 800; color: white; background: var(--marrom-suave); padding: 12px 40px; border-radius: 50px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.1); letter-spacing: 1px;}
+    .progress { background-color: #F1F5F9; border: 1px solid var(--cinza-borda); overflow: visible; }
+    .progress-bar { background: linear-gradient(90deg, var(--secundaria), var(--primaria)); border-radius: 10px; transition: width 0.5s ease; }
+    
+    .input-box-destaque { background-color: #F8FAFC; border: 2px solid #CBD5E1; font-weight: 700; color: var(--marrom-suave); transition: all 0.2s; border-radius: 8px;}
+    .input-box-destaque:focus { outline: none; border-color: var(--primaria); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); background-color: white;}
+    .form-control, .form-select { border-color: var(--cinza-borda); border-radius: 8px; padding: 10px 15px; transition: all 0.2s;}
+    .form-control:focus, .form-select:focus { border-color: var(--primaria); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1); }
+  </style>
+</head>
+<body>
+
+  <div id="telaLogin" class="card-3d mx-auto shadow-sm" style="max-width: 400px; margin-top: 15vh; border-top-color: var(--secundaria);">
+    <div class="text-center mb-4">
+      <div class="mb-3"><i class="fas fa-graduation-cap" style="font-size: 50px; color: var(--primaria);"></i></div>
+      <h1 class="titulo-topo mb-1">Portal de Atividades</h1>
+      <p class="text-muted small">Acesso Restrito para Colaboradores</p>
+    </div>
+    <div class="mb-4">
+      <label class="form-label fw-bold text-secondary">Chave de Acesso:</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light border-end-0"><i class="fas fa-key text-muted"></i></span>
+        <input type="password" id="inputSenha" class="form-control border-start-0" placeholder="••••••••" style="letter-spacing: 3px;">
+      </div>
+    </div>
+    <button class="btn btn-primario w-100 py-2 fs-5" onclick="fazerLogin()">Acessar Painel <i class="fas fa-arrow-right"></i></button>
+  </div>
+
+  <div id="telaPortal" class="container py-4 escondido" style="max-width: 950px;">
+    <div class="d-flex justify-content-between align-items-center mb-4 card-3d py-3 shadow-sm" style="border-top-color: var(--marrom-claro);">
+      <div class="d-flex align-items-center gap-3">
+        <div class="bg-light p-3 rounded-circle text-center" style="width: 50px; height: 50px; line-height: 20px;"><i class="fas fa-user-tie text-primary"></i></div>
+        <div>
+          <h1 class="titulo-topo mb-0" style="font-size: 20px !important;">Painel de Atividades Diagnósticas</h1>
+          <span class="text-muted" style="font-size: 14px;">Bem-vindo(a), <strong id="nomeColaboradorDisplay" style="color: var(--marrom-suave);"></strong></span>
+        </div>
+      </div>
+      <button class="btn btn-sm btn-outline-danger" onclick="sair()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="menu-card menu-card-1" onclick="iniciarNovoCaderno()">
+          <i class="fas fa-file-circle-plus"></i>
+          <div class="menu-card-title">Nova Atividade<br><span class="fw-normal text-muted small">Criar caderno do zero</span></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="menu-card menu-card-2" onclick="abrirTelaBanco()">
+          <i class="fas fa-server"></i>
+          <div class="menu-card-title">Banco Publicado<br><span class="fw-normal text-muted small">Gerenciar e compartilhar links</span></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="menu-card menu-card-3" onclick="abrirTelaHistorico()">
+          <i class="fas fa-chart-line"></i>
+          <div class="menu-card-title">Desempenho<br><span class="fw-normal text-muted small">Analisar histórico de alunos</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="telaBancoCadernos" class="container py-4 escondido" style="max-width: 950px;">
+    <div class="mb-3">
+      <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
+    </div>
+    <div class="card-3d" style="border-top-color: var(--secundaria);">
+      <h5 class="mb-4 text-dark"><i class="fas fa-server text-warning"></i> Banco de Atividades Publicadas</h5>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle border rounded overflow-hidden mb-0">
+          <thead style="background-color: #F8FAFC;">
+            <tr><th class="text-secondary">Título da Atividade</th><th class="text-secondary">Questões</th><th class="text-secondary">Data</th><th class="text-center text-secondary" style="min-width: 140px;">Ações</th></tr>
+          </thead>
+          <tbody id="corpoTabelaPortal">
+            <tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fs-3"></i><br>Carregando banco de dados...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="telaHistoricoAluno" class="container py-4 escondido" style="max-width: 950px;">
+    <div class="mb-3">
+      <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
+    </div>
+    <div class="card-3d" style="border-top-color: var(--marrom-claro);">
+      <h5 class="mb-4 text-dark"><i class="fas fa-chart-line text-danger"></i> Histórico de Desempenho do Aluno</h5>
+      <div class="row g-2 mb-4 bg-light p-3 rounded border">
+        <div class="col-md-9">
+          <input type="text" id="inputBuscaMatricula" class="form-control" placeholder="🔍 Digite a matrícula do aluno para buscar...">
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-primario w-100" onclick="buscarHistorico()">Buscar <i class="fas fa-search"></i></button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle border rounded overflow-hidden mb-0">
+          <thead style="background-color: #F8FAFC;">
+            <tr><th class="text-secondary">Data</th><th class="text-secondary">Atividade</th><th class="text-secondary">Aluno</th><th class="text-center text-secondary">Aproveitamento</th></tr>
+          </thead>
+          <tbody id="corpoTabelaBusca">
+            <tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="telaEditor" class="container py-4 escondido" style="max-width: 900px;">
+    <div class="mb-3">
+      <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
+    </div>
+
+    <div class="card-3d mb-4 shadow-sm" style="border-top: none; background-color: white;">
+      <h5 class="text-secondary mb-3"><i class="fas fa-book-open text-primary"></i> Configuração da Atividade</h5>
+      <div class="row g-3 align-items-center">
+        <div class="col-md-7">
+            <input type="text" id="tituloCaderno" class="form-control form-control-lg fw-bold" placeholder="Digite o Título da Atividade..." style="color: var(--marrom-suave);">
+        </div>
+        <div class="col-md-2">
+            <div class="d-flex align-items-center justify-content-center bg-light rounded border py-2 h-100">
+                <div class="form-check form-switch m-0 d-flex align-items-center gap-2">
+                    <input class="form-check-input m-0" type="checkbox" id="ordemEmbaralhada" style="width: 35px; height: 18px; cursor: pointer;">
+                    <label class="form-check-label small fw-bold text-secondary mb-0" for="ordemEmbaralhada" style="font-size: 13px !important; cursor: pointer;">Embaralhar</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-ouro w-100 h-100 fs-6 py-2" onclick="abrirGeradorQuestao()"><i class="fas fa-plus-circle"></i> Criar Questão</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cardGeradorQuestao" class="card-3d escondido border-primary" style="border-top-width: 5px;">
+      <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h5 id="tituloEditorQuestao" class="mb-0 text-dark fw-bold"><i class="fas fa-pen-ruler text-primary"></i> Elaborar Questão</h5>
+        <button class="btn-close" onclick="fecharGeradorQuestao()"></button>
+      </div>
+      
+      <div class="row g-3 mb-4 align-items-end bg-light p-3 rounded border">
+        <div class="col-md-4">
+          <label class="form-label fw-bold text-secondary small mb-1"><i class="fas fa-list"></i> Formato:</label>
+          <select id="tipoQuestao" class="form-select fw-bold" onchange="renderizarCamposEspecificos()">
+            <option value="">Selecione o tipo...</option>
+            <optgroup label="Objetivas">
+              <option value="multipla_escolha">Múltipla Escolha (A a E)</option>
+              <option value="certo_errado">Certo ou Errado</option>
+              <option value="verdadeiro_falso_mult">Verdadeiro ou Falso</option>
+              <option value="assercao_razao">Asserção-Razão</option>
+            </optgroup>
+            <optgroup label="Lógica e Estrutura">
+              <option value="associacao">Associação Dinâmica</option>
+              <option value="ordenacao">Ordenação de Passos</option>
+              <option value="lacunas">Preenchimento de Lacunas</option>
+            </optgroup>
+            <optgroup label="Subjetivas">
+              <option value="dissertativa">Questão Discursiva</option>
+              <option value="estudo_caso">Estudo de Caso</option>
+              <option value="resposta_curta">Resposta Curta</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-bold text-secondary small mb-1"><i class="far fa-clock"></i> Tempo (seg):</label>
+          <input type="number" id="tempoResolucao" class="form-control" placeholder="Ex: 60" min="5">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-bold text-secondary small mb-1"><i class="fas fa-star-half-stroke"></i> Nota (Professor):</label>
+          <select id="tipoPontuacao" class="form-select" onchange="togglePontos()">
+            <option value="sem">Sem Pontos</option>
+            <option value="com">Atribuir Valor</option>
+          </select>
+        </div>
+        <div class="col-md-2" id="areaValorPontos" style="display:none;">
+          <label class="form-label fw-bold text-secondary small mb-1">Pontos:</label>
+          <input type="number" id="valorPontos" class="form-control text-success fw-bold" step="0.5" placeholder="0.0">
+        </div>
+      </div>
+
+      <div id="areaCamposDinamicos" class="mb-4"></div>
+
+      <div class="d-flex gap-3 border-top pt-4">
+        <button class="btn btn-primario px-4" id="btnSalvarQuestao" onclick="salvarQuestaoAoCaderno()"><i class="fas fa-save"></i> Gravar Questão</button>
+        <button class="btn bg-white border text-secondary px-4" onclick="fecharGeradorQuestao()">Cancelar</button>
+      </div>
+    </div>
+
+    <div class="card-3d" style="border-top-color: var(--cinza-texto);">
+      <h5 class="mb-4"><i class="fas fa-layer-group text-secondary"></i> Estrutura do Caderno</h5>
+      <div id="listaQuestoesVisual" class="d-flex flex-column gap-2 mb-4"></div>
+      
+      <div class="text-end border-top pt-4">
+        <button class="btn btn-primario shadow px-4 py-2" onclick="visualizarRevisar()">
+          Avançar para Revisão <i class="fas fa-arrow-right ms-2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="telaRevisao" class="container py-4 escondido" style="max-width: 800px;">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded border shadow-sm no-print">
+      <button class="btn bg-light border text-secondary fw-bold" onclick="voltarParaEditor()"><i class="fas fa-pencil-alt"></i> Voltar p/ Edição</button>
+      <div id="areaBotaoPublicar" class="d-flex gap-3">
+        <button class="btn btn-ouro fw-bold shadow-sm" onclick="iniciarTesteSimulador()"><i class="fas fa-desktop"></i> Testar Visual do Aluno</button>
+        <button class="btn btn-primario fw-bold shadow-sm px-4" onclick="publicarDefinitivo()"><i class="fas fa-cloud-upload-alt"></i> Salvar e Publicar</button>
+      </div>
+    </div>
+
+    <div class="card-3d text-center mb-4" style="border-top-color: var(--secundaria); background-color: #FFFBEB;">
+      <h2 class="titulo-topo mb-2" id="revTituloCaderno" style="color: var(--marrom-suave);"></h2>
+      <p class="text-muted small fw-bold mb-4 text-uppercase tracking-wide">Revisão de Qualidade Pedagógica</p>
+      
+      <div class="d-flex justify-content-center gap-4">
+        <div class="bg-white px-4 py-3 rounded border text-center shadow-sm">
+          <div class="text-muted fw-bold mb-1" style="font-size: 11px;">TOTAL DE QUESTÕES</div>
+          <div id="revQtdQuestoes" class="fw-bold fs-3" style="color: var(--primaria);">0</div>
+        </div>
+        <div class="bg-white px-4 py-3 rounded border text-center shadow-sm">
+          <div class="text-muted fw-bold mb-1" style="font-size: 11px;">TEMPO ESTIMADO</div>
+          <div id="revTempoTotal" class="fw-bold fs-3 text-secondary">00:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="previewAlunoContainer" class="pb-5"></div>
+  </div>
+
+  <div id="telaTesteSimulador" class="container py-4 escondido" style="max-width: 750px;">
+    <div class="mb-4 text-center">
+      <div class="relogio-teste mx-auto mb-4" id="relogioTeste"><i class="fas fa-stopwatch"></i> 0s</div>
+      
+      <div class="d-flex justify-content-between align-items-end mb-2 px-2">
+        <span class="fw-bold text-secondary fs-5" id="textoProgressoTeste">Questão 1 de X</span>
+        <span class="fw-bold" style="color: var(--primaria);" id="percentualProgressoTeste">0%</span>
+      </div>
+      <div class="progress shadow-sm" style="height: 18px; border-radius: 10px; background-color: #E2E8F0;">
+        <div id="barraProgressoTeste" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%; background-color: var(--primaria);"></div>
+      </div>
+    </div>
+
+    <div id="areaQuestaoAtivaTeste" class="card-3d shadow-sm mb-4" style="border-top-width: 6px; border-top-color: var(--secundaria); min-height: 250px;">
+    </div>
+
+    <div class="text-center mt-4 pb-5">
+      <button id="btnAvancarTeste" class="btn btn-secondary w-100 shadow-sm fw-bold mb-3" disabled onclick="avancarQuestaoTeste()" style="padding: 16px; font-size: 18px; border-radius: 12px;">
+        Aguarde o tempo...
+      </button>
+      <button class="btn btn-outline-danger w-100 fw-bold shadow-sm" onclick="sairDoSimulador()" style="padding: 12px; border-radius: 12px; font-size: 16px;">
+        <i class="fas fa-times me-2"></i> Sair da Pré-visualização (Voltar)
+      </button>
+    </div>
+  </div>
+
+  <div id="telaRelatorioTeste" class="container py-4 escondido" style="max-width: 800px;">
+    <div id="painelFimSimulado" class="card-3d text-center py-5 shadow-lg" style="border-top-color: var(--sucesso); border-top-width: 8px;">
+        <i class="fas fa-flag-checkered mb-4" style="font-size: 70px; color: var(--sucesso);"></i>
+        <h1 class="titulo-topo text-dark mb-3">Teste Concluído!</h1>
+        <p class="text-secondary mb-5 fs-5">Você visualizou como o aluno finalizará a atividade.</p>
+        
+        <div class="d-flex justify-content-center gap-4 mt-2 flex-wrap">
+            <button class="btn bg-white border border-primary text-primary fw-bold shadow-sm px-4 py-3 fs-5" onclick="mostrarResultadoFinal()">
+                <i class="fas fa-chart-pie me-2"></i> Ver Relatório de Teste
+            </button>
+            <button class="btn btn-primario fw-bold shadow-sm px-5 py-3 fs-5" onclick="sairDoSimulador()">
+                <i class="fas fa-arrow-left me-2"></i> Voltar à Revisão
+            </button>
+        </div>
+    </div>
+
+    <div id="painelResultadoFinal" class="escondido">
+      <div id="areaAproveitamentoDetalhado"></div>
+      <h4 class="text-secondary mt-5 mb-4 fw-bold border-bottom pb-3"><i class="fas fa-list-check text-primary"></i> Detalhamento da Correção Simulada</h4>
+      <div id="areaChecklistGabarito" class="pb-4"></div>
+      
+      <div class="text-center mt-5 mb-5 pt-4 border-top">
+         <button class="btn btn-primario shadow-lg px-5 py-3 fw-bold" style="font-size: 18px;" onclick="sairDoSimulador()">
+             <i class="fas fa-arrow-left me-2"></i> Voltar à Revisão
+         </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // COLE AQUI A URL DE IMPLANTAÇÃO DO SEU GOOGLE APPS SCRIPT (CÓDIGO.GS)
+    // =========================================================================
+    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbzEjn_R54vUXpglydH_z669p53Smxw84wt7gm9KPdQSlp5rMHovbxb7-pq7MSWv6Mfd/exec";
+    
+    const colaboradores = { "2490": "Davi Felício", "2514": "Isabele Ferreira", "2333": "Kauan", "1478": "Paulo Henrique", "8895": "Convidado" };
+    let usuarioAtual = "";
+
+    function fazerLogin() {
+      const senha = document.getElementById('inputSenha').value;
+      if (colaboradores[senha]) {
+        usuarioAtual = colaboradores[senha];
+        document.getElementById('nomeColaboradorDisplay').innerText = usuarioAtual;
+        alternarTela('telaPortal');
+        atualizarPortalTabela();
+      } else { alert("⚠️ Acesso Negado. Chave inválida."); }
+    }
+
+    function sair() { usuarioAtual = ""; document.getElementById('inputSenha').value = ""; alternarTela('telaLogin'); }
+
+    function alternarTela(idTela) {
+      document.querySelectorAll('.container, #telaLogin').forEach(el => el.classList.add('escondido'));
+      document.getElementById(idTela).classList.remove('escondido');
+    }
+  </script>
+
+  <script>
+    let questoesDoCaderno = [];
+    let idCadernoAtual = "";
+    let indiceEdicaoAtual = -1;
+    let timerIntervalo = null;
+    let tempoRestanteTeste = 0;
+    let indiceTesteAtual = 0;
+    let respostasDoAluno = [];
+
+    function renderizarMidia(url) {
+      if (!url) return '';
+      try {
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+          let vid = "";
+          if (url.includes('v=')) vid = url.split('v=')[1].split('&')[0];
+          else if (url.includes('youtu.be/')) vid = url.split('youtu.be/')[1].split('?')[0];
+          if(vid) return '<div class="text-center mb-4"><iframe width="100%" height="315" src="https://www.youtube.com/embed/' + vid + '" frameborder="0" allowfullscreen class="rounded border shadow-sm"></iframe></div>';
+        } else if (url.startsWith('http')) {
+          return '<div class="text-center mb-4"><img src="' + url + '" class="img-fluid rounded border shadow-sm" style="max-height: 350px; width: auto;"></div>';
+        }
+      } catch(e) {}
+      return '';
+    }
+
+    function togglePontos() { document.getElementById('areaValorPontos').style.display = document.getElementById('tipoPontuacao').value === 'com' ? 'block' : 'none'; }
+
+    function iniciarNovoCaderno() {
+      idCadernoAtual = ""; document.getElementById('tituloCaderno').value = ""; 
+      document.getElementById('ordemEmbaralhada').checked = false; // Padrão é não embaralhar
+      questoesDoCaderno = [];
+      renderizarListaQuestoesCaderno(); fecharGeradorQuestao(); alternarTela('telaEditor');
+    }
+
+    function abrirTelaBanco() { atualizarPortalTabela(); alternarTela('telaBancoCadernos'); }
+    function abrirTelaHistorico() { alternarTela('telaHistoricoAluno'); }
+
+    function voltarParaPortal() {
+      alternarTela('telaPortal'); clearInterval(timerIntervalo);
+      if(document.getElementById('inputBuscaMatricula')) document.getElementById('inputBuscaMatricula').value = '';
+      if(document.getElementById('corpoTabelaBusca')) document.getElementById('corpoTabelaBusca').innerHTML = '<tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>';
+    }
+    
+    function voltarParaEditor() { alternarTela('telaEditor'); clearInterval(timerIntervalo); }
+
+    function abrirGeradorQuestao() {
+      indiceEdicaoAtual = -1;
+      document.getElementById('tituloEditorQuestao').innerHTML = "<i class='fas fa-pen-ruler text-primary'></i> Nova Questão";
+      document.getElementById('btnSalvarQuestao').innerHTML = "<i class='fas fa-save'></i> Gravar Questão";
+      document.getElementById('tipoQuestao').value = ""; document.getElementById('tempoResolucao').value = "";
+      document.getElementById('tipoPontuacao').value = "sem"; togglePontos(); document.getElementById('valorPontos').value = "";
+      document.getElementById('areaCamposDinamicos').innerHTML = "";
+      document.getElementById('cardGeradorQuestao').classList.remove('escondido');
+      document.getElementById('cardGeradorQuestao').scrollIntoView({behavior: "smooth"});
+    }
+    
+    function fecharGeradorQuestao() { document.getElementById('cardGeradorQuestao').classList.add('escondido'); }
+
+    function renderizarCamposEspecificos() {
+      const tipo = document.getElementById('tipoQuestao').value;
+      const area = document.getElementById('areaCamposDinamicos');
+      area.innerHTML = "";
+      if(!tipo) return;
+
+      let html = "";
+      if (tipo === "multipla_escolha") {
+        html = '<div class="mb-3 bg-white p-3 border rounded shadow-sm"><label class="fw-bold small text-primary"><i class="fas fa-image"></i> Mídia de Apoio (Opcional):</label><div class="small text-muted mb-2">Cole o link de uma imagem ou vídeo do YouTube.</div><input type="text" id="p_midia" class="form-control border-primary bg-light" placeholder="Ex: https://..."></div>';
+        html += '<div class="mb-3"><label class="fw-bold small text-muted"><i class="fas fa-align-left"></i> Enunciado / Pergunta:</label><textarea id="p_enunciado" class="form-control" rows="2"></textarea></div><div class="bg-white p-3 border rounded shadow-sm"><div class="input-group mb-2"><span class="input-group-text fw-bold bg-light">A</span><input type="text" id="p_optA" class="form-control"></div><div class="input-group mb-2"><span class="input-group-text fw-bold bg-light">B</span><input type="text" id="p_optB" class="form-control"></div><div class="input-group mb-2"><span class="input-group-text fw-bold bg-light">C</span><input type="text" id="p_optC" class="form-control"></div><div class="input-group mb-2"><span class="input-group-text fw-bold bg-light">D</span><input type="text" id="p_optD" class="form-control"></div><div class="input-group mb-2"><span class="input-group-text fw-bold bg-light">E</span><input type="text" id="p_optE" class="form-control"></div><div class="mt-3 pt-3 border-top"><label class="fw-bold small text-success"><i class="fas fa-check-circle"></i> Gabarito Correto:</label><select id="p_resposta" class="form-select border-success fw-bold bg-light"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select></div></div>';
+      } else if (tipo === "certo_errado") {
+        html = '<div class="mb-3"><label class="fw-bold small text-muted">Afirmação:</label><textarea id="p_enunciado" class="form-control" rows="2"></textarea></div><div class="bg-white p-3 border rounded shadow-sm"><label class="fw-bold small text-success"><i class="fas fa-check-circle"></i> Gabarito:</label><select id="p_resposta" class="form-select border-success fw-bold bg-light"><option value="Certo">Certo</option><option value="Errado">Errado</option></select></div>';
+      } else if (tipo === "assercao_razao") {
+        html = '<div class="mb-3"><label class="fw-bold small text-muted">I. Asserção:</label><input type="text" id="p_assercao" class="form-control"></div><div class="text-center text-danger small fw-bold mb-3"><i class="fas fa-link"></i> PORQUE</div><div class="mb-3"><label class="fw-bold small text-muted">II. Razão:</label><input type="text" id="p_razao" class="form-control"></div><div class="bg-white p-3 border rounded shadow-sm"><label class="fw-bold small text-success"><i class="fas fa-check-circle"></i> Gabarito Padrão:</label><select id="p_resposta" class="form-select border-success fw-bold text-truncate bg-light" style="max-width: 100%;"><option value="I">I. A afirmação I é verdadeira, e a II é verdadeira, e a II justifica a I.</option><option value="II">II. A afirmação I é verdadeira, e a II é verdadeira, mas a II não justifica a I.</option><option value="III">III. A afirmação I é verdadeira, e a II é falsa.</option><option value="IV">IV. A afirmação I é falsa, e a II é verdadeira.</option><option value="V">V. A afirmação I é falsa, e a II é falsa.</option></select></div>';
+      } else if (tipo === "associacao") {
+        html = '<div class="mb-3"><label class="fw-bold small text-muted">Instrução:</label><input type="text" id="p_enunciado" class="form-control" value="Relacione a Coluna A com a Coluna B:"></div><div class="row g-3 mb-3"><div class="col-md-5 bg-white p-3 border rounded shadow-sm"><label class="fw-bold small text-muted">Coluna A (Itens numerados):</label><div id="containerAssocA" class="mt-2"></div><button class="btn btn-sm btn-light border mt-3 w-100 fw-bold" onclick="adicionarLinhaAssocA()"><i class="fas fa-plus"></i> Add Item Col. A</button></div><div class="col-md-7 bg-white p-3 border rounded shadow-sm"><div class="d-flex justify-content-between align-items-center mb-1"><label class="fw-bold small text-muted">Coluna B (Recebe lacunas [ ]):</label><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="p_assoc_img"><label class="form-check-label small fw-bold text-primary">Usar Imagens</label></div></div><div class="small text-muted mb-3 pb-2 border-bottom">Se "Usar Imagens" estiver ativo, cole URLs de fotos nos campos abaixo.</div><div id="containerAssocB"></div><button class="btn btn-sm btn-light border mt-3 w-100 fw-bold" onclick="adicionarLinhaAssocB()"><i class="fas fa-plus"></i> Add Item Col. B</button></div></div><div class="bg-white p-3 border rounded shadow-sm"><label class="fw-bold small text-success"><i class="fas fa-check-circle"></i> Gabarito (Ex: 1, 2, 1, 2, 1):</label><input type="text" id="p_gabarito" class="form-control border-success fw-bold bg-light mt-1" placeholder="Digite os números na ordem da Coluna B"></div>';
+      } else if (tipo === "ordenacao") {
+        html = '<div class="mb-3"><label class="fw-bold small text-muted">Instrução:</label><input type="text" id="p_enunciado" class="form-control" value="Ordene os passos:"></div><div class="bg-white p-3 border rounded shadow-sm mb-3"><div id="containerOrd"></div><button class="btn btn-sm btn-light border mt-2 fw-bold" onclick="adicionarLinhaOrd()"><i class="fas fa-plus"></i> Adicionar Passo</button></div><div class="bg-white p-3 border rounded shadow-sm"><label class="fw-bold small text-success"><i class="fas fa-check-circle"></i> Gabarito (Ex: 2, 4, 1, 3):</label><input type="text" id="p_gabarito" class="form-control border-success fw-bold bg-light mt-1"></div>';
+      } else if (tipo === "verdadeiro_falso_mult") {
+        html = '<div class="mb-3"><label class="fw-bold small text-muted">Instrução:</label><input type="text" id="p_enunciado" class="form-control" value="Julgue em V ou F:"></div><div class="bg-white p-3 border rounded shadow-sm mb-3"><div id="containerVF"></div><button class="btn btn-sm btn-light border mt-2 fw-bold" onclick="adicionarLinhaVF()"><i class="fas fa-plus"></i> Adicionar Afirmação</button></div><div class="bg-white p-3 border rounded shadow-sm"><label class="fw-bold small text-success"><i class="fas fa-check-circle"></i> Gabarito (Ex: V, F, V):</label><input type="text" id="p_gabarito" class="form-control border-success fw-bold bg-light mt-1"></div>';
+      } else if (tipo === "lacunas") {
+        html = '<div class="mb-3 small p-2 bg-light border border-primary rounded text-primary"><i class="fas fa-info-circle"></i> Digite 3 ou mais underlines (___) juntos para criar UMA lacuna no texto.</div><div class="mb-3"><label class="fw-bold small text-muted">Texto com lacunas:</label><textarea id="p_enunciado" class="form-control" rows="3" placeholder="A cor do céu é ___ e a grama é ___"></textarea></div><div class="bg-white p-3 border rounded shadow-sm"><label class="fw-bold small text-success"><i class="fas fa-check-circle"></i> Respostas Corretas (Na ordem, separadas por vírgula):</label><input type="text" id="p_resposta" class="form-control border-success fw-bold bg-light mt-1" placeholder="Ex: azul, verde"></div>';
+      } else if (["dissertativa", "estudo_caso", "resposta_curta"].includes(tipo)) {
+        if(tipo==="estudo_caso") html += '<div class="mb-3"><label class="fw-bold small text-muted"><i class="fas fa-book"></i> Estória / Contexto do Caso:</label><textarea id="p_contexto" class="form-control bg-light" rows="4"></textarea></div>';
+        html += '<div class="mb-3"><label class="fw-bold small text-muted"><i class="fas fa-question-circle"></i> Pergunta:</label><textarea id="p_enunciado" class="form-control" rows="2"></textarea></div><div class="bg-white p-4 border rounded mb-2 shadow-sm"><div class="mb-4"><label class="fw-bold small text-primary"><i class="fas fa-robot"></i> Critérios de Avaliação (Palavras-chave p/ Robô):</label><div class="small text-muted mb-2">Use vírgula (,) para separar conceitos e barra (/) para sinônimos.</div><textarea id="p_criterios" class="form-control border-primary fw-bold bg-light" rows="2" placeholder="Ex: saúde/bem-estar/vida, alimentação"></textarea></div><div class="border-top pt-4"><label class="fw-bold small text-success"><i class="fas fa-check-double"></i> Resposta Modelo (Para o Aluno ler):</label><div class="small text-muted mb-2">Escreva o texto completo de referência.</div><textarea id="p_resposta" class="form-control border-success" rows="4"></textarea></div></div>';
+      }
+      
+      area.innerHTML = html;
+      if(tipo === "associacao") { adicionarLinhaAssocA(); adicionarLinhaAssocA(); adicionarLinhaAssocB(); adicionarLinhaAssocB(); }
+      if(tipo === "ordenacao") { adicionarLinhaOrd(); adicionarLinhaOrd(); }
+      if(tipo === "verdadeiro_falso_mult") { adicionarLinhaVF(); adicionarLinhaVF(); }
+    }
+
+    function adicionarLinhaAssocA(val="") {
+      const id = Date.now(); const div = document.createElement('div'); div.className = "d-flex gap-2 mb-2 align-items-center"; div.id = "linhaA_"+id;
+      div.innerHTML = '<span class="fw-bold text-muted small num-a" style="width: 20px;"></span><input type="text" class="form-control in-a" placeholder="Ex: Saúde" value="' + val + '"><button class="btn btn-sm btn-outline-danger px-2" onclick="document.getElementById(\'linhaA_' + id + '\').remove(); atualizarNumerosAssocA();"><i class="fas fa-times"></i></button>';
+      document.getElementById('containerAssocA').appendChild(div);
+      atualizarNumerosAssocA();
+    }
+    function atualizarNumerosAssocA() { document.querySelectorAll('#containerAssocA .num-a').forEach((span, idx) => span.innerText = (idx+1) + "."); }
+    
+    function adicionarLinhaAssocB(val="") {
+      const id = Date.now(); const div = document.createElement('div'); div.className = "d-flex gap-2 mb-2 align-items-center"; div.id = "linhaB_"+id;
+      div.innerHTML = '<span class="fw-bold text-muted">[ ]</span><input type="text" class="form-control in-b" placeholder="Texto ou Link" value="' + val + '"><button class="btn btn-sm btn-outline-danger px-2" onclick="document.getElementById(\'linhaB_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
+      document.getElementById('containerAssocB').appendChild(div);
+    }
+
+    function adicionarLinhaOrd(val="") {
+      const id = Date.now(); const div = document.createElement('div'); div.className = "d-flex gap-2 mb-2"; div.id = "linha_"+id;
+      div.innerHTML = '<input type="text" class="form-control in-ord" placeholder="Descrição do passo" value="' + val + '"><button class="btn btn-sm btn-outline-danger px-3" onclick="document.getElementById(\'linha_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
+      document.getElementById('containerOrd').appendChild(div);
+    }
+    function adicionarLinhaVF(val="") {
+      const id = Date.now(); const div = document.createElement('div'); div.className = "d-flex gap-2 mb-2 align-items-center"; div.id = "linha_"+id;
+      div.innerHTML = '<span class="text-muted small fw-bold">( )</span><input type="text" class="form-control in-vf" placeholder="Afirmação" value="' + val + '"><button class="btn btn-sm btn-outline-danger px-3" onclick="document.getElementById(\'linha_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
+      document.getElementById('containerVF').appendChild(div);
+    }
+
+    function salvarQuestaoAoCaderno() {
+      const tipo = document.getElementById('tipoQuestao').value;
+      const tempo = document.getElementById('tempoResolucao').value;
+      const temPts = document.getElementById('tipoPontuacao').value === 'com';
+      const ptsVal = temPts ? parseFloat(document.getElementById('valorPontos').value) || 0 : 0;
+
+      if(!tipo || !tempo) { alert("⚠️ Preencha o formato da questão e o tempo limite."); return; }
+
+      let q = { tipo: tipo, tempo: tempo, pontos: ptsVal };
+      if (document.getElementById('p_enunciado')) q.enunciado = document.getElementById('p_enunciado').value;
+      if (document.getElementById('p_resposta')) q.resposta = document.getElementById('p_resposta').value;
+
+      if (tipo === "multipla_escolha") {
+        if(document.getElementById('p_midia')) q.midia = document.getElementById('p_midia').value;
+        q.opcoes = { A: document.getElementById('p_optA').value, B: document.getElementById('p_optB').value, C: document.getElementById('p_optC').value, D: document.getElementById('p_optD').value, E: document.getElementById('p_optE').value };
+      } else if (tipo === "assercao_razao") {
+        q.assercao = document.getElementById('p_assercao').value; q.razao = document.getElementById('p_razao').value;
+      } else if (tipo === "associacao") {
+        if (document.getElementById('p_assoc_img')) q.b_is_img = document.getElementById('p_assoc_img').checked;
+        q.colunaA = []; document.querySelectorAll('#containerAssocA .in-a').forEach(l => q.colunaA.push(l.value));
+        q.colunaB = []; document.querySelectorAll('#containerAssocB .in-b').forEach(l => q.colunaB.push(l.value));
+        q.resposta = document.getElementById('p_gabarito').value;
+      } else if (tipo === "ordenacao") {
+        q.lista = []; document.querySelectorAll('#containerOrd .d-flex').forEach(l => q.lista.push(l.querySelector('.in-ord').value));
+        q.resposta = document.getElementById('p_gabarito').value;
+      } else if (tipo === "verdadeiro_falso_mult") {
+        q.lista = []; document.querySelectorAll('#containerVF .d-flex').forEach(l => q.lista.push(l.querySelector('.in-vf').value));
+        q.resposta = document.getElementById('p_gabarito').value;
+      } else if (["dissertativa", "estudo_caso", "resposta_curta"].includes(tipo)) {
+        if(document.getElementById('p_criterios')) q.criterios = document.getElementById('p_criterios').value;
+        if(tipo === "estudo_caso") q.contexto = document.getElementById('p_contexto').value;
+      }
+
+      if (indiceEdicaoAtual >= 0) { questoesDoCaderno[indiceEdicaoAtual] = q; } else { questoesDoCaderno.push(q); }
+      renderizarListaQuestoesCaderno(); fecharGeradorQuestao();
+      document.getElementById('listaQuestoesVisual').scrollIntoView({behavior: "smooth"});
+    }
+
+    function moverQuestao(index, direcao) {
+        if (direcao === 'cima' && index > 0) {
+            let temp = questoesDoCaderno[index];
+            questoesDoCaderno[index] = questoesDoCaderno[index - 1];
+            questoesDoCaderno[index - 1] = temp;
+        } else if (direcao === 'baixo' && index < questoesDoCaderno.length - 1) {
+            let temp = questoesDoCaderno[index];
+            questoesDoCaderno[index] = questoesDoCaderno[index + 1];
+            questoesDoCaderno[index + 1] = temp;
+        }
+        renderizarListaQuestoesCaderno();
+    }
+
+    function renderizarListaQuestoesCaderno() {
+      const container = document.getElementById('listaQuestoesVisual'); container.innerHTML = "";
+      if (questoesDoCaderno.length === 0) { container.innerHTML = '<div class="text-center my-4 text-muted p-4 bg-light rounded border border-dashed"><i class="fas fa-box-open fs-3 mb-2 text-secondary"></i><br>Nenhuma questão adicionada ao caderno ainda.</div>'; return; }
+
+      questoesDoCaderno.forEach((q, i) => {
+        let texto = q.enunciado || "Questão Estruturada...";
+        if(q.tipo === "estudo_caso") texto = "<strong>Caso:</strong> " + (q.contexto ? q.contexto.substring(0,60) : "") + "...";
+        let ptsBadge = q.pontos > 0 ? '<span class="badge bg-success ms-2"><i class="fas fa-star text-warning"></i> ' + q.pontos + 'p</span>' : '';
+        let mediaBadge = (q.midia || q.b_is_img) ? '<span class="badge bg-info ms-2 text-dark"><i class="fas fa-image"></i> Visual</span>' : '';
+
+        let div = document.createElement('div'); div.className = "p-3 bg-white border rounded mb-2 shadow-sm d-flex justify-content-between align-items-center";
+        
+        div.innerHTML = '<div class="w-75"><div class="mb-2"><span class="badge-tipo">Questão ' + (i+1) + '</span> <span class="small text-muted fw-bold ms-2">' + q.tipo.replace(/_/g, ' ').toUpperCase() + '</span> <span class="badge-tempo ms-2"><i class="far fa-clock"></i> ' + q.tempo + 's</span>' + ptsBadge + mediaBadge + '</div><div class="text-secondary text-truncate" style="font-size: 14px;">' + texto + '</div></div><div class="d-flex flex-nowrap"><button class="btn btn-sm btn-light border py-1 px-2 shadow-sm me-1" onclick="moverQuestao(' + i + ', \'cima\')" title="Subir" ' + (i === 0 ? 'disabled' : '') + '><i class="fas fa-arrow-up text-secondary"></i></button><button class="btn btn-sm btn-light border py-1 px-2 shadow-sm me-2 border-end" onclick="moverQuestao(' + i + ', \'baixo\')" title="Descer" ' + (i === questoesDoCaderno.length - 1 ? 'disabled' : '') + '><i class="fas fa-arrow-down text-secondary"></i></button><button class="btn btn-sm btn-light border py-1 px-2 shadow-sm me-1" onclick="editarQuestao(' + i + ')" title="Editar"><i class="fas fa-pencil-alt text-primary"></i></button> <button class="btn btn-sm btn-light border py-1 px-2 shadow-sm" onclick="removerQuestao(' + i + ')" title="Remover"><i class="fas fa-trash-alt text-danger"></i></button></div>';
+        
+        container.appendChild(div);
+      });
+    }
+    
+    function removerQuestao(i) { questoesDoCaderno.splice(i, 1); renderizarListaQuestoesCaderno(); }
+
+    function editarQuestao(i) {
+      abrirGeradorQuestao(); indiceEdicaoAtual = i; document.getElementById('tituloEditorQuestao').innerHTML = "<i class='fas fa-pen text-primary'></i> Editando Questão " + (i+1);
+      let q = questoesDoCaderno[i]; document.getElementById('tipoQuestao').value = q.tipo; renderizarCamposEspecificos();
+      document.getElementById('tempoResolucao').value = q.tempo;
+      
+      if(q.pontos && q.pontos > 0) { document.getElementById('tipoPontuacao').value = "com"; document.getElementById('valorPontos').value = q.pontos; }
+      else { document.getElementById('tipoPontuacao').value = "sem"; document.getElementById('valorPontos').value = ""; }
+      togglePontos();
+
+      if(document.getElementById('p_enunciado') && q.enunciado) document.getElementById('p_enunciado').value = q.enunciado;
+      if(document.getElementById('p_resposta') && q.resposta) document.getElementById('p_resposta').value = q.resposta;
+      if(document.getElementById('p_gabarito') && q.resposta) document.getElementById('p_gabarito').value = q.resposta;
+
+      if(q.tipo === "multipla_escolha") {
+        if(document.getElementById('p_midia') && q.midia) document.getElementById('p_midia').value = q.midia;
+        if(q.opcoes) {
+          if(document.getElementById('p_optA')) document.getElementById('p_optA').value = q.opcoes.A || "";
+          if(document.getElementById('p_optB')) document.getElementById('p_optB').value = q.opcoes.B || "";
+          if(document.getElementById('p_optC')) document.getElementById('p_optC').value = q.opcoes.C || "";
+          if(document.getElementById('p_optD')) document.getElementById('p_optD').value = q.opcoes.D || "";
+          if(document.getElementById('p_optE')) document.getElementById('p_optE').value = q.opcoes.E || "";
+        }
+      }
+      else if (q.tipo === "assercao_razao") {
+        document.getElementById('p_assercao').value = q.assercao; document.getElementById('p_razao').value = q.razao;
+        let mapOld = {"A":"I", "B":"II", "C":"III", "D":"IV", "E":"V"};
+        let gVal = mapOld[q.resposta] || q.resposta;
+        if(document.getElementById('p_resposta')) document.getElementById('p_resposta').value = gVal;
+      }
+      else if (q.tipo === "associacao") {
+        document.getElementById('containerAssocA').innerHTML = ""; document.getElementById('containerAssocB').innerHTML = "";
+        if (document.getElementById('p_assoc_img')) document.getElementById('p_assoc_img').checked = !!q.b_is_img;
+        if(q.pares && (!q.colunaA || q.colunaA.length === 0)) { q.pares.forEach(p => { adicionarLinhaAssocA(p.a); adicionarLinhaAssocB(p.b); }); }
+        else {
+           if(q.colunaA) q.colunaA.forEach(item => adicionarLinhaAssocA(item));
+           if(q.colunaB) q.colunaB.forEach(item => adicionarLinhaAssocB(item));
+        }
+      }
+      else if (q.tipo === "ordenacao") { document.getElementById('containerOrd').innerHTML = ""; q.lista.forEach(item => adicionarLinhaOrd(item)); }
+      else if (q.tipo === "verdadeiro_falso_mult") { document.getElementById('containerVF').innerHTML = ""; q.lista.forEach(item => adicionarLinhaVF(item)); }
+      else if (["dissertativa", "estudo_caso", "resposta_curta"].includes(q.tipo)) { 
+        if(document.getElementById('p_criterios')) document.getElementById('p_criterios').value = q.criterios || "";
+        if(q.tipo === "estudo_caso") document.getElementById('p_contexto').value = q.contexto || ""; 
+      }
+    }
+
+    function visualizarRevisar() {
+      try {
+        const titulo = document.getElementById('tituloCaderno').value;
+        if(!titulo) { alert("⚠️ Por favor, insira o Título da Atividade no topo da página."); window.scrollTo(0,0); return; }
+        if(questoesDoCaderno.length === 0) { alert("⚠️ Adicione pelo menos uma questão antes de avançar."); return; }
+
+        let tempoSegundos = questoesDoCaderno.reduce((acc, q) => acc + parseInt(q.tempo || 0), 0);
+        document.getElementById('revTituloCaderno').innerText = titulo;
+        document.getElementById('revQtdQuestoes').innerText = questoesDoCaderno.length;
+        document.getElementById('revTempoTotal').innerText = Math.floor(tempoSegundos / 60) + "m " + (tempoSegundos % 60) + "s";
+
+        const prevContainer = document.getElementById('previewAlunoContainer');
+        prevContainer.innerHTML = "";
+
+        questoesDoCaderno.forEach((q, i) => {
+          let html = '<div class="preview-questao shadow-sm"><div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2"><span class="fw-bold fs-5 text-dark">Questão ' + (i+1) + '</span><span class="badge bg-light text-danger fw-bold border"><i class="far fa-clock"></i> ' + q.tempo + 's</span></div>';
+          
+          if(q.midia) html += renderizarMidia(q.midia);
+
+          if(q.tipo === "estudo_caso") {
+            html += '<div class="estudo-caso-box shadow-sm">' + (q.contexto || "").replace(/\n/g, '<br>') + '</div>';
+          }
+
+          if(q.enunciado && q.tipo !== "assercao_razao") {
+             let enunciadoFormatado = (q.enunciado || "").replace(/_{3,}/g, '<input type="text" class="form-control d-inline text-center input-box-destaque mx-1" style="width:100px; height:30px; display:inline-block;" readonly>');
+             html += '<p class="fw-bold mb-3">' + enunciadoFormatado + '</p>';
+          }
+
+          if(q.tipo === "multipla_escolha") {
+            ['A','B','C','D','E'].forEach(l => {
+              if(q.opcoes && q.opcoes[l]) html += '<div class="form-check mb-2 p-2 rounded hover-bg-light"><input class="form-check-input ms-0 me-2" type="radio" name="q' + i + '"><label class="form-check-label text-dark" style="margin-left: 25px;"><strong>' + l + ')</strong> ' + q.opcoes[l] + '</label></div>';
+            });
+          } else if (q.tipo === "certo_errado") {
+            html += '<div class="d-flex gap-4 p-3 bg-light rounded"><div class="form-check"><input class="form-check-input" type="radio" name="q' + i + '"><label class="form-check-label fw-bold text-success fs-5">CERTO</label></div><div class="form-check"><input class="form-check-input" type="radio" name="q' + i + '"><label class="form-check-label fw-bold text-danger fs-5">ERRADO</label></div></div>';
+          } else if (q.tipo === "assercao_razao") {
+            html += '<div class="bg-light p-3 rounded mb-3 border border-secondary border-opacity-25"><p class="mb-2 fw-bold">I. ' + q.assercao + '</p><div class="text-danger small fw-bold text-center my-2"><i class="fas fa-link"></i> PORQUE</div><p class="mb-0 fw-bold">II. ' + q.razao + '</p></div>';
+            html += '<div class="small"><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> I. A afirmação I é verdadeira, e a II é verdadeira, e a II justifica a I.</div><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> II. A afirmação I é verdadeira, e a II é verdadeira, mas a II não justifica a I.</div><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> III. A afirmação I é verdadeira, e a II é falsa.</div><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> IV. A afirmação I é falsa, e a II é verdadeira.</div><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> V. A afirmação I é falsa, e a II é falsa.</div></div>';
+          } else if (q.tipo === "associacao") {
+            let arrA = q.colunaA || []; let arrB = q.colunaB || [];
+            if(q.pares && arrA.length===0) { q.pares.forEach(p => { arrA.push(p.a); arrB.push(p.b); }); }
+            if(arrA.length===0 && arrB.length===0) { arrA = ["Coluna A (Vazia)"]; arrB = ["Coluna B (Vazia)"]; }
+
+            html += '<div class="row g-4"><div class="col-sm-5 border-end pe-4">';
+            arrA.forEach((item, idx) => { html += '<div class="mb-3 text-dark p-2 bg-light rounded border"><strong>' + (idx+1) + '.</strong> ' + item + '</div>'; });
+            html += '</div><div class="col-sm-7 ps-4">';
+            arrB.forEach((item, idx) => { 
+              let displayItem = (q.b_is_img && item.startsWith('http')) ? '<img src="' + item + '" class="rounded border shadow-sm" style="max-height: 55px; max-width: 150px;">' : '<span class="fw-bold">' + item + '</span>';
+              html += '<div class="d-flex align-items-center mb-3 bg-white p-2 rounded border shadow-sm"><input type="text" class="form-control text-center input-box-destaque me-3 p-0" style="width:45px; height:40px; font-size: 18px;" readonly> ' + displayItem + '</div>'; 
+            });
+            html += '</div></div>';
+          } else if (q.tipo === "ordenacao") {
+            q.pares = q.lista; 
+            q.lista.forEach((item, idx) => {
+              html += '<div class="d-flex align-items-center mb-2 bg-light p-2 rounded border"><div style="width: 85%;" class="ps-2 fw-bold text-dark">' + item + '</div><div style="width: 15%;" class="text-end pe-2"><input type="text" class="form-control text-center input-box-destaque d-inline p-0" style="width:45px; height:35px; font-size: 16px;" readonly></div></div>';
+            });
+          } else if (q.tipo === "verdadeiro_falso_mult") {
+            q.lista.forEach(item => {
+              html += '<div class="d-flex align-items-center mb-2 p-2 bg-light rounded border"><input type="text" class="form-control text-center input-box-destaque me-3 p-0" style="width:40px; height:35px; font-weight: 800;" readonly><span class="fw-bold text-dark">' + item + '</span></div>';
+            });
+          } else if (["dissertativa", "estudo_caso", "resposta_curta"].includes(q.tipo)) {
+            html += '<textarea class="form-control bg-light input-box-destaque" rows="4" placeholder="Área de resposta do aluno..." readonly></textarea>';
+          }
+          
+          html += '</div>';
+          prevContainer.innerHTML += html;
+        });
+
+        alternarTela('telaRevisao');
+      } catch(e) { alert("Erro ao renderizar a revisão: " + e.message); }
+    }
+
+    function iniciarTesteSimulador() {
+      indiceTesteAtual = 0;
+      respostasDoAluno = new Array(questoesDoCaderno.length).fill(null);
+      
+      let relatorio = document.getElementById('telaRelatorioTeste');
+      if (relatorio) {
+          document.getElementById('painelFimSimulado').classList.add('escondido');
+          document.getElementById('painelResultadoFinal').classList.add('escondido');
+      }
+      
+      alternarTela('telaTesteSimulador');
+      carregarQuestaoSimulador();
+    }
+
+    // SAIR DO TESTE RAPIDAMENTE (VOLTAR PARA A REVISÃO)
+    function sairDoSimulador() {
+        clearInterval(timerIntervalo);
+        document.getElementById('telaTesteSimulador').classList.add('escondido');
+        document.getElementById('telaRelatorioTeste').classList.add('escondido');
+        document.getElementById('telaRevisao').classList.remove('escondido');
+    }
+
+    function carregarQuestaoSimulador() {
+      if(indiceTesteAtual >= questoesDoCaderno.length) { finalizarTeste(); return; }
+      
+      const q = questoesDoCaderno[indiceTesteAtual];
+      tempoRestanteTeste = q.tempo;
+      
+      let numAtual = indiceTesteAtual + 1;
+      let totalQ = questoesDoCaderno.length;
+      let pct = Math.round(((indiceTesteAtual) / totalQ) * 100);
+      
+      document.getElementById('textoProgressoTeste').innerText = 'Questão ' + numAtual + ' de ' + totalQ;
+      document.getElementById('percentualProgressoTeste').innerText = pct + '%';
+      document.getElementById('barraProgressoTeste').style.width = pct + '%';
+      
+      let html = '<div class="p-4"><div class="text-secondary small fw-bold mb-4 border-bottom pb-2 text-uppercase tracking-wide"><i class="fas fa-clipboard-question text-primary"></i> Atividade Diagnóstica</div>';
+      
+      if(q.midia) html += renderizarMidia(q.midia);
+
+      if(q.tipo === "estudo_caso") html += '<div class="estudo-caso-box shadow-sm">' + (q.contexto || "").replace(/\n/g, '<br>') + '</div>';
+      
+      if(q.tipo === "lacunas") {
+        let enunciadoFormatado = (q.enunciado || "").replace(/_{3,}/g, '<input type="text" class="form-control d-inline-block in-teste-multi text-center input-box-destaque mx-1 shadow-sm" style="width:110px; height:40px; font-size: 16px;" oninput="verificarInteracaoTeste()">');
+        html += '<p class="fw-bold mb-4 text-dark">' + enunciadoFormatado + '</p>';
+      } else if(q.tipo !== "assercao_razao") {
+        html += '<p class="fw-bold mb-4 text-dark">' + (q.enunciado || "") + '</p>';
+      }
+
+      if (q.tipo === "multipla_escolha") {
+        ['A','B','C','D','E'].forEach(l => { 
+            if(q.opcoes && q.opcoes[l]) {
+                html += '<div class="form-check mb-3 p-3 bg-light rounded border hover-shadow transition"><input class="form-check-input ms-0 me-3" type="radio" name="testeResp" value="' + l + '" id="opt_' + l + '" onclick="verificarInteracaoTeste()"><label class="form-check-label text-dark w-100" for="opt_' + l + '" style="cursor:pointer;"><strong>' + l + ')</strong> ' + q.opcoes[l] + '</label></div>'; 
+            }
+        });
+      } else if (q.tipo === "certo_errado") {
+        html += '<div class="d-flex gap-4 mb-3"><div class="form-check p-3 bg-light rounded border w-50 text-center hover-shadow transition"><input class="form-check-input float-none ms-0 me-2" type="radio" name="testeResp" value="Certo" id="opt_C" onclick="verificarInteracaoTeste()"><label class="form-check-label fw-bold text-success w-100" for="opt_C" style="cursor:pointer;">CERTO</label></div><div class="form-check p-3 bg-light rounded border w-50 text-center hover-shadow transition"><input class="form-check-input float-none ms-0 me-2" type="radio" name="testeResp" value="Errado" id="opt_E" onclick="verificarInteracaoTeste()"><label class="form-check-label fw-bold text-danger w-100" for="opt_E" style="cursor:pointer;">ERRADO</label></div></div>';
+      } else if (q.tipo === "assercao_razao") {
+        html += '<div class="bg-light p-4 rounded mb-4 border shadow-sm"><p class="mb-2 fw-bold">I. ' + q.assercao + '</p><div class="text-danger fw-bold my-3 text-center"><i class="fas fa-link"></i> PORQUE</div><p class="mb-0 fw-bold">II. ' + q.razao + '</p></div>';
+        
+        let assOpcoes = [
+            {v: "I", t: "I. A afirmação I é verdadeira, e a II é verdadeira, e a II justifica a I."},
+            {v: "II", t: "II. A afirmação I é verdadeira, e a II é verdadeira, mas a II não justifica a I."},
+            {v: "III", t: "III. A afirmação I é verdadeira, e a II é falsa."},
+            {v: "IV", t: "IV. A afirmação I é falsa, e a II é verdadeira."},
+            {v: "V", t: "V. A afirmação I é falsa, e a II é falsa."}
+        ];
+        html += '<div>';
+        assOpcoes.forEach(op => {
+            html += '<div class="form-check mb-2 p-2 rounded hover-bg-light border"><input class="form-check-input ms-1 me-2" type="radio" name="testeResp" value="' + op.v + '" id="ass_' + op.v + '" onclick="verificarInteracaoTeste()"> <label class="form-check-label" for="ass_' + op.v + '" style="cursor:pointer;">' + op.t + '</label></div>';
+        });
+        html += '</div>';
+      } else if (q.tipo === "associacao") {
+        let arrA = q.colunaA || []; let arrB = q.colunaB || [];
+        if(q.pares && arrA.length===0) { q.pares.forEach(p => { arrA.push(p.a); arrB.push(p.b); }); }
+        if(arrA.length===0 && arrB.length===0) { arrA = ["Item A1"]; arrB = ["Item B1"]; } 
+
+        html += '<div class="row g-4"><div class="col-sm-5 border-end pe-4">';
+        arrA.forEach((item, idx) => { html += '<div class="mb-3 text-dark p-2 bg-light rounded border shadow-sm"><strong>' + (idx+1) + '.</strong> ' + item + '</div>'; });
+        html += '</div><div class="col-sm-7 ps-4">';
+        arrB.forEach((item, idx) => { 
+          let displayItem = (q.b_is_img && item.startsWith('http')) ? '<img src="' + item + '" class="rounded border shadow-sm" style="max-height: 65px; max-width: 150px;">' : '<span class="fw-bold">' + item + '</span>';
+          html += '<div class="d-flex align-items-center mb-3 bg-white p-2 rounded border shadow-sm transition hover-shadow"><input type="text" class="form-control text-center in-teste-multi input-box-destaque me-3 p-0" style="width:45px; height:45px; font-size: 18px;" oninput="verificarInteracaoTeste()"> ' + displayItem + '</div>'; 
+        });
+        html += '</div></div>';
+      } else if (q.tipo === "ordenacao") {
+        q.lista.forEach((item, idx) => { 
+          html += '<div class="d-flex align-items-center mb-3 bg-light p-3 rounded border shadow-sm"><div style="width: 85%;" class="ps-2 fw-bold text-dark">' + item + '</div><div style="width: 15%;" class="text-end pe-2"><input type="text" class="form-control text-center in-teste-multi input-box-destaque d-inline p-0 shadow-sm" style="width:55px; height:45px; font-size: 18px;" oninput="verificarInteracaoTeste()"></div></div>'; 
+        });
+      } else if (q.tipo === "verdadeiro_falso_mult") {
+        q.lista.forEach(item => { 
+          html += '<div class="d-flex align-items-center mb-3 bg-light p-3 rounded border shadow-sm"><input type="text" class="form-control text-center in-teste-multi input-box-destaque me-4 p-0 shadow-sm text-uppercase" style="width:50px; height:45px; font-weight: 800; font-size: 18px;" maxlength="1" oninput="verificarInteracaoTeste()"><span class="fw-bold text-dark">' + item + '</span></div>'; 
+        });
+      } else if (q.tipo !== "lacunas") {
+        html += '<textarea class="form-control in-teste-multi p-3 shadow-sm" style="width: 100%; border: 2px solid #CBD5E1; color: #78350F; font-weight: 700; background-color: #F8FAFC;" rows="5" placeholder="Sua resposta detalhada..." oninput="verificarInteracaoTeste()"></textarea>';
+      }
+      
+      document.getElementById('areaQuestaoAtivaTeste').innerHTML = html + '</div>';
+      document.getElementById('btnAvancarTeste').disabled = true;
+      document.getElementById('btnAvancarTeste').innerHTML = 'Aguarde... <span class="badge bg-white text-secondary ms-2">' + tempoRestanteTeste + 's</span>';
+      
+      clearInterval(timerIntervalo);
+      document.getElementById('relogioTeste').innerHTML = '<i class="fas fa-stopwatch"></i> ' + tempoRestanteTeste + 's';
+      timerIntervalo = setInterval(tickTimerTeste, 1000);
+    }
+
+    function tickTimerTeste() {
+      tempoRestanteTeste--;
+      document.getElementById('relogioTeste').innerHTML = '<i class="fas fa-stopwatch"></i> ' + (tempoRestanteTeste > 0 ? tempoRestanteTeste + 's' : '0s');
+      if(tempoRestanteTeste > 0) { 
+          document.getElementById('btnAvancarTeste').innerHTML = 'Aguarde... <span class="badge bg-white text-secondary ms-2">' + tempoRestanteTeste + 's</span>'; 
+      } else { 
+          clearInterval(timerIntervalo); 
+          verificarInteracaoTeste(); 
+      }
+    }
+
+    function verificarInteracaoTeste() {
+      if(tempoRestanteTeste > 0) return; 
+      let respondeu = false;
+      const radios = document.querySelectorAll('#areaQuestaoAtivaTeste input[type="radio"]:checked');
+      const inputs = document.querySelectorAll('#areaQuestaoAtivaTeste input[type="text"], #areaQuestaoAtivaTeste textarea');
+      
+      if (radios.length > 0) respondeu = true;
+      if (inputs.length > 0) {
+        let allFilled = true;
+        inputs.forEach(inp => { if(inp.value.trim() === '') allFilled = false; });
+        if(allFilled) respondeu = true; 
+      }
+
+      const btn = document.getElementById('btnAvancarTeste');
+      if(respondeu) {
+        btn.disabled = false;
+        btn.className = "btn btn-ouro w-100 shadow-lg text-dark mb-3";
+        btn.innerHTML = (indiceTesteAtual === questoesDoCaderno.length - 1) ? 'Avançar para Conclusão <i class="fas fa-flag-checkered ms-2"></i>' : 'Confirmar e Próxima <i class="fas fa-arrow-right ms-2"></i>';
+      } else {
+        btn.disabled = true;
+        btn.className = "btn btn-secondary w-100 mb-3";
+        btn.innerHTML = '<i class="fas fa-pen me-2"></i> Preencha para avançar';
+      }
+    }
+
+    function avancarQuestaoTeste() {
+      const q = questoesDoCaderno[indiceTesteAtual];
+      if(["multipla_escolha", "certo_errado", "assercao_razao"].includes(q.tipo)) {
+        const rad = document.querySelector('input[name="testeResp"]:checked');
+        respostasDoAluno[indiceTesteAtual] = rad ? rad.value : "";
+      } else {
+        const inputs = document.querySelectorAll('.in-teste-multi');
+        let vals = []; inputs.forEach(i => vals.push(i.value.trim().toUpperCase()));
+        respostasDoAluno[indiceTesteAtual] = vals.join(", ");
+      }
+      
+      if (indiceTesteAtual === questoesDoCaderno.length - 1) {
+          document.getElementById('barraProgressoTeste').style.width = '100%';
+          document.getElementById('percentualProgressoTeste').innerText = '100%';
+      }
+      
+      indiceTesteAtual++; carregarQuestaoSimulador();
+    }
+
+    function mostrarResultadoFinal() {
+      document.getElementById('painelFimSimulado').classList.add('escondido');
+      document.getElementById('painelResultadoFinal').classList.remove('escondido');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function finalizarTeste() {
+      alternarTela('telaRelatorioTeste');
+      document.getElementById('painelFimSimulado').classList.remove('escondido');
+      document.getElementById('painelResultadoFinal').classList.add('escondido');
+
+      let htmlGabarito = "";
+      let notaPontosInterna = 0; 
+      let somaAcertosParaPorcentagem = 0; 
+      let totalQuestoes = questoesDoCaderno.length;
+
+      questoesDoCaderno.forEach((q, i) => {
+        let respAluno = respostasDoAluno[i] || "";
+        let ptsQuestao = parseFloat(q.pontos) || 0;
+        let status = ""; let corStatusHex = ""; let icone = "";
+        let respEsperadaParaExibir = q.resposta || ""; 
+        let acertoFracao = 0;
+
+        if(["dissertativa", "estudo_caso", "resposta_curta"].includes(q.tipo)) {
+          let criterios = q.criterios || q.resposta || ""; 
+          let gruposChaves = criterios.split(/[,;]+/).map(g => g.trim().toLowerCase()).filter(g => g.length > 0);
+          let respAlunoMin = respAluno.toLowerCase();
+          let encontradas = 0;
+          
+          gruposChaves.forEach(grupo => {
+            let sinomimos = grupo.split('/').map(s => s.trim());
+            let achouNesteGrupo = sinomimos.some(s => respAlunoMin.includes(s));
+            if(achouNesteGrupo) encontradas++;
+          });
+          
+          let percentualItem = gruposChaves.length > 0 ? (encontradas / gruposChaves.length) : 0;
+          
+          if (percentualItem >= 0.8) { 
+            status = "Excelente"; corStatusHex = "var(--sucesso)"; icone = "<i class='fas fa-star text-white'></i>"; acertoFracao = 1; 
+          } 
+          else if (percentualItem >= 0.5) { 
+            status = "Satisfatório"; corStatusHex = "#0EA5E9"; icone = "<i class='fas fa-check text-white'></i>"; acertoFracao = 0.75; 
+          } 
+          else if (percentualItem >= 0.25) { 
+            status = "Parcialmente Satisfatório"; corStatusHex = "var(--secundaria)"; icone = "<i class='fas fa-exclamation-triangle text-dark'></i>"; acertoFracao = 0.40; 
+          } 
+          else { 
+            status = "Insatisfatório"; corStatusHex = "var(--erro)"; icone = "<i class='fas fa-times text-white'></i>"; acertoFracao = 0; 
+          }
+        } else {
+          if(q.tipo === 'assercao_razao') {
+             let mapRetro = {"A":"I", "B":"II", "C":"III", "D":"IV", "E":"V"};
+             if(mapRetro[respEsperadaParaExibir]) respEsperadaParaExibir = mapRetro[respEsperadaParaExibir];
+          }
+
+          let aLimpo = respAluno.replace(/\s/g, '').toLowerCase(); let gLimpo = respEsperadaParaExibir.replace(/\s/g, '').toLowerCase();
+          if(aLimpo === gLimpo && aLimpo !== "") { 
+            status = "Exato"; corStatusHex = "var(--sucesso)"; icone = "<i class='fas fa-check-circle text-white'></i>"; acertoFracao = 1; 
+          } else { 
+            status = "Incorreto"; corStatusHex = "var(--erro)"; icone = "<i class='fas fa-times-circle text-white'></i>"; acertoFracao = 0; 
+          }
+        }
+
+        somaAcertosParaPorcentagem += acertoFracao;
+        notaPontosInterna += (acertoFracao * ptsQuestao);
+
+        let textColorForBadge = corStatusHex === "var(--secundaria)" ? "#000" : "#fff";
+        htmlGabarito += `
+          <div class="card mb-4 shadow border-0" style="border-left: 6px solid ${corStatusHex} !important; border-radius: 12px; overflow: hidden;">
+             <div class="card-header py-3" style="background-color: var(--cinza-fundo); border-bottom: 1px solid var(--cinza-borda);">
+                 <span class="fw-bold" style="color: var(--cinza-texto);"><i class="fas fa-layer-group me-2" style="color: ${corStatusHex};"></i> Questão ${i+1}</span>
+                 <span class="badge bg-white text-secondary border px-3 py-2 shadow-sm">${q.tipo.replace(/_/g,' ').toUpperCase()}</span>
+             </div>
+             <div class="card-body p-4">
+                 <div class="row g-4">
+                     <div class="col-md-6">
+                         <div class="text-secondary fw-bold mb-2 text-uppercase tracking-wide"><i class="fas fa-user-edit me-1"></i> Sua Resposta</div>
+                         <div class="p-3 bg-light border rounded text-dark shadow-sm" style="min-height: 50px;">${respAluno || '<span class="text-muted fst-italic"><i class="fas fa-minus me-1"></i> Deixada em branco</span>'}</div>
+                     </div>
+                     <div class="col-md-6">
+                         <div class="fw-bold mb-2 text-uppercase tracking-wide" style="color: var(--sucesso);"><i class="fas fa-check-double me-1"></i> Gabarito Esperado</div>
+                         <div class="p-3 border rounded text-dark shadow-sm" style="min-height: 50px; background-color: #F0FDF4; border-color: #BBF7D0 !important;">${respEsperadaParaExibir}</div>
+                     </div>
+                 </div>
+                 <div class="mt-4 text-end">
+                     <span class="badge px-4 py-2 shadow-sm" style="background-color: ${corStatusHex}; color: ${textColorForBadge}; border-radius: 50px;">
+                         ${icone} ${status}
+                     </span>
+                 </div>
+             </div>
+          </div>
+        `;
+      });
+      
+      document.getElementById('areaChecklistGabarito').innerHTML = htmlGabarito;
+
+      let aproveitamento = totalQuestoes > 0 ? (somaAcertosParaPorcentagem / totalQuestoes) * 100 : 0;
+      let pctFormatado = aproveitamento % 1 === 0 ? aproveitamento : aproveitamento.toFixed(2);
+      let txtCriterio = ""; let descCriterio = ""; let corAproveitamento = "";
+
+      if (aproveitamento >= 80) {
+          txtCriterio = "Excelente"; 
+          descCriterio = "Atendeu integralmente à proposta, apresentando resposta completa, clara e correta."; 
+          corAproveitamento = "sucesso";
+      } else if (aproveitamento >= 50) {
+          txtCriterio = "Satisfatório"; 
+          descCriterio = "Atendeu à maior parte da proposta, apresentando pequenos desvios ou omissões que não comprometem significativamente a resposta."; 
+          corAproveitamento = "primaria"; // Laranja
+      } else if (aproveitamento >= 25) {
+          txtCriterio = "Parcialmente Satisfatório"; 
+          descCriterio = "Atendeu parcialmente à proposta, demonstrando compreensão limitada do conteúdo ou deixando de contemplar aspectos importantes."; 
+          corAproveitamento = "secundaria"; // Amarelo
+      } else {
+          txtCriterio = "Insatisfatório"; 
+          descCriterio = "Não atendeu aos critérios mínimos esperados ou apresentou resposta incorreta, incompleta ou incompatível com o tema."; 
+          corAproveitamento = "erro";
+      }
+
+      document.getElementById('areaAproveitamentoDetalhado').innerHTML = `
+        <div class="card-3d text-center py-5 px-3 shadow-lg" style="border-top-width: 8px !important; border-top-color: var(--${corAproveitamento}); background-color: #ffffff;">
+            <h5 class="text-secondary fw-bold mb-3 text-uppercase tracking-wide"><i class="fas fa-chart-pie me-2"></i> Desempenho na Atividade</h5>
+            <div class="display-1 fw-bold mb-0" style="color: var(--${corAproveitamento}); font-size: 80px;">${pctFormatado}%</div>
+            <div class="text-muted fw-bold mb-4">/ 100%</div>
+            
+            <div class="mt-4 p-4 rounded text-center mx-auto shadow-sm" style="max-width: 650px; background-color: var(--cinza-fundo); border: 1px solid var(--cinza-borda); border-bottom: 4px solid var(--${corAproveitamento});">
+                <h4 class="text-dark fw-bold mb-2">${txtCriterio}</h4>
+                <p class="text-secondary mb-0">${descCriterio}</p>
+            </div>
+        </div>
+      `;
+    }
+
+    function publicarDefinitivo() {
+      let pacote = { 
+          id: idCadernoAtual || null, 
+          titulo: document.getElementById('tituloCaderno').value, 
+          embaralhar: document.getElementById('ordemEmbaralhada').checked,
+          questoes: questoesDoCaderno 
+      };
+      
+      const areaBtn = document.getElementById('areaBotaoPublicar');
+      const botaoOriginal = areaBtn.innerHTML;
+      areaBtn.innerHTML = '<span class="text-primary fw-bold pt-1"><i class="fas fa-spinner fa-spin me-2"></i> Sincronizando...</span>';
+
+      fetch(URL_API_GOOGLE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ api: 'salvarCaderno', pacote: pacote })
+      })
+      .then(res => res.json())
+      .then(resposta => {
+         if(resposta.sucesso) {
+             alert(resposta.msg); 
+             idCadernoAtual = ""; 
+             areaBtn.innerHTML = botaoOriginal; 
+             atualizarPortalTabela(); 
+             alternarTela('telaPortal'); 
+         } else {
+             alert("❌ Erro na publicação: " + resposta.msg);
+             areaBtn.innerHTML = botaoOriginal; 
+         }
+      })
+      .catch(erro => {
+         alert("Erro de conexão ao publicar.");
+         areaBtn.innerHTML = botaoOriginal;
+      });
+    }
+
+    function atualizarPortalTabela() {
+      const tabela = document.getElementById('corpoTabelaPortal');
+      tabela.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Carregando banco de dados...</td></tr>';
+      
+      fetch(`${URL_API_GOOGLE}?api=obterCadernos`)
+        .then(res => res.json())
+        .then(cadernos => {
+          window.listaCadernosGlobal = cadernos || [];
+          tabela.innerHTML = "";
+          
+          if(!cadernos || cadernos.length === 0) { 
+            tabela.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Nenhum caderno na base.</td></tr>'; 
+            return; 
+          }
+          
+          cadernos.forEach(c => {
+            let linkAluno = "https://pedagogicoeducensino-star.github.io/atividades/?id=" + c.id;
+            let safeTitulo = c.titulo.replace(/'/g, "\\'");
+            
+            tabela.innerHTML += '<tr><td class="fw-bold align-middle text-dark">' + c.titulo + '</td><td class="align-middle"><span class="badge bg-light text-secondary border px-2 py-1 shadow-sm">' + c.questoes.length + ' itens</span></td><td class="text-muted align-middle">' + new Date(c.data).toLocaleDateString('pt-BR') + '</td><td class="text-center align-middle"><div class="d-flex justify-content-center gap-2"><button class="btn btn-sm btn-light border py-1 shadow-sm text-primary" title="Editar" onclick="carregarParaEdicao(\'' + c.id + '\')"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-ouro py-1 shadow-sm text-dark" title="Copiar Link" onclick="navigator.clipboard.writeText(\'' + linkAluno + '\'); alert(\'Link do aluno copiado com sucesso! Pode colar no WhatsApp.\');"><i class="fas fa-link"></i></button><button class="btn btn-sm btn-light border py-1 shadow-sm text-danger" title="Excluir Caderno" onclick="excluirCadernoBd(\'' + c.id + '\', \'' + safeTitulo + '\')"><i class="fas fa-trash"></i></button></div></td></tr>';
+          });
+        })
+        .catch(err => {
+            tabela.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-5">Erro de conexão ao buscar cadernos.</td></tr>';
+        });
+    }
+
+    function excluirCadernoBd(idCaderno, titulo) {
+      if(!confirm('Tem certeza que deseja EXCLUIR a atividade:\n"' + titulo + '"?\n\nEsta ação não pode ser desfeita e os alunos não conseguirão mais acessar este link.')) return;
+
+      const tabela = document.getElementById('corpoTabelaPortal');
+      tabela.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Excluindo atividade...</td></tr>';
+
+      fetch(URL_API_GOOGLE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ api: 'excluirCaderno', idCaderno: idCaderno })
+      })
+      .then(res => res.json())
+      .then(resposta => {
+          if(resposta.sucesso) alert(resposta.msg); else alert("Erro: " + resposta.msg);
+          atualizarPortalTabela();
+      })
+      .catch(erro => {
+          alert("Erro de conexão ao excluir.");
+          atualizarPortalTabela();
+      });
+    }
+
+    function carregarParaEdicao(id) {
+      const caderno = window.listaCadernosGlobal.find(c => c.id === id);
+      if(!caderno) return;
+      idCadernoAtual = caderno.id; 
+      document.getElementById('tituloCaderno').value = caderno.titulo; 
+      
+      if (caderno.embaralhar === true) {
+          document.getElementById('ordemEmbaralhada').checked = true;
+      } else {
+          document.getElementById('ordemCriacao').checked = true;
+      }
+
+      questoesDoCaderno = [...caderno.questoes];
+      renderizarListaQuestoesCaderno(); fecharGeradorQuestao(); alternarTela('telaEditor');
+    }
+
+    function buscarHistorico() {
+      const matricula = document.getElementById('inputBuscaMatricula').value.trim();
+      if(!matricula) { alert("⚠️ Por favor, digite a matrícula do aluno."); return; }
+
+      const corpo = document.getElementById('corpoTabelaBusca');
+      corpo.innerHTML = '<tr><td colspan="4" class="text-center text-primary py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Buscando histórico na base de dados...</td></tr>';
+
+      fetch(`${URL_API_GOOGLE}?api=buscarHistorico&matricula=${matricula}`)
+        .then(res => res.json())
+        .then(historico => {
+          corpo.innerHTML = "";
+          if(historico.length === 0) {
+            corpo.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-box-open fs-3 mb-2 text-secondary"></i><br>Nenhum registro encontrado para a matrícula <strong>' + matricula + '</strong>.</td></tr>';
+            return;
+          }
+
+          historico.forEach(h => {
+            corpo.innerHTML += '<tr><td class="text-muted">' + h.data + '</td><td class="fw-bold text-dark">' + h.titulo + '</td><td class="text-secondary">' + h.nome + '</td><td class="text-center fw-bold" style="color: var(--sucesso);">' + h.nota + ' / ' + h.max + '</td></tr>';
+          });
+        })
+        .catch(err => {
+          corpo.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-5"><i class="fas fa-exclamation-triangle fs-3 mb-2"></i><br>Erro de conexão ao buscar histórico.</td></tr>';
+        });
+    }
+  </script>
+</body>
+</html>
