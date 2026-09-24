@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal de Atividades - Criador</title>
+  <title>Portal de Atividades - Criador & LMS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Adicionado Script do Bootstrap para os Modais funcionarem -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <style>
     :root { 
       --primaria: #F97316; 
@@ -39,6 +41,7 @@
     .menu-card-1 { border-bottom: 4px solid var(--primaria); color: var(--primaria); }
     .menu-card-2 { border-bottom: 4px solid var(--secundaria); color: var(--secundaria); }
     .menu-card-3 { border-bottom: 4px solid var(--marrom-claro); color: var(--marrom-claro); }
+    .menu-card-4 { border-bottom: 4px solid var(--sucesso); color: var(--sucesso); } /* Nova cor para Alunos */
     .menu-card-title { font-size: 17px; font-weight: 700; color: var(--marrom-suave); margin-top: 10px; line-height: 1.3;}
 
     .btn { font-weight: 600; padding: 10px 20px; border-radius: 8px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;}
@@ -67,10 +70,11 @@
 </head>
 <body>
 
+  <!-- TELA DE LOGIN -->
   <div id="telaLogin" class="card-3d mx-auto shadow-sm" style="max-width: 400px; margin-top: 15vh; border-top-color: var(--secundaria);">
     <div class="text-center mb-4">
       <div class="mb-3"><i class="fas fa-graduation-cap" style="font-size: 50px; color: var(--primaria);"></i></div>
-      <h1 class="titulo-topo mb-1">Portal de Atividades</h1>
+      <h1 class="titulo-topo mb-1">Portal Pedagógico</h1>
       <p class="text-muted small">Acesso Restrito para Colaboradores</p>
     </div>
     <div class="mb-4">
@@ -83,12 +87,13 @@
     <button class="btn btn-primario w-100 py-2 fs-5" onclick="fazerLogin()">Acessar Painel <i class="fas fa-arrow-right"></i></button>
   </div>
 
-  <div id="telaPortal" class="container py-4 escondido" style="max-width: 950px;">
+  <!-- TELA PORTAL (ATUALIZADA COM GESTÃO DE ALUNOS) -->
+  <div id="telaPortal" class="container py-4 escondido" style="max-width: 1050px;">
     <div class="d-flex justify-content-between align-items-center mb-4 card-3d py-3 shadow-sm" style="border-top-color: var(--marrom-claro);">
       <div class="d-flex align-items-center gap-3">
         <div class="bg-light p-3 rounded-circle text-center" style="width: 50px; height: 50px; line-height: 20px;"><i class="fas fa-user-tie text-primary"></i></div>
         <div>
-          <h1 class="titulo-topo mb-0" style="font-size: 20px !important;">Painel de Atividades Diagnósticas</h1>
+          <h1 class="titulo-topo mb-0" style="font-size: 20px !important;">Painel de Atividades e Gestão</h1>
           <span class="text-muted" style="font-size: 14px;">Bem-vindo(a), <strong id="nomeColaboradorDisplay" style="color: var(--marrom-suave);"></strong></span>
         </div>
       </div>
@@ -96,27 +101,64 @@
     </div>
 
     <div class="row g-4 mb-4">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="menu-card menu-card-1" onclick="iniciarNovoCaderno()">
           <i class="fas fa-file-circle-plus"></i>
           <div class="menu-card-title">Nova Atividade<br><span class="fw-normal text-muted small">Criar caderno do zero</span></div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="menu-card menu-card-2" onclick="abrirTelaBanco()">
           <i class="fas fa-server"></i>
-          <div class="menu-card-title">Banco Publicado<br><span class="fw-normal text-muted small">Gerenciar e compartilhar links</span></div>
+          <div class="menu-card-title">Banco de Provas<br><span class="fw-normal text-muted small">Gerenciar publicadas</span></div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
+        <div class="menu-card menu-card-4" onclick="abrirTelaGestaoAlunos()">
+          <i class="fas fa-users-gear"></i>
+          <div class="menu-card-title">Gestão de Alunos<br><span class="fw-normal text-muted small">Cadastrar e Liberar</span></div>
+        </div>
+      </div>
+      <div class="col-md-3">
         <div class="menu-card menu-card-3" onclick="abrirTelaHistorico()">
           <i class="fas fa-chart-line"></i>
-          <div class="menu-card-title">Desempenho<br><span class="fw-normal text-muted small">Analisar histórico de alunos</span></div>
+          <div class="menu-card-title">Desempenho<br><span class="fw-normal text-muted small">Histórico do Aluno</span></div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- TELA GESTÃO DE ALUNOS (NOVA) -->
+  <div id="telaGestaoAlunos" class="container py-4 escondido" style="max-width: 950px;">
+    <div class="mb-3">
+      <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
+    </div>
+    
+    <div class="card-3d mb-4" style="border-top-color: var(--sucesso);">
+      <h5 class="mb-3 text-dark"><i class="fas fa-user-plus text-success"></i> Cadastrar Novo Aluno</h5>
+      <div class="row g-2">
+        <div class="col-md-5"><input type="text" id="novoNomeAluno" class="form-control" placeholder="Nome Completo do Aluno"></div>
+        <div class="col-md-4"><input type="text" id="novaMatriculaAluno" class="form-control" placeholder="Nº da Matrícula (Ex: 202401)"></div>
+        <div class="col-md-3"><button class="btn btn-primario w-100" onclick="cadastrarAluno()"><i class="fas fa-save"></i> Cadastrar</button></div>
+      </div>
+    </div>
+
+    <div class="card-3d" style="border-top-color: var(--marrom-claro);">
+      <h5 class="mb-4 text-dark"><i class="fas fa-users text-primary"></i> Base de Alunos (LMS)</h5>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle border rounded overflow-hidden mb-0">
+          <thead style="background-color: #F8FAFC;">
+            <tr><th class="text-secondary">Matrícula</th><th class="text-secondary">Nome do Aluno</th><th class="text-secondary text-center">Status</th><th class="text-center text-secondary">Ações Pedagógicas</th></tr>
+          </thead>
+          <tbody id="corpoTabelaAlunos">
+            <tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fs-3"></i><br>Carregando alunos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA BANCO DE CADERNOS (MANTIDA) -->
   <div id="telaBancoCadernos" class="container py-4 escondido" style="max-width: 950px;">
     <div class="mb-3">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
@@ -136,33 +178,35 @@
     </div>
   </div>
 
+  <!-- TELA HISTÓRICO ALUNO (ATUALIZADA) -->
   <div id="telaHistoricoAluno" class="container py-4 escondido" style="max-width: 950px;">
     <div class="mb-3">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
     </div>
     <div class="card-3d" style="border-top-color: var(--marrom-claro);">
-      <h5 class="mb-4 text-dark"><i class="fas fa-chart-line text-danger"></i> Histórico de Desempenho do Aluno</h5>
+      <h5 class="mb-4 text-dark"><i class="fas fa-chart-line text-danger"></i> Relatório de Desempenho do Aluno</h5>
       <div class="row g-2 mb-4 bg-light p-3 rounded border">
         <div class="col-md-9">
           <input type="text" id="inputBuscaMatricula" class="form-control" placeholder="🔍 Digite a matrícula do aluno para buscar...">
         </div>
         <div class="col-md-3">
-          <button class="btn btn-primario w-100" onclick="buscarHistorico()">Buscar <i class="fas fa-search"></i></button>
+          <button class="btn btn-primario w-100" onclick="buscarHistoricoPedagogico()">Buscar <i class="fas fa-search"></i></button>
         </div>
       </div>
       <div class="table-responsive">
         <table class="table table-hover align-middle border rounded overflow-hidden mb-0">
           <thead style="background-color: #F8FAFC;">
-            <tr><th class="text-secondary">Data</th><th class="text-secondary">Atividade</th><th class="text-secondary">Aluno</th><th class="text-center text-secondary">Aproveitamento</th></tr>
+            <tr><th class="text-secondary">Atividade</th><th class="text-secondary text-center">Status / Prazo</th><th class="text-secondary text-center">Tentativas</th><th class="text-center text-secondary">Nota</th><th class="text-center text-secondary">Entrega</th></tr>
           </thead>
           <tbody id="corpoTabelaBusca">
-            <tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>
+            <tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
+  <!-- TODAS AS TELAS DO EDITOR E REVISÃO (MANTIDAS INTACTAS) -->
   <div id="telaEditor" class="container py-4 escondido" style="max-width: 900px;">
     <div class="mb-3">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
@@ -343,13 +387,44 @@
     </div>
   </div>
 
+  <!-- MODAL PARA LIBERAR ATIVIDADE (NOVO) -->
+  <div class="modal fade" id="modalLiberarAtividade" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content border-0 shadow-lg" style="border-top: 5px solid var(--primaria);">
+        <div class="modal-header border-bottom-0">
+          <h5 class="modal-title fw-bold text-dark"><i class="fas fa-paper-plane text-primary"></i> Atribuir Atividade</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-secondary mb-3">Atribuindo para o aluno: <strong id="lblNomeAlunoAtribuir" class="text-dark"></strong></p>
+          <input type="hidden" id="hdnMatriculaAtribuir">
+          
+          <div class="mb-3">
+            <label class="fw-bold text-muted small mb-1">Selecione a Atividade:</label>
+            <select id="selCadernoAtribuir" class="form-select"></select>
+          </div>
+          
+          <div class="mb-3">
+            <label class="fw-bold text-muted small mb-1">Prazo Limite de Entrega (Opcional):</label>
+            <input type="datetime-local" id="dataPrazoAtribuir" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer border-top-0 bg-light">
+          <button type="button" class="btn bg-white border text-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primario" onclick="salvarAtribuicaoAtividade()">Liberar para o Aluno</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INÍCIO DOS SCRIPTS (ONDE A MÁGICA ACONTECE) -->
   <script>
     // =========================================================================
-    // COLE AQUI A URL DE IMPLANTAÇÃO DO SEU GOOGLE APPS SCRIPT (CÓDIGO.GS)
+    // COLE AQUI A NOVA URL DE IMPLANTAÇÃO DO SEU GOOGLE APPS SCRIPT (CÓDIGO.GS)
     // =========================================================================
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbzEjn_R54vUXpglydH_z669p53Smxw84wt7gm9KPdQSlp5rMHovbxb7-pq7MSWv6Mfd/exec";
     
-    const colaboradores = { "2490": "Davi Felício", "34769849": "Theo Araujo", "8895": "Convidado" };
+    const colaboradores = { "2490": "Davi Felício", "123456789": "Convidado", "8895": "Convidado" };
     let usuarioAtual = "";
 
     function fazerLogin() {
@@ -358,7 +433,7 @@
         usuarioAtual = colaboradores[senha];
         document.getElementById('nomeColaboradorDisplay').innerText = usuarioAtual;
         alternarTela('telaPortal');
-        atualizarPortalTabela();
+        atualizarPortalTabela(); // Já carrega o banco por baixo dos panos
       } else { alert("⚠️ Acesso Negado. Chave inválida."); }
     }
 
@@ -370,6 +445,111 @@
     }
   </script>
 
+  <!-- SCRIPTS DA GESTÃO DE ALUNOS (NOVOS) -->
+  <script>
+    function abrirTelaGestaoAlunos() {
+      alternarTela('telaGestaoAlunos');
+      carregarAlunos();
+    }
+
+    function carregarAlunos() {
+      const tabela = document.getElementById('corpoTabelaAlunos');
+      tabela.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fs-3"></i><br>Carregando base de alunos...</td></tr>';
+      
+      fetch(`${URL_API_GOOGLE}?api=obterAlunos`)
+      .then(res => res.json())
+      .then(alunos => {
+        tabela.innerHTML = "";
+        if(alunos.length === 0) {
+          tabela.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4"><i class="fas fa-inbox fs-3 mb-2"></i><br>Nenhum aluno cadastrado no sistema ainda.</td></tr>'; return;
+        }
+        
+        alunos.forEach(a => {
+          let badgeStatus = a.status === 'Ativo' ? '<span class="badge bg-success">Ativo</span>' : '<span class="badge bg-danger">Bloqueado</span>';
+          let btnBloqueio = a.status === 'Ativo' ? 
+            `<button class="btn btn-sm btn-outline-danger shadow-sm me-2" onclick="bloquearAluno('${a.matricula}')" title="Bloquear Acesso"><i class="fas fa-ban"></i></button>` : 
+            `<button class="btn btn-sm btn-outline-success shadow-sm me-2" onclick="bloquearAluno('${a.matricula}')" title="Desbloquear Acesso"><i class="fas fa-unlock"></i></button>`;
+          
+          tabela.innerHTML += `
+            <tr>
+              <td class="fw-bold text-dark">${a.matricula}</td>
+              <td class="text-secondary">${a.nome}</td>
+              <td class="text-center">${badgeStatus}</td>
+              <td class="text-center">
+                <div class="d-flex justify-content-center">
+                  ${btnBloqueio}
+                  <button class="btn btn-sm btn-ouro shadow-sm fw-bold" onclick="abrirModalLiberarAtividade('${a.matricula}', '${a.nome}')" title="Liberar Atividade"><i class="fas fa-paper-plane"></i> Liberar Prova</button>
+                </div>
+              </td>
+            </tr>`;
+        });
+      })
+      .catch(err => {
+          tabela.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-4">Erro ao carregar alunos. Verifique a URL do Google Apps Script.</td></tr>';
+      });
+    }
+
+    function cadastrarAluno() {
+      const nome = document.getElementById('novoNomeAluno').value.trim();
+      const matricula = document.getElementById('novaMatriculaAluno').value.trim();
+      if(!nome || !matricula) { alert("⚠️ Preencha o nome e a matrícula!"); return; }
+      
+      document.getElementById('corpoTabelaAlunos').innerHTML = '<tr><td colspan="4" class="text-center text-primary py-4"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Salvando...</td></tr>';
+      
+      fetch(URL_API_GOOGLE, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ api: 'cadastrarAluno', matricula: matricula, nome: nome })
+      }).then(res => res.json()).then(r => {
+        alert(r.msg);
+        document.getElementById('novoNomeAluno').value = ""; document.getElementById('novaMatriculaAluno').value = "";
+        carregarAlunos();
+      }).catch(err => alert("Erro ao cadastrar: " + err.message));
+    }
+
+    function bloquearAluno(matricula) {
+      if(!confirm("Tem certeza que deseja alterar o status de acesso deste aluno?")) return;
+      document.getElementById('corpoTabelaAlunos').innerHTML = '<tr><td colspan="4" class="text-center text-primary py-4"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Atualizando status...</td></tr>';
+      
+      fetch(URL_API_GOOGLE, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ api: 'bloquearAluno', matricula: matricula })
+      }).then(res => res.json()).then(r => { alert(r.msg); carregarAlunos(); });
+    }
+
+    function abrirModalLiberarAtividade(matricula, nome) {
+      document.getElementById('lblNomeAlunoAtribuir').innerText = nome;
+      document.getElementById('hdnMatriculaAtribuir').value = matricula;
+      
+      const select = document.getElementById('selCadernoAtribuir');
+      select.innerHTML = '<option>Carregando banco de atividades...</option>';
+      
+      fetch(`${URL_API_GOOGLE}?api=obterCadernos`).then(res => res.json()).then(cadernos => {
+        select.innerHTML = '<option value="">-- Selecione a Atividade --</option>';
+        cadernos.forEach(c => { select.innerHTML += `<option value="${c.id}">${c.titulo}</option>`; });
+      });
+      
+      if(!window.meuModalLiberar) { window.meuModalLiberar = new bootstrap.Modal(document.getElementById('modalLiberarAtividade')); }
+      window.meuModalLiberar.show();
+    }
+
+    function salvarAtribuicaoAtividade() {
+      const matricula = document.getElementById('hdnMatriculaAtribuir').value;
+      const idCad = document.getElementById('selCadernoAtribuir').value;
+      const prazo = document.getElementById('dataPrazoAtribuir').value;
+      
+      if(!idCad) { alert("⚠️ Selecione uma atividade para enviar!"); return; }
+      
+      fetch(URL_API_GOOGLE, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ api: 'liberarAtividade', matricula: matricula, idCaderno: idCad, prazo: prazo })
+      }).then(res => res.json()).then(r => {
+        alert(r.msg);
+        window.meuModalLiberar.hide();
+      });
+    }
+  </script>
+
+  <!-- SCRIPTS DO GERADOR E DEMAIS FUNÇÕES (MANTIDOS INTACTOS) -->
   <script>
     let questoesDoCaderno = [];
     let idCadernoAtual = "";
@@ -409,7 +589,7 @@
     function voltarParaPortal() {
       alternarTela('telaPortal'); clearInterval(timerIntervalo);
       if(document.getElementById('inputBuscaMatricula')) document.getElementById('inputBuscaMatricula').value = '';
-      if(document.getElementById('corpoTabelaBusca')) document.getElementById('corpoTabelaBusca').innerHTML = '<tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>';
+      if(document.getElementById('corpoTabelaBusca')) document.getElementById('corpoTabelaBusca').innerHTML = '<tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>';
     }
     
     function voltarParaEditor() { alternarTela('telaEditor'); clearInterval(timerIntervalo); }
@@ -687,7 +867,6 @@
       carregarQuestaoSimulador();
     }
 
-    // SAIR DO TESTE RAPIDAMENTE (VOLTAR PARA A REVISÃO)
     function sairDoSimulador() {
         clearInterval(timerIntervalo);
         document.getElementById('telaTesteSimulador').classList.add('escondido');
@@ -941,11 +1120,11 @@
       } else if (aproveitamento >= 50) {
           txtCriterio = "Satisfatório"; 
           descCriterio = "Atendeu à maior parte da proposta, apresentando pequenos desvios ou omissões que não comprometem significativamente a resposta."; 
-          corAproveitamento = "primaria"; // Laranja
+          corAproveitamento = "primaria"; 
       } else if (aproveitamento >= 25) {
           txtCriterio = "Parcialmente Satisfatório"; 
           descCriterio = "Atendeu parcialmente à proposta, demonstrando compreensão limitada do conteúdo ou deixando de contemplar aspectos importantes."; 
-          corAproveitamento = "secundaria"; // Amarelo
+          corAproveitamento = "secundaria"; 
       } else {
           txtCriterio = "Insatisfatório"; 
           descCriterio = "Não atendeu aos critérios mínimos esperados ou apresentou resposta incorreta, incompleta ou incompatível com o tema."; 
@@ -1018,10 +1197,8 @@
           }
           
           cadernos.forEach(c => {
-            let linkAluno = "https://pedagogicoeducensino-star.github.io/atividades/?id=" + c.id;
             let safeTitulo = c.titulo.replace(/'/g, "\\'");
-            
-            tabela.innerHTML += '<tr><td class="fw-bold align-middle text-dark">' + c.titulo + '</td><td class="align-middle"><span class="badge bg-light text-secondary border px-2 py-1 shadow-sm">' + c.questoes.length + ' itens</span></td><td class="text-muted align-middle">' + new Date(c.data).toLocaleDateString('pt-BR') + '</td><td class="text-center align-middle"><div class="d-flex justify-content-center gap-2"><button class="btn btn-sm btn-light border py-1 shadow-sm text-primary" title="Editar" onclick="carregarParaEdicao(\'' + c.id + '\')"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-ouro py-1 shadow-sm text-dark" title="Copiar Link" onclick="navigator.clipboard.writeText(\'' + linkAluno + '\'); alert(\'Link do aluno copiado com sucesso! Pode colar no WhatsApp.\');"><i class="fas fa-link"></i></button><button class="btn btn-sm btn-light border py-1 shadow-sm text-danger" title="Excluir Caderno" onclick="excluirCadernoBd(\'' + c.id + '\', \'' + safeTitulo + '\')"><i class="fas fa-trash"></i></button></div></td></tr>';
+            tabela.innerHTML += '<tr><td class="fw-bold align-middle text-dark">' + c.titulo + '</td><td class="align-middle"><span class="badge bg-light text-secondary border px-2 py-1 shadow-sm">' + c.questoes.length + ' itens</span></td><td class="text-muted align-middle">' + new Date(c.data).toLocaleDateString('pt-BR') + '</td><td class="text-center align-middle"><div class="d-flex justify-content-center gap-2"><button class="btn btn-sm btn-light border py-1 shadow-sm text-primary" title="Editar" onclick="carregarParaEdicao(\'' + c.id + '\')"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-light border py-1 shadow-sm text-danger" title="Excluir Caderno" onclick="excluirCadernoBd(\'' + c.id + '\', \'' + safeTitulo + '\')"><i class="fas fa-trash"></i></button></div></td></tr>';
           });
         })
         .catch(err => {
@@ -1030,7 +1207,7 @@
     }
 
     function excluirCadernoBd(idCaderno, titulo) {
-      if(!confirm('Tem certeza que deseja EXCLUIR a atividade:\n"' + titulo + '"?\n\nEsta ação não pode ser desfeita e os alunos não conseguirão mais acessar este link.')) return;
+      if(!confirm('Tem certeza que deseja EXCLUIR a atividade:\n"' + titulo + '"?\n\nEsta ação não pode ser desfeita.')) return;
 
       const tabela = document.getElementById('corpoTabelaPortal');
       tabela.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Excluindo atividade...</td></tr>';
@@ -1067,28 +1244,38 @@
       renderizarListaQuestoesCaderno(); fecharGeradorQuestao(); alternarTela('telaEditor');
     }
 
-    function buscarHistorico() {
+    // ==========================================
+    // HISTÓRICO ATUALIZADO (USA A NOVA API)
+    // ==========================================
+    function buscarHistoricoPedagogico() {
       const matricula = document.getElementById('inputBuscaMatricula').value.trim();
-      if(!matricula) { alert("⚠️ Por favor, digite a matrícula do aluno."); return; }
+      if(!matricula) { alert("⚠️ Digite a matrícula do aluno."); return; }
 
       const corpo = document.getElementById('corpoTabelaBusca');
-      corpo.innerHTML = '<tr><td colspan="4" class="text-center text-primary py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Buscando histórico na base de dados...</td></tr>';
+      corpo.innerHTML = '<tr><td colspan="5" class="text-center text-primary py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Buscando histórico na base de dados...</td></tr>';
 
       fetch(`${URL_API_GOOGLE}?api=buscarHistorico&matricula=${matricula}`)
         .then(res => res.json())
-        .then(historico => {
+        .then(hist => {
           corpo.innerHTML = "";
-          if(historico.length === 0) {
-            corpo.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-box-open fs-3 mb-2 text-secondary"></i><br>Nenhum registro encontrado para a matrícula <strong>' + matricula + '</strong>.</td></tr>';
-            return;
+          if(hist.length === 0) {
+            corpo.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-box-open fs-3 mb-2"></i><br>Nenhuma atividade associada a esta matrícula.</td></tr>'; return;
           }
 
-          historico.forEach(h => {
-            corpo.innerHTML += '<tr><td class="text-muted">' + h.data + '</td><td class="fw-bold text-dark">' + h.titulo + '</td><td class="text-secondary">' + h.nome + '</td><td class="text-center fw-bold" style="color: var(--sucesso);">' + h.nota + ' / ' + h.max + '</td></tr>';
+          hist.forEach(h => {
+            let corStatus = h.status === 'Concluído' ? 'success' : (h.status === 'Em Andamento' ? 'warning text-dark' : 'secondary');
+            corpo.innerHTML += `
+              <tr>
+                <td class="fw-bold text-dark">${h.titulo}</td>
+                <td class="text-center"><span class="badge bg-${corStatus}">${h.status}</span><br><small class="text-muted">Prazo: ${h.prazo}</small></td>
+                <td class="text-center text-secondary fw-bold">${h.tentativas}</td>
+                <td class="text-center fw-bold" style="color: var(--sucesso);">${h.nota}</td>
+                <td class="text-center text-muted">${h.dataFim}</td>
+              </tr>`;
           });
         })
         .catch(err => {
-          corpo.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-5"><i class="fas fa-exclamation-triangle fs-3 mb-2"></i><br>Erro de conexão ao buscar histórico.</td></tr>';
+            corpo.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-5"><i class="fas fa-exclamation-triangle fs-3 mb-2"></i><br>Erro de conexão ao buscar histórico.</td></tr>';
         });
     }
   </script>
