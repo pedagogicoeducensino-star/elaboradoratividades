@@ -4,10 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal de Atividades - Criador & LMS</title>
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Adicionado Script do Bootstrap para os Modais funcionarem -->
+  
+  <!-- BOOTSTRAP E SWEETALERT2 (Para os Alertas Charmosos) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
   <style>
     :root { 
       --primaria: #F97316; 
@@ -41,7 +45,7 @@
     .menu-card-1 { border-bottom: 4px solid var(--primaria); color: var(--primaria); }
     .menu-card-2 { border-bottom: 4px solid var(--secundaria); color: var(--secundaria); }
     .menu-card-3 { border-bottom: 4px solid var(--marrom-claro); color: var(--marrom-claro); }
-    .menu-card-4 { border-bottom: 4px solid var(--sucesso); color: var(--sucesso); } /* Nova cor para Alunos */
+    .menu-card-4 { border-bottom: 4px solid var(--sucesso); color: var(--sucesso); }
     .menu-card-title { font-size: 17px; font-weight: 700; color: var(--marrom-suave); margin-top: 10px; line-height: 1.3;}
 
     .btn { font-weight: 600; padding: 10px 20px; border-radius: 8px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;}
@@ -81,13 +85,14 @@
       <label class="form-label fw-bold text-secondary">Chave de Acesso:</label>
       <div class="input-group">
         <span class="input-group-text bg-light border-end-0"><i class="fas fa-key text-muted"></i></span>
-        <input type="password" id="inputSenha" class="form-control border-start-0" placeholder="••••••••" style="letter-spacing: 3px;">
+        <!-- Input com o recurso de apertar Enter -->
+        <input type="password" id="inputSenha" class="form-control border-start-0" placeholder="••••••••" style="letter-spacing: 3px;" onkeypress="if(event.key === 'Enter') fazerLogin()">
       </div>
     </div>
     <button class="btn btn-primario w-100 py-2 fs-5" onclick="fazerLogin()">Acessar Painel <i class="fas fa-arrow-right"></i></button>
   </div>
 
-  <!-- TELA PORTAL (ATUALIZADA COM GESTÃO DE ALUNOS) -->
+  <!-- TELA PORTAL (MENU PRINCIPAL) -->
   <div id="telaPortal" class="container py-4 escondido" style="max-width: 1050px;">
     <div class="d-flex justify-content-between align-items-center mb-4 card-3d py-3 shadow-sm" style="border-top-color: var(--marrom-claro);">
       <div class="d-flex align-items-center gap-3">
@@ -128,7 +133,7 @@
     </div>
   </div>
 
-  <!-- TELA GESTÃO DE ALUNOS (NOVA) -->
+  <!-- TELA GESTÃO DE ALUNOS -->
   <div id="telaGestaoAlunos" class="container py-4 escondido" style="max-width: 950px;">
     <div class="mb-3">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
@@ -137,9 +142,15 @@
     <div class="card-3d mb-4" style="border-top-color: var(--sucesso);">
       <h5 class="mb-3 text-dark"><i class="fas fa-user-plus text-success"></i> Cadastrar Novo Aluno</h5>
       <div class="row g-2">
-        <div class="col-md-5"><input type="text" id="novoNomeAluno" class="form-control" placeholder="Nome Completo do Aluno"></div>
-        <div class="col-md-4"><input type="text" id="novaMatriculaAluno" class="form-control" placeholder="Nº da Matrícula (Ex: 202401)"></div>
-        <div class="col-md-3"><button class="btn btn-primario w-100" onclick="cadastrarAluno()"><i class="fas fa-save"></i> Cadastrar</button></div>
+        <div class="col-md-5">
+            <input type="text" id="novoNomeAluno" class="form-control" placeholder="Nome Completo do Aluno" onkeypress="if(event.key === 'Enter') cadastrarAluno()">
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="novaMatriculaAluno" class="form-control" placeholder="Nº da Matrícula (Ex: 202401)" onkeypress="if(event.key === 'Enter') cadastrarAluno()">
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primario w-100" onclick="cadastrarAluno()"><i class="fas fa-save"></i> Cadastrar</button>
+        </div>
       </div>
     </div>
 
@@ -148,7 +159,12 @@
       <div class="table-responsive">
         <table class="table table-hover align-middle border rounded overflow-hidden mb-0">
           <thead style="background-color: #F8FAFC;">
-            <tr><th class="text-secondary">Matrícula</th><th class="text-secondary">Nome do Aluno</th><th class="text-secondary text-center">Status</th><th class="text-center text-secondary">Ações Pedagógicas</th></tr>
+            <tr>
+              <th class="text-secondary">Matrícula</th>
+              <th class="text-secondary">Nome do Aluno</th>
+              <th class="text-secondary text-center">Status</th>
+              <th class="text-center text-secondary">Ações Pedagógicas</th>
+            </tr>
           </thead>
           <tbody id="corpoTabelaAlunos">
             <tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fs-3"></i><br>Carregando alunos...</td></tr>
@@ -158,7 +174,7 @@
     </div>
   </div>
 
-  <!-- TELA BANCO DE CADERNOS (MANTIDA) -->
+  <!-- TELA BANCO DE CADERNOS -->
   <div id="telaBancoCadernos" class="container py-4 escondido" style="max-width: 950px;">
     <div class="mb-3">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
@@ -168,7 +184,12 @@
       <div class="table-responsive">
         <table class="table table-hover align-middle border rounded overflow-hidden mb-0">
           <thead style="background-color: #F8FAFC;">
-            <tr><th class="text-secondary">Título da Atividade</th><th class="text-secondary">Questões</th><th class="text-secondary">Data</th><th class="text-center text-secondary" style="min-width: 140px;">Ações</th></tr>
+            <tr>
+              <th class="text-secondary">Título da Atividade</th>
+              <th class="text-secondary">Questões</th>
+              <th class="text-secondary">Data</th>
+              <th class="text-center text-secondary" style="min-width: 140px;">Ações</th>
+            </tr>
           </thead>
           <tbody id="corpoTabelaPortal">
             <tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fs-3"></i><br>Carregando banco de dados...</td></tr>
@@ -178,7 +199,7 @@
     </div>
   </div>
 
-  <!-- TELA HISTÓRICO ALUNO (ATUALIZADA) -->
+  <!-- TELA HISTÓRICO ALUNO -->
   <div id="telaHistoricoAluno" class="container py-4 escondido" style="max-width: 950px;">
     <div class="mb-3">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
@@ -187,7 +208,7 @@
       <h5 class="mb-4 text-dark"><i class="fas fa-chart-line text-danger"></i> Relatório de Desempenho do Aluno</h5>
       <div class="row g-2 mb-4 bg-light p-3 rounded border">
         <div class="col-md-9">
-          <input type="text" id="inputBuscaMatricula" class="form-control" placeholder="🔍 Digite a matrícula do aluno para buscar...">
+          <input type="text" id="inputBuscaMatricula" class="form-control" placeholder="🔍 Digite a matrícula do aluno para buscar..." onkeypress="if(event.key === 'Enter') buscarHistoricoPedagogico()">
         </div>
         <div class="col-md-3">
           <button class="btn btn-primario w-100" onclick="buscarHistoricoPedagogico()">Buscar <i class="fas fa-search"></i></button>
@@ -196,7 +217,13 @@
       <div class="table-responsive">
         <table class="table table-hover align-middle border rounded overflow-hidden mb-0">
           <thead style="background-color: #F8FAFC;">
-            <tr><th class="text-secondary">Atividade</th><th class="text-secondary text-center">Status / Prazo</th><th class="text-secondary text-center">Tentativas</th><th class="text-center text-secondary">Nota</th><th class="text-center text-secondary">Entrega</th></tr>
+            <tr>
+              <th class="text-secondary">Atividade</th>
+              <th class="text-secondary text-center">Status / Prazo</th>
+              <th class="text-secondary text-center">Tentativas</th>
+              <th class="text-center text-secondary">Nota</th>
+              <th class="text-center text-secondary">Entrega</th>
+            </tr>
           </thead>
           <tbody id="corpoTabelaBusca">
             <tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>
@@ -206,7 +233,7 @@
     </div>
   </div>
 
-  <!-- TODAS AS TELAS DO EDITOR E REVISÃO (MANTIDAS INTACTAS) -->
+  <!-- TELA EDITOR (CRIAÇÃO DE ATIVIDADE) -->
   <div id="telaEditor" class="container py-4 escondido" style="max-width: 900px;">
     <div class="mb-3">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
@@ -303,8 +330,8 @@
     </div>
   </div>
 
+  <!-- TELA REVISÃO -->
   <div id="telaRevisao" class="container py-4 escondido" style="max-width: 800px;">
-    
     <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded border shadow-sm no-print">
       <button class="btn bg-light border text-secondary fw-bold" onclick="voltarParaEditor()"><i class="fas fa-pencil-alt"></i> Voltar p/ Edição</button>
       <div id="areaBotaoPublicar" class="d-flex gap-3">
@@ -332,6 +359,7 @@
     <div id="previewAlunoContainer" class="pb-5"></div>
   </div>
 
+  <!-- TELA SIMULADOR -->
   <div id="telaTesteSimulador" class="container py-4 escondido" style="max-width: 750px;">
     <div class="mb-4 text-center">
       <div class="relogio-teste mx-auto mb-4" id="relogioTeste"><i class="fas fa-stopwatch"></i> 0s</div>
@@ -358,6 +386,7 @@
     </div>
   </div>
 
+  <!-- TELA RELATÓRIO DO SIMULADOR -->
   <div id="telaRelatorioTeste" class="container py-4 escondido" style="max-width: 800px;">
     <div id="painelFimSimulado" class="card-3d text-center py-5 shadow-lg" style="border-top-color: var(--sucesso); border-top-width: 8px;">
         <i class="fas fa-flag-checkered mb-4" style="font-size: 70px; color: var(--sucesso);"></i>
@@ -387,7 +416,7 @@
     </div>
   </div>
 
-  <!-- MODAL PARA LIBERAR ATIVIDADE (NOVO) -->
+  <!-- MODAL PARA LIBERAR ATIVIDADE -->
   <div class="modal fade" id="modalLiberarAtividade" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content border-0 shadow-lg" style="border-top: 5px solid var(--primaria);">
@@ -408,6 +437,16 @@
             <label class="fw-bold text-muted small mb-1">Prazo Limite de Entrega (Opcional):</label>
             <input type="datetime-local" id="dataPrazoAtribuir" class="form-control">
           </div>
+
+          <!-- CHECKBOX DE REAPLICAR (SOLICITADO) -->
+          <div class="form-check p-3 bg-light rounded border border-warning mt-4" style="background-color: #FFFBEB !important;">
+            <input class="form-check-input ms-1" type="checkbox" id="chkReaplicar">
+            <label class="form-check-label ms-2 fw-bold text-dark small" for="chkReaplicar">
+              Permitir Reaplicação (Zera a nota)
+            </label>
+            <div class="small text-muted mt-1 ms-4">Marque isso se o aluno já fez a atividade, mas você quer apagar o histórico e dar uma nova chance para ele refazer a prova.</div>
+          </div>
+
         </div>
         <div class="modal-footer border-top-0 bg-light">
           <button type="button" class="btn bg-white border text-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -417,10 +456,10 @@
     </div>
   </div>
 
-  <!-- INÍCIO DOS SCRIPTS (ONDE A MÁGICA ACONTECE) -->
+  <!-- INÍCIO DOS SCRIPTS -->
   <script>
     // =========================================================================
-    // COLE AQUI A NOVA URL DE IMPLANTAÇÃO DO SEU GOOGLE APPS SCRIPT (CÓDIGO.GS)
+    // COLE AQUI A NOVA URL DE IMPLANTAÇÃO DO SEU GOOGLE APPS SCRIPT
     // =========================================================================
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbzEjn_R54vUXpglydH_z669p53Smxw84wt7gm9KPdQSlp5rMHovbxb7-pq7MSWv6Mfd/exec";
     
@@ -433,11 +472,22 @@
         usuarioAtual = colaboradores[senha];
         document.getElementById('nomeColaboradorDisplay').innerText = usuarioAtual;
         alternarTela('telaPortal');
-        atualizarPortalTabela(); // Já carrega o banco por baixo dos panos
-      } else { alert("⚠️ Acesso Negado. Chave inválida."); }
+        atualizarPortalTabela();
+      } else { 
+        Swal.fire({
+          title: 'Acesso Negado',
+          text: 'A chave de acesso é inválida.',
+          icon: 'error',
+          confirmButtonColor: '#F97316'
+        });
+      }
     }
 
-    function sair() { usuarioAtual = ""; document.getElementById('inputSenha').value = ""; alternarTela('telaLogin'); }
+    function sair() { 
+        usuarioAtual = ""; 
+        document.getElementById('inputSenha').value = ""; 
+        alternarTela('telaLogin'); 
+    }
 
     function alternarTela(idTela) {
       document.querySelectorAll('.container, #telaLogin').forEach(el => el.classList.add('escondido'));
@@ -445,7 +495,7 @@
     }
   </script>
 
-  <!-- SCRIPTS DA GESTÃO DE ALUNOS (NOVOS) -->
+  <!-- SCRIPTS DA GESTÃO DE ALUNOS -->
   <script>
     function abrirTelaGestaoAlunos() {
       alternarTela('telaGestaoAlunos');
@@ -492,7 +542,11 @@
     function cadastrarAluno() {
       const nome = document.getElementById('novoNomeAluno').value.trim();
       const matricula = document.getElementById('novaMatriculaAluno').value.trim();
-      if(!nome || !matricula) { alert("⚠️ Preencha o nome e a matrícula!"); return; }
+      
+      if(!nome || !matricula) { 
+          Swal.fire('Atenção', 'Preencha o nome e a matrícula!', 'warning'); 
+          return; 
+      }
       
       document.getElementById('corpoTabelaAlunos').innerHTML = '<tr><td colspan="4" class="text-center text-primary py-4"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Salvando...</td></tr>';
       
@@ -500,30 +554,49 @@
         method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ api: 'cadastrarAluno', matricula: matricula, nome: nome })
       }).then(res => res.json()).then(r => {
-        alert(r.msg);
-        document.getElementById('novoNomeAluno').value = ""; document.getElementById('novaMatriculaAluno').value = "";
+        if(r.sucesso) Swal.fire('Sucesso!', r.msg, 'success');
+        else Swal.fire('Ops', r.msg, 'info');
+
+        document.getElementById('novoNomeAluno').value = ""; 
+        document.getElementById('novaMatriculaAluno').value = "";
         carregarAlunos();
-      }).catch(err => alert("Erro ao cadastrar: " + err.message));
+      }).catch(err => Swal.fire('Erro', 'Falha ao cadastrar: ' + err.message, 'error'));
     }
 
     function bloquearAluno(matricula) {
-      if(!confirm("Tem certeza que deseja alterar o status de acesso deste aluno?")) return;
-      document.getElementById('corpoTabelaAlunos').innerHTML = '<tr><td colspan="4" class="text-center text-primary py-4"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Atualizando status...</td></tr>';
-      
-      fetch(URL_API_GOOGLE, {
-        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ api: 'bloquearAluno', matricula: matricula })
-      }).then(res => res.json()).then(r => { alert(r.msg); carregarAlunos(); });
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: "Deseja alterar o status de acesso deste aluno?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#F97316',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim, alterar!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('corpoTabelaAlunos').innerHTML = '<tr><td colspan="4" class="text-center text-primary py-4"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Atualizando status...</td></tr>';
+            
+            fetch(URL_API_GOOGLE, {
+              method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ api: 'bloquearAluno', matricula: matricula })
+            }).then(res => res.json()).then(r => { 
+                Swal.fire('Atualizado!', r.msg, 'success');
+                carregarAlunos(); 
+            });
+        }
+      });
     }
 
     function abrirModalLiberarAtividade(matricula, nome) {
       document.getElementById('lblNomeAlunoAtribuir').innerText = nome;
       document.getElementById('hdnMatriculaAtribuir').value = matricula;
+      document.getElementById('chkReaplicar').checked = false; 
       
       const select = document.getElementById('selCadernoAtribuir');
       select.innerHTML = '<option>Carregando banco de atividades...</option>';
       
       fetch(`${URL_API_GOOGLE}?api=obterCadernos`).then(res => res.json()).then(cadernos => {
+        window.listaCadernosGlobal = cadernos;
         select.innerHTML = '<option value="">-- Selecione a Atividade --</option>';
         cadernos.forEach(c => { select.innerHTML += `<option value="${c.id}">${c.titulo}</option>`; });
       });
@@ -536,20 +609,37 @@
       const matricula = document.getElementById('hdnMatriculaAtribuir').value;
       const idCad = document.getElementById('selCadernoAtribuir').value;
       const prazo = document.getElementById('dataPrazoAtribuir').value;
+      const resetar = document.getElementById('chkReaplicar').checked;
       
-      if(!idCad) { alert("⚠️ Selecione uma atividade para enviar!"); return; }
+      if(!idCad) { 
+          Swal.fire('Atenção', 'Selecione uma atividade da lista para enviar!', 'warning'); 
+          return; 
+      }
+
+      // Calcular o tempo maximo (soma dos segundos de cada questao)
+      let tempoMax = 0;
+      if (window.listaCadernosGlobal) {
+          const cadernoSelecionado = window.listaCadernosGlobal.find(c => c.id === idCad);
+          if (cadernoSelecionado && cadernoSelecionado.questoes) {
+              tempoMax = cadernoSelecionado.questoes.reduce((acc, q) => acc + parseInt(q.tempo || 0), 0);
+          }
+      }
       
       fetch(URL_API_GOOGLE, {
         method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ api: 'liberarAtividade', matricula: matricula, idCaderno: idCad, prazo: prazo })
+        body: JSON.stringify({ api: 'liberarAtividade', matricula: matricula, idCaderno: idCad, prazo: prazo, resetar: resetar, tempoMaximo: tempoMax })
       }).then(res => res.json()).then(r => {
-        alert(r.msg);
-        window.meuModalLiberar.hide();
+        if(r.sucesso) {
+            Swal.fire('Feito!', r.msg, 'success');
+            window.meuModalLiberar.hide();
+        } else {
+            Swal.fire('Ops!', r.msg, 'info');
+        }
       });
     }
   </script>
 
-  <!-- SCRIPTS DO GERADOR E DEMAIS FUNÇÕES (MANTIDOS INTACTOS) -->
+  <!-- SCRIPTS DO GERADOR E DEMAIS FUNÇÕES -->
   <script>
     let questoesDoCaderno = [];
     let idCadernoAtual = "";
@@ -574,38 +664,58 @@
       return '';
     }
 
-    function togglePontos() { document.getElementById('areaValorPontos').style.display = document.getElementById('tipoPontuacao').value === 'com' ? 'block' : 'none'; }
-
-    function iniciarNovoCaderno() {
-      idCadernoAtual = ""; document.getElementById('tituloCaderno').value = ""; 
-      document.getElementById('ordemCriacao').checked = true; // Padrão
-      questoesDoCaderno = [];
-      renderizarListaQuestoesCaderno(); fecharGeradorQuestao(); alternarTela('telaEditor');
+    function togglePontos() { 
+        document.getElementById('areaValorPontos').style.display = document.getElementById('tipoPontuacao').value === 'com' ? 'block' : 'none'; 
     }
 
-    function abrirTelaBanco() { atualizarPortalTabela(); alternarTela('telaBancoCadernos'); }
-    function abrirTelaHistorico() { alternarTela('telaHistoricoAluno'); }
+    function iniciarNovoCaderno() {
+      idCadernoAtual = ""; 
+      document.getElementById('tituloCaderno').value = ""; 
+      document.getElementById('ordemCriacao').checked = true;
+      questoesDoCaderno = [];
+      renderizarListaQuestoesCaderno(); 
+      fecharGeradorQuestao(); 
+      alternarTela('telaEditor');
+    }
+
+    function abrirTelaBanco() { 
+        atualizarPortalTabela(); 
+        alternarTela('telaBancoCadernos'); 
+    }
+
+    function abrirTelaHistorico() { 
+        alternarTela('telaHistoricoAluno'); 
+    }
 
     function voltarParaPortal() {
-      alternarTela('telaPortal'); clearInterval(timerIntervalo);
+      alternarTela('telaPortal'); 
+      clearInterval(timerIntervalo);
       if(document.getElementById('inputBuscaMatricula')) document.getElementById('inputBuscaMatricula').value = '';
       if(document.getElementById('corpoTabelaBusca')) document.getElementById('corpoTabelaBusca').innerHTML = '<tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>';
     }
     
-    function voltarParaEditor() { alternarTela('telaEditor'); clearInterval(timerIntervalo); }
+    function voltarParaEditor() { 
+        alternarTela('telaEditor'); 
+        clearInterval(timerIntervalo); 
+    }
 
     function abrirGeradorQuestao() {
       indiceEdicaoAtual = -1;
       document.getElementById('tituloEditorQuestao').innerHTML = "<i class='fas fa-pen-ruler text-primary'></i> Nova Questão";
       document.getElementById('btnSalvarQuestao').innerHTML = "<i class='fas fa-save'></i> Gravar Questão";
-      document.getElementById('tipoQuestao').value = ""; document.getElementById('tempoResolucao').value = "";
-      document.getElementById('tipoPontuacao').value = "sem"; togglePontos(); document.getElementById('valorPontos').value = "";
+      document.getElementById('tipoQuestao').value = ""; 
+      document.getElementById('tempoResolucao').value = "";
+      document.getElementById('tipoPontuacao').value = "sem"; 
+      togglePontos(); 
+      document.getElementById('valorPontos').value = "";
       document.getElementById('areaCamposDinamicos').innerHTML = "";
       document.getElementById('cardGeradorQuestao').classList.remove('escondido');
       document.getElementById('cardGeradorQuestao').scrollIntoView({behavior: "smooth"});
     }
     
-    function fecharGeradorQuestao() { document.getElementById('cardGeradorQuestao').classList.add('escondido'); }
+    function fecharGeradorQuestao() { 
+        document.getElementById('cardGeradorQuestao').classList.add('escondido'); 
+    }
 
     function renderizarCamposEspecificos() {
       const tipo = document.getElementById('tipoQuestao').value;
@@ -630,38 +740,64 @@
       } else if (tipo === "lacunas") {
         html = '<div class="mb-3 small p-2 bg-light border border-primary rounded text-primary"><i class="fas fa-info-circle"></i> Digite 3 ou mais underlines (___) juntos para criar UMA lacuna no texto.</div><div class="mb-3"><label class="fw-bold small text-muted">Texto com lacunas:</label><textarea id="p_enunciado" class="form-control" rows="3" placeholder="A cor do céu é ___ e a grama é ___"></textarea></div><div class="bg-white p-3 border rounded shadow-sm"><label class="fw-bold small text-success"><i class="fas fa-check-circle"></i> Respostas Corretas (Na ordem, separadas por vírgula):</label><input type="text" id="p_resposta" class="form-control border-success fw-bold bg-light mt-1" placeholder="Ex: azul, verde"></div>';
       } else if (["dissertativa", "estudo_caso", "resposta_curta"].includes(tipo)) {
-        if(tipo==="estudo_caso") html += '<div class="mb-3"><label class="fw-bold small text-muted"><i class="fas fa-book"></i> Estória / Contexto do Caso:</label><textarea id="p_contexto" class="form-control bg-light" rows="4"></textarea></div>';
+        if(tipo==="estudo_caso") {
+            html += '<div class="mb-3"><label class="fw-bold small text-muted"><i class="fas fa-book"></i> Estória / Contexto do Caso:</label><textarea id="p_contexto" class="form-control bg-light" rows="4"></textarea></div>';
+        }
         html += '<div class="mb-3"><label class="fw-bold small text-muted"><i class="fas fa-question-circle"></i> Pergunta:</label><textarea id="p_enunciado" class="form-control" rows="2"></textarea></div><div class="bg-white p-4 border rounded mb-2 shadow-sm"><div class="mb-4"><label class="fw-bold small text-primary"><i class="fas fa-robot"></i> Critérios de Avaliação (Palavras-chave p/ Robô):</label><div class="small text-muted mb-2">Use vírgula (,) para separar conceitos e barra (/) para sinônimos.</div><textarea id="p_criterios" class="form-control border-primary fw-bold bg-light" rows="2" placeholder="Ex: saúde/bem-estar/vida, alimentação"></textarea></div><div class="border-top pt-4"><label class="fw-bold small text-success"><i class="fas fa-check-double"></i> Resposta Modelo (Para o Aluno ler):</label><div class="small text-muted mb-2">Escreva o texto completo de referência.</div><textarea id="p_resposta" class="form-control border-success" rows="4"></textarea></div></div>';
       }
       
       area.innerHTML = html;
+      
       if(tipo === "associacao") { adicionarLinhaAssocA(); adicionarLinhaAssocA(); adicionarLinhaAssocB(); adicionarLinhaAssocB(); }
       if(tipo === "ordenacao") { adicionarLinhaOrd(); adicionarLinhaOrd(); }
       if(tipo === "verdadeiro_falso_mult") { adicionarLinhaVF(); adicionarLinhaVF(); }
     }
 
     function adicionarLinhaAssocA(val="") {
-      const id = Date.now(); const div = document.createElement('div'); div.className = "d-flex gap-2 mb-2 align-items-center"; div.id = "linhaA_"+id;
-      div.innerHTML = '<span class="fw-bold text-muted small num-a" style="width: 20px;"></span><input type="text" class="form-control in-a" placeholder="Ex: Saúde" value="' + val + '"><button class="btn btn-sm btn-outline-danger px-2" onclick="document.getElementById(\'linhaA_' + id + '\').remove(); atualizarNumerosAssocA();"><i class="fas fa-times"></i></button>';
+      const id = Date.now(); 
+      const div = document.createElement('div'); 
+      div.className = "d-flex gap-2 mb-2 align-items-center"; 
+      div.id = "linhaA_"+id;
+      div.innerHTML = '<span class="fw-bold text-muted small num-a" style="width: 20px;"></span>' +
+                      '<input type="text" class="form-control in-a" placeholder="Ex: Saúde" value="' + val + '">' +
+                      '<button class="btn btn-sm btn-outline-danger px-2" onclick="document.getElementById(\'linhaA_' + id + '\').remove(); atualizarNumerosAssocA();"><i class="fas fa-times"></i></button>';
       document.getElementById('containerAssocA').appendChild(div);
       atualizarNumerosAssocA();
     }
-    function atualizarNumerosAssocA() { document.querySelectorAll('#containerAssocA .num-a').forEach((span, idx) => span.innerText = (idx+1) + "."); }
+
+    function atualizarNumerosAssocA() { 
+        document.querySelectorAll('#containerAssocA .num-a').forEach((span, idx) => span.innerText = (idx+1) + "."); 
+    }
     
     function adicionarLinhaAssocB(val="") {
-      const id = Date.now(); const div = document.createElement('div'); div.className = "d-flex gap-2 mb-2 align-items-center"; div.id = "linhaB_"+id;
-      div.innerHTML = '<span class="fw-bold text-muted">[ ]</span><input type="text" class="form-control in-b" placeholder="Texto ou Link" value="' + val + '"><button class="btn btn-sm btn-outline-danger px-2" onclick="document.getElementById(\'linhaB_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
+      const id = Date.now(); 
+      const div = document.createElement('div'); 
+      div.className = "d-flex gap-2 mb-2 align-items-center"; 
+      div.id = "linhaB_"+id;
+      div.innerHTML = '<span class="fw-bold text-muted">[ ]</span>' +
+                      '<input type="text" class="form-control in-b" placeholder="Texto ou Link" value="' + val + '">' +
+                      '<button class="btn btn-sm btn-outline-danger px-2" onclick="document.getElementById(\'linhaB_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
       document.getElementById('containerAssocB').appendChild(div);
     }
 
     function adicionarLinhaOrd(val="") {
-      const id = Date.now(); const div = document.createElement('div'); div.className = "d-flex gap-2 mb-2"; div.id = "linha_"+id;
-      div.innerHTML = '<input type="text" class="form-control in-ord" placeholder="Descrição do passo" value="' + val + '"><button class="btn btn-sm btn-outline-danger px-3" onclick="document.getElementById(\'linha_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
+      const id = Date.now(); 
+      const div = document.createElement('div'); 
+      div.className = "d-flex gap-2 mb-2"; 
+      div.id = "linha_"+id;
+      div.innerHTML = '<input type="text" class="form-control in-ord" placeholder="Descrição do passo" value="' + val + '">' +
+                      '<button class="btn btn-sm btn-outline-danger px-3" onclick="document.getElementById(\'linha_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
       document.getElementById('containerOrd').appendChild(div);
     }
+
     function adicionarLinhaVF(val="") {
-      const id = Date.now(); const div = document.createElement('div'); div.className = "d-flex gap-2 mb-2 align-items-center"; div.id = "linha_"+id;
-      div.innerHTML = '<span class="text-muted small fw-bold">( )</span><input type="text" class="form-control in-vf" placeholder="Afirmação" value="' + val + '"><button class="btn btn-sm btn-outline-danger px-3" onclick="document.getElementById(\'linha_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
+      const id = Date.now(); 
+      const div = document.createElement('div'); 
+      div.className = "d-flex gap-2 mb-2 align-items-center"; 
+      div.id = "linha_"+id;
+      div.innerHTML = '<span class="text-muted small fw-bold">( )</span>' +
+                      '<input type="text" class="form-control in-vf" placeholder="Afirmação" value="' + val + '">' +
+                      '<button class="btn btn-sm btn-outline-danger px-3" onclick="document.getElementById(\'linha_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
       document.getElementById('containerVF').appendChild(div);
     }
 
@@ -671,35 +807,56 @@
       const temPts = document.getElementById('tipoPontuacao').value === 'com';
       const ptsVal = temPts ? parseFloat(document.getElementById('valorPontos').value) || 0 : 0;
 
-      if(!tipo || !tempo) { alert("⚠️ Preencha o formato da questão e o tempo limite."); return; }
+      if(!tipo || !tempo) { 
+          Swal.fire('Atenção', 'Preencha o formato da questão e o tempo limite.', 'warning'); 
+          return; 
+      }
 
       let q = { tipo: tipo, tempo: tempo, pontos: ptsVal };
+      
       if (document.getElementById('p_enunciado')) q.enunciado = document.getElementById('p_enunciado').value;
       if (document.getElementById('p_resposta')) q.resposta = document.getElementById('p_resposta').value;
 
       if (tipo === "multipla_escolha") {
         if(document.getElementById('p_midia')) q.midia = document.getElementById('p_midia').value;
-        q.opcoes = { A: document.getElementById('p_optA').value, B: document.getElementById('p_optB').value, C: document.getElementById('p_optC').value, D: document.getElementById('p_optD').value, E: document.getElementById('p_optE').value };
+        q.opcoes = { 
+            A: document.getElementById('p_optA').value, 
+            B: document.getElementById('p_optB').value, 
+            C: document.getElementById('p_optC').value, 
+            D: document.getElementById('p_optD').value, 
+            E: document.getElementById('p_optE').value 
+        };
       } else if (tipo === "assercao_razao") {
-        q.assercao = document.getElementById('p_assercao').value; q.razao = document.getElementById('p_razao').value;
+        q.assercao = document.getElementById('p_assercao').value; 
+        q.razao = document.getElementById('p_razao').value;
       } else if (tipo === "associacao") {
         if (document.getElementById('p_assoc_img')) q.b_is_img = document.getElementById('p_assoc_img').checked;
-        q.colunaA = []; document.querySelectorAll('#containerAssocA .in-a').forEach(l => q.colunaA.push(l.value));
-        q.colunaB = []; document.querySelectorAll('#containerAssocB .in-b').forEach(l => q.colunaB.push(l.value));
+        q.colunaA = []; 
+        document.querySelectorAll('#containerAssocA .in-a').forEach(l => q.colunaA.push(l.value));
+        q.colunaB = []; 
+        document.querySelectorAll('#containerAssocB .in-b').forEach(l => q.colunaB.push(l.value));
         q.resposta = document.getElementById('p_gabarito').value;
       } else if (tipo === "ordenacao") {
-        q.lista = []; document.querySelectorAll('#containerOrd .d-flex').forEach(l => q.lista.push(l.querySelector('.in-ord').value));
+        q.lista = []; 
+        document.querySelectorAll('#containerOrd .d-flex').forEach(l => q.lista.push(l.querySelector('.in-ord').value));
         q.resposta = document.getElementById('p_gabarito').value;
       } else if (tipo === "verdadeiro_falso_mult") {
-        q.lista = []; document.querySelectorAll('#containerVF .d-flex').forEach(l => q.lista.push(l.querySelector('.in-vf').value));
+        q.lista = []; 
+        document.querySelectorAll('#containerVF .d-flex').forEach(l => q.lista.push(l.querySelector('.in-vf').value));
         q.resposta = document.getElementById('p_gabarito').value;
       } else if (["dissertativa", "estudo_caso", "resposta_curta"].includes(tipo)) {
         if(document.getElementById('p_criterios')) q.criterios = document.getElementById('p_criterios').value;
         if(tipo === "estudo_caso") q.contexto = document.getElementById('p_contexto').value;
       }
 
-      if (indiceEdicaoAtual >= 0) { questoesDoCaderno[indiceEdicaoAtual] = q; } else { questoesDoCaderno.push(q); }
-      renderizarListaQuestoesCaderno(); fecharGeradorQuestao();
+      if (indiceEdicaoAtual >= 0) { 
+          questoesDoCaderno[indiceEdicaoAtual] = q; 
+      } else { 
+          questoesDoCaderno.push(q); 
+      }
+      
+      renderizarListaQuestoesCaderno(); 
+      fecharGeradorQuestao();
       document.getElementById('listaQuestoesVisual').scrollIntoView({behavior: "smooth"});
     }
 
@@ -717,32 +874,58 @@
     }
 
     function renderizarListaQuestoesCaderno() {
-      const container = document.getElementById('listaQuestoesVisual'); container.innerHTML = "";
-      if (questoesDoCaderno.length === 0) { container.innerHTML = '<div class="text-center my-4 text-muted p-4 bg-light rounded border border-dashed"><i class="fas fa-box-open fs-3 mb-2 text-secondary"></i><br>Nenhuma questão adicionada ao caderno ainda.</div>'; return; }
+      const container = document.getElementById('listaQuestoesVisual'); 
+      container.innerHTML = "";
+      
+      if (questoesDoCaderno.length === 0) { 
+          container.innerHTML = '<div class="text-center my-4 text-muted p-4 bg-light rounded border border-dashed"><i class="fas fa-box-open fs-3 mb-2 text-secondary"></i><br>Nenhuma questão adicionada ao caderno ainda.</div>'; 
+          return; 
+      }
 
       questoesDoCaderno.forEach((q, i) => {
         let texto = q.enunciado || "Questão Estruturada...";
         if(q.tipo === "estudo_caso") texto = "<strong>Caso:</strong> " + (q.contexto ? q.contexto.substring(0,60) : "") + "...";
+        
         let ptsBadge = q.pontos > 0 ? '<span class="badge bg-success ms-2"><i class="fas fa-star text-warning"></i> ' + q.pontos + 'p</span>' : '';
         let mediaBadge = (q.midia || q.b_is_img) ? '<span class="badge bg-info ms-2 text-dark"><i class="fas fa-image"></i> Visual</span>' : '';
 
-        let div = document.createElement('div'); div.className = "p-3 bg-white border rounded mb-2 shadow-sm d-flex justify-content-between align-items-center";
+        let div = document.createElement('div'); 
+        div.className = "p-3 bg-white border rounded mb-2 shadow-sm d-flex justify-content-between align-items-center";
         
-        div.innerHTML = '<div class="w-75"><div class="mb-2"><span class="badge-tipo">Questão ' + (i+1) + '</span> <span class="small text-muted fw-bold ms-2">' + q.tipo.replace(/_/g, ' ').toUpperCase() + '</span> <span class="badge-tempo ms-2"><i class="far fa-clock"></i> ' + q.tempo + 's</span>' + ptsBadge + mediaBadge + '</div><div class="text-secondary text-truncate" style="font-size: 14px;">' + texto + '</div></div><div class="d-flex flex-nowrap"><button class="btn btn-sm btn-light border py-1 px-2 shadow-sm me-1" onclick="moverQuestao(' + i + ', \'cima\')" title="Subir" ' + (i === 0 ? 'disabled' : '') + '><i class="fas fa-arrow-up text-secondary"></i></button><button class="btn btn-sm btn-light border py-1 px-2 shadow-sm me-2 border-end" onclick="moverQuestao(' + i + ', \'baixo\')" title="Descer" ' + (i === questoesDoCaderno.length - 1 ? 'disabled' : '') + '><i class="fas fa-arrow-down text-secondary"></i></button><button class="btn btn-sm btn-light border py-1 px-2 shadow-sm me-1" onclick="editarQuestao(' + i + ')" title="Editar"><i class="fas fa-pencil-alt text-primary"></i></button> <button class="btn btn-sm btn-light border py-1 px-2 shadow-sm" onclick="removerQuestao(' + i + ')" title="Remover"><i class="fas fa-trash-alt text-danger"></i></button></div>';
+        div.innerHTML = '<div class="w-75"><div class="mb-2"><span class="badge-tipo">Questão ' + (i+1) + '</span> <span class="small text-muted fw-bold ms-2">' + q.tipo.replace(/_/g, ' ').toUpperCase() + '</span> <span class="badge-tempo ms-2"><i class="far fa-clock"></i> ' + q.tempo + 's</span>' + ptsBadge + mediaBadge + '</div><div class="text-secondary text-truncate" style="font-size: 14px;">' + texto + '</div></div>' +
+                        '<div class="d-flex flex-nowrap">' +
+                        '<button class="btn btn-sm btn-light border py-1 px-2 shadow-sm me-1" onclick="moverQuestao(' + i + ', \'cima\')" title="Subir" ' + (i === 0 ? 'disabled' : '') + '><i class="fas fa-arrow-up text-secondary"></i></button>' +
+                        '<button class="btn btn-sm btn-light border py-1 px-2 shadow-sm me-2 border-end" onclick="moverQuestao(' + i + ', \'baixo\')" title="Descer" ' + (i === questoesDoCaderno.length - 1 ? 'disabled' : '') + '><i class="fas fa-arrow-down text-secondary"></i></button>' +
+                        '<button class="btn btn-sm btn-light border py-1 px-2 shadow-sm me-1" onclick="editarQuestao(' + i + ')" title="Editar"><i class="fas fa-pencil-alt text-primary"></i></button> ' +
+                        '<button class="btn btn-sm btn-light border py-1 px-2 shadow-sm" onclick="removerQuestao(' + i + ')" title="Remover"><i class="fas fa-trash-alt text-danger"></i></button></div>';
         
         container.appendChild(div);
       });
     }
     
-    function removerQuestao(i) { questoesDoCaderno.splice(i, 1); renderizarListaQuestoesCaderno(); }
+    function removerQuestao(i) { 
+        questoesDoCaderno.splice(i, 1); 
+        renderizarListaQuestoesCaderno(); 
+    }
 
     function editarQuestao(i) {
-      abrirGeradorQuestao(); indiceEdicaoAtual = i; document.getElementById('tituloEditorQuestao').innerHTML = "<i class='fas fa-pen text-primary'></i> Editando Questão " + (i+1);
-      let q = questoesDoCaderno[i]; document.getElementById('tipoQuestao').value = q.tipo; renderizarCamposEspecificos();
+      abrirGeradorQuestao(); 
+      indiceEdicaoAtual = i; 
+      document.getElementById('tituloEditorQuestao').innerHTML = "<i class='fas fa-pen text-primary'></i> Editando Questão " + (i+1);
+      
+      let q = questoesDoCaderno[i]; 
+      document.getElementById('tipoQuestao').value = q.tipo; 
+      renderizarCamposEspecificos();
+      
       document.getElementById('tempoResolucao').value = q.tempo;
       
-      if(q.pontos && q.pontos > 0) { document.getElementById('tipoPontuacao').value = "com"; document.getElementById('valorPontos').value = q.pontos; }
-      else { document.getElementById('tipoPontuacao').value = "sem"; document.getElementById('valorPontos').value = ""; }
+      if(q.pontos && q.pontos > 0) { 
+          document.getElementById('tipoPontuacao').value = "com"; 
+          document.getElementById('valorPontos').value = q.pontos; 
+      } else { 
+          document.getElementById('tipoPontuacao').value = "sem"; 
+          document.getElementById('valorPontos').value = ""; 
+      }
       togglePontos();
 
       if(document.getElementById('p_enunciado') && q.enunciado) document.getElementById('p_enunciado').value = q.enunciado;
@@ -760,22 +943,32 @@
         }
       }
       else if (q.tipo === "assercao_razao") {
-        document.getElementById('p_assercao').value = q.assercao; document.getElementById('p_razao').value = q.razao;
+        document.getElementById('p_assercao').value = q.assercao; 
+        document.getElementById('p_razao').value = q.razao;
         let mapOld = {"A":"I", "B":"II", "C":"III", "D":"IV", "E":"V"};
         let gVal = mapOld[q.resposta] || q.resposta;
         if(document.getElementById('p_resposta')) document.getElementById('p_resposta').value = gVal;
       }
       else if (q.tipo === "associacao") {
-        document.getElementById('containerAssocA').innerHTML = ""; document.getElementById('containerAssocB').innerHTML = "";
+        document.getElementById('containerAssocA').innerHTML = ""; 
+        document.getElementById('containerAssocB').innerHTML = "";
         if (document.getElementById('p_assoc_img')) document.getElementById('p_assoc_img').checked = !!q.b_is_img;
-        if(q.pares && (!q.colunaA || q.colunaA.length === 0)) { q.pares.forEach(p => { adicionarLinhaAssocA(p.a); adicionarLinhaAssocB(p.b); }); }
-        else {
+        
+        if(q.pares && (!q.colunaA || q.colunaA.length === 0)) { 
+            q.pares.forEach(p => { adicionarLinhaAssocA(p.a); adicionarLinhaAssocB(p.b); }); 
+        } else {
            if(q.colunaA) q.colunaA.forEach(item => adicionarLinhaAssocA(item));
            if(q.colunaB) q.colunaB.forEach(item => adicionarLinhaAssocB(item));
         }
       }
-      else if (q.tipo === "ordenacao") { document.getElementById('containerOrd').innerHTML = ""; q.lista.forEach(item => adicionarLinhaOrd(item)); }
-      else if (q.tipo === "verdadeiro_falso_mult") { document.getElementById('containerVF').innerHTML = ""; q.lista.forEach(item => adicionarLinhaVF(item)); }
+      else if (q.tipo === "ordenacao") { 
+          document.getElementById('containerOrd').innerHTML = ""; 
+          q.lista.forEach(item => adicionarLinhaOrd(item)); 
+      }
+      else if (q.tipo === "verdadeiro_falso_mult") { 
+          document.getElementById('containerVF').innerHTML = ""; 
+          q.lista.forEach(item => adicionarLinhaVF(item)); 
+      }
       else if (["dissertativa", "estudo_caso", "resposta_curta"].includes(q.tipo)) { 
         if(document.getElementById('p_criterios')) document.getElementById('p_criterios').value = q.criterios || "";
         if(q.tipo === "estudo_caso") document.getElementById('p_contexto').value = q.contexto || ""; 
@@ -785,8 +978,15 @@
     function visualizarRevisar() {
       try {
         const titulo = document.getElementById('tituloCaderno').value;
-        if(!titulo) { alert("⚠️ Por favor, insira o Título da Atividade no topo da página."); window.scrollTo(0,0); return; }
-        if(questoesDoCaderno.length === 0) { alert("⚠️ Adicione pelo menos uma questão antes de avançar."); return; }
+        if(!titulo) { 
+            Swal.fire('Atenção', 'Por favor, insira o Título da Atividade no topo da página.', 'warning'); 
+            window.scrollTo(0,0); 
+            return; 
+        }
+        if(questoesDoCaderno.length === 0) { 
+            Swal.fire('Atenção', 'Adicione pelo menos uma questão antes de avançar.', 'warning'); 
+            return; 
+        }
 
         let tempoSegundos = questoesDoCaderno.reduce((acc, q) => acc + parseInt(q.tempo || 0), 0);
         document.getElementById('revTituloCaderno').innerText = titulo;
@@ -812,7 +1012,9 @@
 
           if(q.tipo === "multipla_escolha") {
             ['A','B','C','D','E'].forEach(l => {
-              if(q.opcoes && q.opcoes[l]) html += '<div class="form-check mb-2 p-2 rounded hover-bg-light"><input class="form-check-input ms-0 me-2" type="radio" name="q' + i + '"><label class="form-check-label text-dark" style="margin-left: 25px;"><strong>' + l + ')</strong> ' + q.opcoes[l] + '</label></div>';
+              if(q.opcoes && q.opcoes[l]) {
+                  html += '<div class="form-check mb-2 p-2 rounded hover-bg-light"><input class="form-check-input ms-0 me-2" type="radio" name="q' + i + '"><label class="form-check-label text-dark" style="margin-left: 25px;"><strong>' + l + ')</strong> ' + q.opcoes[l] + '</label></div>';
+              }
             });
           } else if (q.tipo === "certo_errado") {
             html += '<div class="d-flex gap-4 p-3 bg-light rounded"><div class="form-check"><input class="form-check-input" type="radio" name="q' + i + '"><label class="form-check-label fw-bold text-success fs-5">CERTO</label></div><div class="form-check"><input class="form-check-input" type="radio" name="q' + i + '"><label class="form-check-label fw-bold text-danger fs-5">ERRADO</label></div></div>';
@@ -820,12 +1022,21 @@
             html += '<div class="bg-light p-3 rounded mb-3 border border-secondary border-opacity-25"><p class="mb-2 fw-bold">I. ' + q.assercao + '</p><div class="text-danger small fw-bold text-center my-2"><i class="fas fa-link"></i> PORQUE</div><p class="mb-0 fw-bold">II. ' + q.razao + '</p></div>';
             html += '<div class="small"><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> I. A afirmação I é verdadeira, e a II é verdadeira, e a II justifica a I.</div><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> II. A afirmação I é verdadeira, e a II é verdadeira, mas a II não justifica a I.</div><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> III. A afirmação I é verdadeira, e a II é falsa.</div><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> IV. A afirmação I é falsa, e a II é verdadeira.</div><div class="mb-2 p-1 rounded hover-bg-light"><input type="radio" name="q' + i + '" disabled> V. A afirmação I é falsa, e a II é falsa.</div></div>';
           } else if (q.tipo === "associacao") {
-            let arrA = q.colunaA || []; let arrB = q.colunaB || [];
-            if(q.pares && arrA.length===0) { q.pares.forEach(p => { arrA.push(p.a); arrB.push(p.b); }); }
-            if(arrA.length===0 && arrB.length===0) { arrA = ["Coluna A (Vazia)"]; arrB = ["Coluna B (Vazia)"]; }
+            let arrA = q.colunaA || []; 
+            let arrB = q.colunaB || [];
+            
+            if(q.pares && arrA.length===0) { 
+                q.pares.forEach(p => { arrA.push(p.a); arrB.push(p.b); }); 
+            }
+            if(arrA.length===0 && arrB.length===0) { 
+                arrA = ["Coluna A (Vazia)"]; 
+                arrB = ["Coluna B (Vazia)"]; 
+            }
 
             html += '<div class="row g-4"><div class="col-sm-5 border-end pe-4">';
-            arrA.forEach((item, idx) => { html += '<div class="mb-3 text-dark p-2 bg-light rounded border"><strong>' + (idx+1) + '.</strong> ' + item + '</div>'; });
+            arrA.forEach((item, idx) => { 
+                html += '<div class="mb-3 text-dark p-2 bg-light rounded border"><strong>' + (idx+1) + '.</strong> ' + item + '</div>'; 
+            });
             html += '</div><div class="col-sm-7 ps-4">';
             arrB.forEach((item, idx) => { 
               let displayItem = (q.b_is_img && item.startsWith('http')) ? '<img src="' + item + '" class="rounded border shadow-sm" style="max-height: 55px; max-width: 150px;">' : '<span class="fw-bold">' + item + '</span>';
@@ -850,7 +1061,9 @@
         });
 
         alternarTela('telaRevisao');
-      } catch(e) { alert("Erro ao renderizar a revisão: " + e.message); }
+      } catch(e) { 
+          Swal.fire('Erro', 'Erro ao renderizar a revisão: ' + e.message, 'error'); 
+      }
     }
 
     function iniciarTesteSimulador() {
@@ -875,7 +1088,10 @@
     }
 
     function carregarQuestaoSimulador() {
-      if(indiceTesteAtual >= questoesDoCaderno.length) { finalizarTeste(); return; }
+      if(indiceTesteAtual >= questoesDoCaderno.length) { 
+          finalizarTeste(); 
+          return; 
+      }
       
       const q = questoesDoCaderno[indiceTesteAtual];
       tempoRestanteTeste = q.tempo;
@@ -892,7 +1108,9 @@
       
       if(q.midia) html += renderizarMidia(q.midia);
 
-      if(q.tipo === "estudo_caso") html += '<div class="estudo-caso-box shadow-sm">' + (q.contexto || "").replace(/\n/g, '<br>') + '</div>';
+      if(q.tipo === "estudo_caso") {
+          html += '<div class="estudo-caso-box shadow-sm">' + (q.contexto || "").replace(/\n/g, '<br>') + '</div>';
+      }
       
       if(q.tipo === "lacunas") {
         let enunciadoFormatado = (q.enunciado || "").replace(/_{3,}/g, '<input type="text" class="form-control d-inline-block in-teste-multi text-center input-box-destaque mx-1 shadow-sm" style="width:110px; height:40px; font-size: 16px;" oninput="verificarInteracaoTeste()">');
@@ -1001,7 +1219,8 @@
         respostasDoAluno[indiceTesteAtual] = rad ? rad.value : "";
       } else {
         const inputs = document.querySelectorAll('.in-teste-multi');
-        let vals = []; inputs.forEach(i => vals.push(i.value.trim().toUpperCase()));
+        let vals = []; 
+        inputs.forEach(i => vals.push(i.value.trim().toUpperCase()));
         respostasDoAluno[indiceTesteAtual] = vals.join(", ");
       }
       
@@ -1010,7 +1229,8 @@
           document.getElementById('percentualProgressoTeste').innerText = '100%';
       }
       
-      indiceTesteAtual++; carregarQuestaoSimulador();
+      indiceTesteAtual++; 
+      carregarQuestaoSimulador();
     }
 
     function mostrarResultadoFinal() {
@@ -1032,7 +1252,9 @@
       questoesDoCaderno.forEach((q, i) => {
         let respAluno = respostasDoAluno[i] || "";
         let ptsQuestao = parseFloat(q.pontos) || 0;
-        let status = ""; let corStatusHex = ""; let icone = "";
+        let status = ""; 
+        let corStatusHex = ""; 
+        let icone = "";
         let respEsperadaParaExibir = q.resposta || ""; 
         let acertoFracao = 0;
 
@@ -1068,7 +1290,9 @@
              if(mapRetro[respEsperadaParaExibir]) respEsperadaParaExibir = mapRetro[respEsperadaParaExibir];
           }
 
-          let aLimpo = respAluno.replace(/\s/g, '').toLowerCase(); let gLimpo = respEsperadaParaExibir.replace(/\s/g, '').toLowerCase();
+          let aLimpo = respAluno.replace(/\s/g, '').toLowerCase(); 
+          let gLimpo = respEsperadaParaExibir.replace(/\s/g, '').toLowerCase();
+          
           if(aLimpo === gLimpo && aLimpo !== "") { 
             status = "Exato"; corStatusHex = "var(--sucesso)"; icone = "<i class='fas fa-check-circle text-white'></i>"; acertoFracao = 1; 
           } else { 
@@ -1165,18 +1389,18 @@
       .then(res => res.json())
       .then(resposta => {
          if(resposta.sucesso) {
-             alert(resposta.msg); 
+             Swal.fire('Publicado!', resposta.msg, 'success');
              idCadernoAtual = ""; 
              areaBtn.innerHTML = botaoOriginal; 
              atualizarPortalTabela(); 
              alternarTela('telaPortal'); 
          } else {
-             alert("❌ Erro na publicação: " + resposta.msg);
+             Swal.fire('Ops!', "Erro na publicação: " + resposta.msg, 'error');
              areaBtn.innerHTML = botaoOriginal; 
          }
       })
       .catch(erro => {
-         alert("Erro de conexão ao publicar.");
+         Swal.fire('Erro', "Erro de conexão ao publicar.", 'error');
          areaBtn.innerHTML = botaoOriginal;
       });
     }
@@ -1198,7 +1422,17 @@
           
           cadernos.forEach(c => {
             let safeTitulo = c.titulo.replace(/'/g, "\\'");
-            tabela.innerHTML += '<tr><td class="fw-bold align-middle text-dark">' + c.titulo + '</td><td class="align-middle"><span class="badge bg-light text-secondary border px-2 py-1 shadow-sm">' + c.questoes.length + ' itens</span></td><td class="text-muted align-middle">' + new Date(c.data).toLocaleDateString('pt-BR') + '</td><td class="text-center align-middle"><div class="d-flex justify-content-center gap-2"><button class="btn btn-sm btn-light border py-1 shadow-sm text-primary" title="Editar" onclick="carregarParaEdicao(\'' + c.id + '\')"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-light border py-1 shadow-sm text-danger" title="Excluir Caderno" onclick="excluirCadernoBd(\'' + c.id + '\', \'' + safeTitulo + '\')"><i class="fas fa-trash"></i></button></div></td></tr>';
+            tabela.innerHTML += '<tr>' +
+                                '<td class="fw-bold align-middle text-dark">' + c.titulo + '</td>' +
+                                '<td class="align-middle"><span class="badge bg-light text-secondary border px-2 py-1 shadow-sm">' + c.questoes.length + ' itens</span></td>' +
+                                '<td class="text-muted align-middle">' + new Date(c.data).toLocaleDateString('pt-BR') + '</td>' +
+                                '<td class="text-center align-middle">' +
+                                    '<div class="d-flex justify-content-center gap-2">' +
+                                        '<button class="btn btn-sm btn-light border py-1 shadow-sm text-primary" title="Editar" onclick="carregarParaEdicao(\'' + c.id + '\')"><i class="fas fa-edit"></i></button>' +
+                                        '<button class="btn btn-sm btn-light border py-1 shadow-sm text-danger" title="Excluir Caderno" onclick="excluirCadernoBd(\'' + c.id + '\', \'' + safeTitulo + '\')"><i class="fas fa-trash"></i></button>' +
+                                    '</div>' +
+                                '</td>' +
+                                '</tr>';
           });
         })
         .catch(err => {
@@ -1207,30 +1441,43 @@
     }
 
     function excluirCadernoBd(idCaderno, titulo) {
-      if(!confirm('Tem certeza que deseja EXCLUIR a atividade:\n"' + titulo + '"?\n\nEsta ação não pode ser desfeita.')) return;
+      Swal.fire({
+        title: 'Excluir Atividade?',
+        text: 'Deseja apagar a atividade "' + titulo + '"? Isso não pode ser desfeito.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#EF4444',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim, Excluir!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            const tabela = document.getElementById('corpoTabelaPortal');
+            tabela.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Excluindo atividade...</td></tr>';
 
-      const tabela = document.getElementById('corpoTabelaPortal');
-      tabela.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Excluindo atividade...</td></tr>';
-
-      fetch(URL_API_GOOGLE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ api: 'excluirCaderno', idCaderno: idCaderno })
-      })
-      .then(res => res.json())
-      .then(resposta => {
-          if(resposta.sucesso) alert(resposta.msg); else alert("Erro: " + resposta.msg);
-          atualizarPortalTabela();
-      })
-      .catch(erro => {
-          alert("Erro de conexão ao excluir.");
-          atualizarPortalTabela();
+            fetch(URL_API_GOOGLE, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ api: 'excluirCaderno', idCaderno: idCaderno })
+            })
+            .then(res => res.json())
+            .then(resposta => {
+                if(resposta.sucesso) Swal.fire('Excluído!', resposta.msg, 'success'); 
+                else Swal.fire('Erro!', resposta.msg, 'error');
+                
+                atualizarPortalTabela();
+            })
+            .catch(erro => {
+                Swal.fire('Erro', 'Erro de conexão ao excluir.', 'error');
+                atualizarPortalTabela();
+            });
+        }
       });
     }
 
     function carregarParaEdicao(id) {
       const caderno = window.listaCadernosGlobal.find(c => c.id === id);
       if(!caderno) return;
+      
       idCadernoAtual = caderno.id; 
       document.getElementById('tituloCaderno').value = caderno.titulo; 
       
@@ -1241,15 +1488,17 @@
       }
 
       questoesDoCaderno = [...caderno.questoes];
-      renderizarListaQuestoesCaderno(); fecharGeradorQuestao(); alternarTela('telaEditor');
+      renderizarListaQuestoesCaderno(); 
+      fecharGeradorQuestao(); 
+      alternarTela('telaEditor');
     }
 
-    // ==========================================
-    // HISTÓRICO ATUALIZADO (USA A NOVA API)
-    // ==========================================
     function buscarHistoricoPedagogico() {
       const matricula = document.getElementById('inputBuscaMatricula').value.trim();
-      if(!matricula) { alert("⚠️ Digite a matrícula do aluno."); return; }
+      if(!matricula) { 
+          Swal.fire('Atenção', 'Digite a matrícula do aluno para buscar.', 'warning'); 
+          return; 
+      }
 
       const corpo = document.getElementById('corpoTabelaBusca');
       corpo.innerHTML = '<tr><td colspan="5" class="text-center text-primary py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Buscando histórico na base de dados...</td></tr>';
@@ -1259,7 +1508,8 @@
         .then(hist => {
           corpo.innerHTML = "";
           if(hist.length === 0) {
-            corpo.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-box-open fs-3 mb-2"></i><br>Nenhuma atividade associada a esta matrícula.</td></tr>'; return;
+            corpo.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-box-open fs-3 mb-2"></i><br>Nenhuma atividade associada a esta matrícula.</td></tr>'; 
+            return;
           }
 
           hist.forEach(h => {
