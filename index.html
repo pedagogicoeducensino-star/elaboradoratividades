@@ -77,17 +77,17 @@
   <div id="telaLogin" class="card-3d mx-auto shadow-sm" style="max-width: 400px; margin-top: 15vh; border-top-color: var(--secundaria);">
     <div class="text-center mb-4">
       <div class="mb-3"><i class="fas fa-graduation-cap" style="font-size: 50px; color: var(--primaria);"></i></div>
-      <h1 class="titulo-topo mb-1">Portal de Elaboração das Atividades e Gestão</h1>
+      <h1 class="titulo-topo mb-1">Portal da Coordenação</h1>
       <p class="text-muted small">Acesso Restrito para Colaboradores</p>
     </div>
     <div class="mb-4">
-      <label class="form-label fw-bold text-secondary">Digite a Senha de Acesso:</label>
+      <label class="form-label fw-bold text-secondary">Chave de Acesso:</label>
       <div class="input-group">
         <span class="input-group-text bg-light border-end-0"><i class="fas fa-key text-muted"></i></span>
-        <input type="password" id="inputSenha" class="form-control border-start-0" placeholder="••••" style="letter-spacing: 3px;" onkeypress="if(event.key === 'Enter') fazerLogin()">
+        <input type="password" id="inputSenha" class="form-control border-start-0" placeholder="••••••••" style="letter-spacing: 3px;" onkeypress="if(event.key === 'Enter') fazerLogin()">
       </div>
     </div>
-    <button class="btn btn-primario w-100 py-2 fs-5" onclick="fazerLogin()">Acessar <i class="fas fa-arrow-right"></i></button>
+    <button class="btn btn-primario w-100 py-2 fs-5" onclick="fazerLogin()">Acessar Painel <i class="fas fa-arrow-right"></i></button>
   </div>
 
   <!-- TELA PORTAL (MENU PRINCIPAL) - MENU LIMPO COM 3 OPÇÕES -->
@@ -96,7 +96,7 @@
       <div class="d-flex align-items-center gap-3">
         <div class="bg-light p-3 rounded-circle text-center" style="width: 50px; height: 50px; line-height: 20px;"><i class="fas fa-user-tie text-primary"></i></div>
         <div>
-          <h1 class="titulo-topo mb-0" style="font-size: 20px !important;">Painel de Elaboração das Atividades e Gestão</h1>
+          <h1 class="titulo-topo mb-0" style="font-size: 20px !important;">Painel de Atividades e Gestão</h1>
           <span class="text-muted" style="font-size: 14px;">Bem-vindo(a), <strong id="nomeColaboradorDisplay" style="color: var(--marrom-suave);"></strong></span>
         </div>
       </div>
@@ -181,7 +181,7 @@
   <div id="telaFichaAluno" class="container py-4 escondido" style="max-width: 1050px;">
     <div class="mb-3 d-flex justify-content-between align-items-center">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="alternarTela('telaGestaoAlunos')"><i class="fas fa-arrow-left"></i> Voltar à Lista</button>
-      <button class="btn btn-primario fw-bold shadow-sm" onclick="abrirModalAtribuirNaFicha()"><i class="fas fa-plus-circle"></i> Nova Atividade</button>
+      <button class="btn btn-primario fw-bold shadow-sm" onclick="abrirModalAtribuirNaFicha()"><i class="fas fa-plus-circle"></i> Atribuir Nova Atividade</button>
     </div>
 
     <!-- Cabeçalho da Ficha -->
@@ -211,7 +211,7 @@
         <!-- Coluna Direita: Boletim Escolar (Histórico Concluído) -->
         <div class="col-md-7">
             <div class="card-3d h-100" style="border-top-color: var(--sucesso); padding: 20px;">
-                <h5 class="text-dark mb-3"><i class="fas fa-medal text-success"></i> Notas das Atividades Concluídas </h5>
+                <h5 class="text-dark mb-3"><i class="fas fa-medal text-success"></i> Boletim Escolar (Concluídas)</h5>
                 
                 <div class="table-responsive">
                     <table class="table table-sm table-hover align-middle border mb-0">
@@ -735,7 +735,7 @@
             document.getElementById('fichaMatriculaAluno').innerText = al.matricula;
             
             let btnStatus = al.status === 'Ativo' ? 
-                `<button class="btn btn-sm btn-outline-danger fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-ban me-1"></i> Bloquear Acesso </button>` : 
+                `<button class="btn btn-sm btn-outline-danger fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-ban me-1"></i> Bloquear Acesso Geral</button>` : 
                 `<button class="btn btn-sm btn-success fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-unlock me-1"></i> Desbloquear Aluno</button>`;
             document.getElementById('fichaStatusAluno').innerHTML = btnStatus;
 
@@ -768,13 +768,13 @@
                 
                 if(ativ.status === 'Bloqueada') {
                     badgeInfo = `<span class="badge bg-danger"><i class="fas fa-lock"></i> Bloqueada</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-success fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Pendente')"><i class="fas fa-unlock me-1"></i> Liberar </button>`;
+                    btnAcao = `<button class="btn btn-sm btn-success fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Pendente')"><i class="fas fa-unlock me-1"></i> Liberar P/ Aluno</button>`;
                 } else if(ativ.status === 'Pendente') {
                     badgeInfo = `<span class="badge bg-primary"><i class="fas fa-clock"></i> Pendente</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-outline-danger fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-lock me-1"></i> Travar </button>`;
+                    btnAcao = `<button class="btn btn-sm btn-outline-danger fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-lock me-1"></i> Travar Prova</button>`;
                 } else if(ativ.status === 'Em Andamento') {
                     badgeInfo = `<span class="badge bg-warning text-dark"><i class="fas fa-running"></i> Em Andamento</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-outline-danger fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-ban me-1"></i> Interromper </button>`;
+                    btnAcao = `<button class="btn btn-sm btn-outline-danger fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-ban me-1"></i> Interromper/Travar</button>`;
                 }
 
                 areaControle.innerHTML += `
