@@ -179,9 +179,8 @@
 
   <!-- TELA FICHA DO ALUNO (RAIO-X COMPLETO) -->
   <div id="telaFichaAluno" class="container py-4 escondido" style="max-width: 1050px;">
-    <div class="mb-3 d-flex justify-content-between align-items-center">
+<div class="mb-3 d-flex justify-content-between align-items-center">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="alternarTela('telaGestaoAlunos')"><i class="fas fa-arrow-left"></i> Voltar à Lista</button>
-      <button class="btn btn-primario fw-bold shadow-sm" onclick="abrirModalAtribuirNaFicha()"><i class="fas fa-plus-circle"></i> Atribuir Nova Atividade</button>
     </div>
 
     <!-- Cabeçalho da Ficha -->
@@ -215,11 +214,12 @@
                 
                 <div class="table-responsive">
                     <table class="table table-sm table-hover align-middle border mb-0">
-                        <thead class="bg-light">
+<thead class="bg-light">
                             <tr>
                                 <th class="text-secondary small">Atividade</th>
-                                <th class="text-center text-secondary small">Nota (Pontos)</th>
-                                <th class="text-center text-secondary small">Data</th>
+                                <th class="text-center text-secondary small">Nota (pontos)</th>
+                                <th class="text-center text-secondary small">Acertos</th>
+                                <th class="text-center text-secondary small">Data/hora</th>
                                 <th class="text-center text-secondary small">Tentativas</th>
                             </tr>
                         </thead>
@@ -734,10 +734,17 @@
             document.getElementById('fichaNomeAluno').innerText = al.nome;
             document.getElementById('fichaMatriculaAluno').innerText = al.matricula;
             
-            let btnStatus = al.status === 'Ativo' ? 
-                `<button class="btn btn-sm btn-outline-danger fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-ban me-1"></i> Bloquear Acesso Geral</button>` : 
-                `<button class="btn btn-sm btn-success fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-unlock me-1"></i> Desbloquear Aluno</button>`;
-            document.getElementById('fichaStatusAluno').innerHTML = btnStatus;
+let btnStatus = al.status === 'Ativo' ? 
+                `<button class="btn btn-sm btn-outline-danger fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-ban me-1"></i> Bloquear Acesso</button>` : 
+                `<button class="btn btn-sm btn-success fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-unlock me-1"></i> Desbloquear Acesso</button>`;
+
+            document.getElementById('fichaStatusAluno').innerHTML = `
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-primario fw-bold shadow-sm" onclick="abrirModalAtribuirNaFicha()"><i class="fas fa-plus-circle"></i> Nova Atividade</button>
+                    <button class="btn btn-sm btn-secondary fw-bold shadow-sm text-white" onclick="abrirFichaAluno('${al.matricula}')"><i class="fas fa-sync-alt"></i> Atualizar Ficha</button>
+                    ${btnStatus}
+                </div>
+            `;
 
             renderizarListasFicha(resp.atividades);
         });
@@ -753,15 +760,30 @@
         let qtdControle = 0; let qtdBoletim = 0;
 
         atividades.forEach(ativ => {
-            if(ativ.status === 'Concluído') {
+if(ativ.status === 'Concluído') {
                 qtdBoletim++;
+                
+                // Formatar Data e Hora corretamente
+                let dataFormatada = ativ.dataFim;
+                if(dataFormatada && dataFormatada.includes("T")) {
+                    let d = new Date(dataFormatada);
+                    dataFormatada = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+                }
+
+                // Separar Nota e Acertos (recebidos do Portal do Aluno)
+                let notaQuebrada = (ativ.nota || "0|0/0").split("|");
+                let notaExibir = notaQuebrada[0];
+                let acertosExibir = notaQuebrada[1] || "-";
+
                 areaBoletim.innerHTML += `
                 <tr>
                     <td class="text-dark fw-bold small">${ativ.titulo}</td>
-                    <td class="text-center fw-bold text-success">${ativ.nota}</td>
-                    <td class="text-center text-muted small">${ativ.dataFim}</td>
+                    <td class="text-center fw-bold text-success">${notaExibir}</td>
+                    <td class="text-center fw-bold text-primary">${acertosExibir}</td>
+                    <td class="text-center text-muted small">${dataFormatada}</td>
                     <td class="text-center text-secondary small">${ativ.tentativas}x</td>
                 </tr>`;
+            }
             } else {
                 qtdControle++;
                 let badgeInfo = ""; let btnAcao = "";
@@ -1551,19 +1573,23 @@
       
       document.getElementById('areaChecklistGabarito').innerHTML = htmlGabarito;
 
-      let aproveitamento = totalQuestoes > 0 ? (somaAcertosParaPorcentagem / totalQuestoes) * 100 : 0;
-      let pctFormatado = aproveitamento % 1 === 0 ? aproveitamento : aproveitamento.toFixed(2);
+// NOVO CÁLCULO: 10 dividido pelo total de questões = valor de cada questão
+      let valorQuestao = totalQuestoes > 0 ? (10 / totalQuestoes) : 0;
+      let notaFinal = somaAcertosParaPorcentagem * valorQuestao;
+      let notaFormatada = notaFinal.toFixed(1).replace('.0', ''); // Tira o .0 se for nota redonda
+      
+      let aproveitamentoPct = totalQuestoes > 0 ? (somaAcertosParaPorcentagem / totalQuestoes) * 100 : 0;
       let txtCriterio = ""; let descCriterio = ""; let corAproveitamento = "";
 
-      if (aproveitamento >= 80) {
+      if (aproveitamentoPct >= 80) {
           txtCriterio = "Excelente"; 
           descCriterio = "Atendeu integralmente à proposta, apresentando resposta completa, clara e correta."; 
           corAproveitamento = "sucesso";
-      } else if (aproveitamento >= 50) {
+      } else if (aproveitamentoPct >= 50) {
           txtCriterio = "Satisfatório"; 
           descCriterio = "Atendeu à maior parte da proposta, apresentando pequenos desvios ou omissões que não comprometem significativamente a resposta."; 
           corAproveitamento = "primaria"; 
-      } else if (aproveitamento >= 25) {
+      } else if (aproveitamentoPct >= 25) {
           txtCriterio = "Parcialmente Satisfatório"; 
           descCriterio = "Atendeu parcialmente à proposta, demonstrando compreensão limitada do conteúdo ou deixando de contemplar aspectos importantes."; 
           corAproveitamento = "secundaria"; 
@@ -1576,8 +1602,8 @@
       document.getElementById('areaAproveitamentoDetalhado').innerHTML = `
         <div class="card-3d text-center py-5 px-3 shadow-lg" style="border-top-width: 8px !important; border-top-color: var(--${corAproveitamento}); background-color: #ffffff;">
             <h5 class="text-secondary fw-bold mb-3 text-uppercase tracking-wide"><i class="fas fa-chart-pie me-2"></i> Desempenho na Atividade</h5>
-            <div class="display-1 fw-bold mb-0" style="color: var(--${corAproveitamento}); font-size: 80px;">${pctFormatado}%</div>
-            <div class="text-muted fw-bold mb-4">/ 100%</div>
+            <div class="display-1 fw-bold mb-0" style="color: var(--${corAproveitamento}); font-size: 80px;">${notaFormatada}</div>
+            <div class="text-muted fw-bold mb-4">Acertos: ${somaAcertosParaPorcentagem}/${totalQuestoes}</div>
             
             <div class="mt-4 p-4 rounded text-center mx-auto shadow-sm" style="max-width: 650px; background-color: var(--cinza-fundo); border: 1px solid var(--cinza-borda); border-bottom: 4px solid var(--${corAproveitamento});">
                 <h4 class="text-dark fw-bold mb-2">${txtCriterio}</h4>
