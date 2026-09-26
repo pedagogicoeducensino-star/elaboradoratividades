@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal de Atividades</title>
+  <title>Portal de Atividades - Coordenação</title>
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- BOOTSTRAP E SWEETALERT2 (Para os Alertas Charmosos) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
@@ -25,7 +24,7 @@
       --cinza-borda: #E2E8F0;
       --sucesso: #10B981; 
       --erro: #EF4444; 
-      --fonte-padrao: 15.5px;
+      --fonte-padrao: 15px; /* Fonte normalizada e confortável */
     }
     
     body { background-color: var(--cinza-fundo); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--cinza-texto); font-size: var(--fonte-padrao); line-height: 1.6; }
@@ -44,7 +43,6 @@
     .menu-card i { font-size: 48px; margin-bottom: 18px; }
     .menu-card-1 { border-bottom: 4px solid var(--primaria); color: var(--primaria); }
     .menu-card-2 { border-bottom: 4px solid var(--secundaria); color: var(--secundaria); }
-    .menu-card-3 { border-bottom: 4px solid var(--marrom-claro); color: var(--marrom-claro); }
     .menu-card-4 { border-bottom: 4px solid var(--sucesso); color: var(--sucesso); }
     .menu-card-title { font-size: 17px; font-weight: 700; color: var(--marrom-suave); margin-top: 10px; line-height: 1.3;}
 
@@ -78,21 +76,20 @@
   <div id="telaLogin" class="card-3d mx-auto shadow-sm" style="max-width: 400px; margin-top: 15vh; border-top-color: var(--secundaria);">
     <div class="text-center mb-4">
       <div class="mb-3"><i class="fas fa-graduation-cap" style="font-size: 50px; color: var(--primaria);"></i></div>
-      <h1 class="titulo-topo mb-1">Portal Gerencial de Atividades</h1>
+      <h1 class="titulo-topo mb-1">Portal da Coordenação</h1>
       <p class="text-muted small">Acesso Restrito para Colaboradores</p>
     </div>
     <div class="mb-4">
       <label class="form-label fw-bold text-secondary">Chave de Acesso:</label>
       <div class="input-group">
         <span class="input-group-text bg-light border-end-0"><i class="fas fa-key text-muted"></i></span>
-        <!-- Input com o recurso de apertar Enter -->
         <input type="password" id="inputSenha" class="form-control border-start-0" placeholder="••••••••" style="letter-spacing: 3px;" onkeypress="if(event.key === 'Enter') fazerLogin()">
       </div>
     </div>
     <button class="btn btn-primario w-100 py-2 fs-5" onclick="fazerLogin()">Acessar Painel <i class="fas fa-arrow-right"></i></button>
   </div>
 
-  <!-- TELA PORTAL (MENU PRINCIPAL) -->
+  <!-- TELA PORTAL (MENU PRINCIPAL) - MENU LIMPO COM 3 OPÇÕES -->
   <div id="telaPortal" class="container py-4 escondido" style="max-width: 1050px;">
     <div class="d-flex justify-content-between align-items-center mb-4 card-3d py-3 shadow-sm" style="border-top-color: var(--marrom-claro);">
       <div class="d-flex align-items-center gap-3">
@@ -102,68 +99,73 @@
           <span class="text-muted" style="font-size: 14px;">Bem-vindo(a), <strong id="nomeColaboradorDisplay" style="color: var(--marrom-suave);"></strong></span>
         </div>
       </div>
-      <button class="btn btn-sm btn-outline-danger" onclick="sair()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+      <button class="btn btn-sm btn-outline-danger" onclick="sair()"><i class="fas fa-sign-out-alt"></i> Sair do Sistema</button>
     </div>
 
-    <div class="row g-4 mb-4">
-      <div class="col-md-3">
+    <div class="row justify-content-center g-4 mb-4">
+      <div class="col-md-4">
         <div class="menu-card menu-card-1" onclick="iniciarNovoCaderno()">
           <i class="fas fa-file-circle-plus"></i>
           <div class="menu-card-title">Nova Atividade<br><span class="fw-normal text-muted small">Criar caderno do zero</span></div>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="menu-card menu-card-2" onclick="abrirTelaBanco()">
           <i class="fas fa-server"></i>
-          <div class="menu-card-title">Banco de Atividades<br><span class="fw-normal text-muted small">Gerenciar Atividades Publicadas</span></div>
+          <div class="menu-card-title">Banco de Atividades<br><span class="fw-normal text-muted small">Gerenciar Publicações</span></div>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="menu-card menu-card-4" onclick="abrirTelaGestaoAlunos()">
           <i class="fas fa-users-gear"></i>
-          <div class="menu-card-title">Gestão de Alunos<br><span class="fw-normal text-muted small">Cadastrar e Liberar</span></div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="menu-card menu-card-3" onclick="abrirTelaHistorico()">
-          <i class="fas fa-chart-line"></i>
-          <div class="menu-card-title">Desempenho<br><span class="fw-normal text-muted small">Histórico do Aluno</span></div>
+          <div class="menu-card-title">Gestão de Alunos<br><span class="fw-normal text-muted small">Alunos, Notas e Liberações</span></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TELA GESTÃO DE ALUNOS -->
-  <div id="telaGestaoAlunos" class="container py-4 escondido" style="max-width: 950px;">
+  <!-- TELA GESTÃO DE ALUNOS (CENTRAL DO COORDENADOR) -->
+  <div id="telaGestaoAlunos" class="container py-4 escondido" style="max-width: 1050px;">
     <div class="mb-3">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
     </div>
     
-    <div class="card-3d mb-4" style="border-top-color: var(--sucesso);">
-      <h5 class="mb-3 text-dark"><i class="fas fa-user-plus text-success"></i> Cadastrar Novo Aluno</h5>
-      <div class="row g-2">
-        <div class="col-md-5">
-            <input type="text" id="novoNomeAluno" class="form-control" placeholder="Nome Completo do Aluno" onkeypress="if(event.key === 'Enter') cadastrarAluno()">
+    <div class="card-3d mb-4 shadow-sm" style="border-top-color: var(--sucesso); background-color: #F8FAFC;">
+      <h5 class="mb-3 text-dark"><i class="fas fa-user-plus text-success"></i> Entradas no Sistema</h5>
+      <div class="row g-3">
+        <!-- Cadastro Manual -->
+        <div class="col-md-7 border-end pe-4">
+            <label class="fw-bold text-muted small mb-2">Cadastro Individual:</label>
+            <div class="d-flex gap-2">
+                <input type="text" id="novoNomeAluno" class="form-control w-50" placeholder="Nome Completo">
+                <input type="text" id="novaMatriculaAluno" class="form-control w-25" placeholder="Matrícula">
+                <button class="btn btn-success w-25" onclick="cadastrarAluno()"><i class="fas fa-save"></i> Salvar</button>
+            </div>
         </div>
-        <div class="col-md-4">
-            <input type="text" id="novaMatriculaAluno" class="form-control" placeholder="Nº da Matrícula (Ex: 202401)" onkeypress="if(event.key === 'Enter') cadastrarAluno()">
-        </div>
-        <div class="col-md-3">
-            <button class="btn btn-primario w-100" onclick="cadastrarAluno()"><i class="fas fa-save"></i> Cadastrar</button>
+        <!-- Importação em Lote -->
+        <div class="col-md-5 ps-4 text-center d-flex flex-column justify-content-center">
+            <label class="fw-bold text-muted small mb-2">Muitos alunos para cadastrar?</label>
+            <button class="btn btn-ouro w-100" onclick="abrirModalImportarLote()"><i class="fas fa-file-excel"></i> Importar via Excel / Planilha</button>
         </div>
       </div>
     </div>
 
     <div class="card-3d" style="border-top-color: var(--marrom-claro);">
-      <h5 class="mb-4 text-dark"><i class="fas fa-users text-primary"></i> Base de Alunos (LMS)</h5>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="mb-0 text-dark"><i class="fas fa-users text-primary"></i> Base de Alunos e Boletins</h5>
+          <div class="w-50">
+              <input type="text" id="buscaAluno" class="form-control bg-light border-secondary" placeholder="🔍 Buscar por nome ou matrícula..." onkeyup="filtrarAlunosGestao()">
+          </div>
+      </div>
+      
       <div class="table-responsive">
         <table class="table table-hover align-middle border rounded overflow-hidden mb-0">
-          <thead style="background-color: #F8FAFC;">
+          <thead style="background-color: #F1F5F9;">
             <tr>
               <th class="text-secondary">Matrícula</th>
               <th class="text-secondary">Nome do Aluno</th>
-              <th class="text-secondary text-center">Status</th>
-              <th class="text-center text-secondary">Ações Pedagógicas</th>
+              <th class="text-secondary text-center">Status no Portal</th>
+              <th class="text-center text-secondary">Controle</th>
             </tr>
           </thead>
           <tbody id="corpoTabelaAlunos">
@@ -174,6 +176,64 @@
     </div>
   </div>
 
+  <!-- TELA FICHA DO ALUNO (RAIO-X COMPLETO) -->
+  <div id="telaFichaAluno" class="container py-4 escondido" style="max-width: 1050px;">
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+      <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="alternarTela('telaGestaoAlunos')"><i class="fas fa-arrow-left"></i> Voltar à Lista</button>
+      <button class="btn btn-primario fw-bold shadow-sm" onclick="abrirModalAtribuirNaFicha()"><i class="fas fa-plus-circle"></i> Atribuir Nova Atividade</button>
+    </div>
+
+    <!-- Cabeçalho da Ficha -->
+    <div class="card-3d mb-4 py-3" style="border-top-color: var(--primaria); background: linear-gradient(to right, #ffffff, #FFFBEB);">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="mb-1 fw-bold text-dark" id="fichaNomeAluno">Nome do Aluno</h2>
+                <span class="text-muted fw-bold">Matrícula: <span id="fichaMatriculaAluno" class="text-primary"></span></span>
+            </div>
+            <div id="fichaStatusAluno" class="fs-5"></div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Coluna Esquerda: Controle de Atividades (Travas e Liberações) -->
+        <div class="col-md-5">
+            <div class="card-3d h-100" style="border-top-color: var(--erro); padding: 20px;">
+                <h5 class="text-dark mb-3"><i class="fas fa-lock text-danger"></i> Controle de Acesso (Trava)</h5>
+                <p class="small text-muted mb-3">Atividades pendentes ou em andamento. Libere ou bloqueie o acesso do aluno ao caderno.</p>
+                
+                <div id="fichaAreaControle" class="d-flex flex-column gap-2">
+                    <!-- Preenchido via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna Direita: Boletim Escolar (Histórico Concluído) -->
+        <div class="col-md-7">
+            <div class="card-3d h-100" style="border-top-color: var(--sucesso); padding: 20px;">
+                <h5 class="text-dark mb-3"><i class="fas fa-medal text-success"></i> Boletim Escolar (Concluídas)</h5>
+                
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle border mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-secondary small">Atividade</th>
+                                <th class="text-center text-secondary small">Nota (Pontos)</th>
+                                <th class="text-center text-secondary small">Data</th>
+                                <th class="text-center text-secondary small">Tentativas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fichaAreaBoletim">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+  <!-- RESTANTE DAS TELAS INTOCÁVEIS (BANCO, EDITOR, REVISÃO E SIMULADOR) -->
   <!-- TELA BANCO DE CADERNOS -->
   <div id="telaBancoCadernos" class="container py-4 escondido" style="max-width: 950px;">
     <div class="mb-3">
@@ -193,40 +253,6 @@
           </thead>
           <tbody id="corpoTabelaPortal">
             <tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fs-3"></i><br>Carregando banco de dados...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- TELA HISTÓRICO ALUNO -->
-  <div id="telaHistoricoAluno" class="container py-4 escondido" style="max-width: 950px;">
-    <div class="mb-3">
-      <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
-    </div>
-    <div class="card-3d" style="border-top-color: var(--marrom-claro);">
-      <h5 class="mb-4 text-dark"><i class="fas fa-chart-line text-danger"></i> Relatório de Desempenho do Aluno</h5>
-      <div class="row g-2 mb-4 bg-light p-3 rounded border">
-        <div class="col-md-9">
-          <input type="text" id="inputBuscaMatricula" class="form-control" placeholder="🔍 Digite a matrícula do aluno para buscar..." onkeypress="if(event.key === 'Enter') buscarHistoricoPedagogico()">
-        </div>
-        <div class="col-md-3">
-          <button class="btn btn-primario w-100" onclick="buscarHistoricoPedagogico()">Buscar <i class="fas fa-search"></i></button>
-        </div>
-      </div>
-      <div class="table-responsive">
-        <table class="table table-hover align-middle border rounded overflow-hidden mb-0">
-          <thead style="background-color: #F8FAFC;">
-            <tr>
-              <th class="text-secondary">Atividade</th>
-              <th class="text-secondary text-center">Status / Prazo</th>
-              <th class="text-secondary text-center">Tentativas</th>
-              <th class="text-center text-secondary">Nota</th>
-              <th class="text-center text-secondary">Entrega</th>
-            </tr>
-          </thead>
-          <tbody id="corpoTabelaBusca">
-            <tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>
           </tbody>
         </table>
       </div>
@@ -330,7 +356,7 @@
     </div>
   </div>
 
-  <!-- TELA REVISÃO -->
+  <!-- TELA REVISÃO E TELA SIMULADOR ESTÃO AQUI INTACTAS -->
   <div id="telaRevisao" class="container py-4 escondido" style="max-width: 800px;">
     <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded border shadow-sm no-print">
       <button class="btn bg-light border text-secondary fw-bold" onclick="voltarParaEditor()"><i class="fas fa-pencil-alt"></i> Voltar p/ Edição</button>
@@ -339,11 +365,9 @@
         <button class="btn btn-primario fw-bold shadow-sm px-4" onclick="publicarDefinitivo()"><i class="fas fa-cloud-upload-alt"></i> Salvar e Publicar</button>
       </div>
     </div>
-
     <div class="card-3d text-center mb-4" style="border-top-color: var(--secundaria); background-color: #FFFBEB;">
       <h2 class="titulo-topo mb-2" id="revTituloCaderno" style="color: var(--marrom-suave);"></h2>
       <p class="text-muted small fw-bold mb-4 text-uppercase tracking-wide">Revisão de Qualidade Pedagógica</p>
-      
       <div class="d-flex justify-content-center gap-4">
         <div class="bg-white px-4 py-3 rounded border text-center shadow-sm">
           <div class="text-muted fw-bold mb-1" style="font-size: 11px;">TOTAL DE QUESTÕES</div>
@@ -355,15 +379,12 @@
         </div>
       </div>
     </div>
-
     <div id="previewAlunoContainer" class="pb-5"></div>
   </div>
 
-  <!-- TELA SIMULADOR -->
   <div id="telaTesteSimulador" class="container py-4 escondido" style="max-width: 750px;">
     <div class="mb-4 text-center">
       <div class="relogio-teste mx-auto mb-4" id="relogioTeste"><i class="fas fa-stopwatch"></i> 0s</div>
-      
       <div class="d-flex justify-content-between align-items-end mb-2 px-2">
         <span class="fw-bold text-secondary fs-5" id="textoProgressoTeste">Questão 1 de X</span>
         <span class="fw-bold" style="color: var(--primaria);" id="percentualProgressoTeste">0%</span>
@@ -372,51 +393,37 @@
         <div id="barraProgressoTeste" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%; background-color: var(--primaria);"></div>
       </div>
     </div>
-
-    <div id="areaQuestaoAtivaTeste" class="card-3d shadow-sm mb-4" style="border-top-width: 6px; border-top-color: var(--secundaria); min-height: 250px;">
-    </div>
-
+    <div id="areaQuestaoAtivaTeste" class="card-3d shadow-sm mb-4" style="border-top-width: 6px; border-top-color: var(--secundaria); min-height: 250px;"></div>
     <div class="text-center mt-4 pb-5">
-      <button id="btnAvancarTeste" class="btn btn-secondary w-100 shadow-sm fw-bold mb-3" disabled onclick="avancarQuestaoTeste()" style="padding: 16px; font-size: 18px; border-radius: 12px;">
-        Aguarde o tempo...
-      </button>
-      <button class="btn btn-outline-danger w-100 fw-bold shadow-sm" onclick="sairDoSimulador()" style="padding: 12px; border-radius: 12px; font-size: 16px;">
-        <i class="fas fa-times me-2"></i> Sair da Pré-visualização (Voltar)
-      </button>
+      <button id="btnAvancarTeste" class="btn btn-secondary w-100 shadow-sm fw-bold mb-3" disabled onclick="avancarQuestaoTeste()" style="padding: 16px; font-size: 18px; border-radius: 12px;">Aguarde o tempo...</button>
+      <button class="btn btn-outline-danger w-100 fw-bold shadow-sm" onclick="sairDoSimulador()" style="padding: 12px; border-radius: 12px; font-size: 16px;"><i class="fas fa-times me-2"></i> Sair da Pré-visualização</button>
     </div>
   </div>
 
-  <!-- TELA RELATÓRIO DO SIMULADOR -->
   <div id="telaRelatorioTeste" class="container py-4 escondido" style="max-width: 800px;">
     <div id="painelFimSimulado" class="card-3d text-center py-5 shadow-lg" style="border-top-color: var(--sucesso); border-top-width: 8px;">
         <i class="fas fa-flag-checkered mb-4" style="font-size: 70px; color: var(--sucesso);"></i>
         <h1 class="titulo-topo text-dark mb-3">Teste Concluído!</h1>
         <p class="text-secondary mb-5 fs-5">Você visualizou como o aluno finalizará a atividade.</p>
-        
         <div class="d-flex justify-content-center gap-4 mt-2 flex-wrap">
-            <button class="btn bg-white border border-primary text-primary fw-bold shadow-sm px-4 py-3 fs-5" onclick="mostrarResultadoFinal()">
-                <i class="fas fa-chart-pie me-2"></i> Ver Relatório de Teste
-            </button>
-            <button class="btn btn-primario fw-bold shadow-sm px-5 py-3 fs-5" onclick="sairDoSimulador()">
-                <i class="fas fa-arrow-left me-2"></i> Voltar à Revisão
-            </button>
+            <button class="btn bg-white border border-primary text-primary fw-bold shadow-sm px-4 py-3 fs-5" onclick="mostrarResultadoFinal()"><i class="fas fa-chart-pie me-2"></i> Ver Relatório de Teste</button>
+            <button class="btn btn-primario fw-bold shadow-sm px-5 py-3 fs-5" onclick="sairDoSimulador()"><i class="fas fa-arrow-left me-2"></i> Voltar à Revisão</button>
         </div>
     </div>
-
     <div id="painelResultadoFinal" class="escondido">
       <div id="areaAproveitamentoDetalhado"></div>
       <h4 class="text-secondary mt-5 mb-4 fw-bold border-bottom pb-3"><i class="fas fa-list-check text-primary"></i> Detalhamento da Correção Simulada</h4>
       <div id="areaChecklistGabarito" class="pb-4"></div>
-      
       <div class="text-center mt-5 mb-5 pt-4 border-top">
-         <button class="btn btn-primario shadow-lg px-5 py-3 fw-bold" style="font-size: 18px;" onclick="sairDoSimulador()">
-             <i class="fas fa-arrow-left me-2"></i> Voltar à Revisão
-         </button>
+         <button class="btn btn-primario shadow-lg px-5 py-3 fw-bold" style="font-size: 18px;" onclick="sairDoSimulador()"><i class="fas fa-arrow-left me-2"></i> Voltar à Revisão</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL PARA LIBERAR ATIVIDADE -->
+
+  <!-- MODAIS DO SISTEMA DE GESTÃO -->
+
+  <!-- MODAL: ATRIBUIR ATIVIDADE (LIBERAR PARA O ALUNO) -->
   <div class="modal fade" id="modalLiberarAtividade" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content border-0 shadow-lg" style="border-top: 5px solid var(--primaria);">
@@ -429,7 +436,7 @@
           <input type="hidden" id="hdnMatriculaAtribuir">
           
           <div class="mb-3">
-            <label class="fw-bold text-muted small mb-1">Selecione a Atividade:</label>
+            <label class="fw-bold text-muted small mb-1">Selecione a Atividade (Banco):</label>
             <select id="selCadernoAtribuir" class="form-select"></select>
           </div>
           
@@ -438,25 +445,47 @@
             <input type="datetime-local" id="dataPrazoAtribuir" class="form-control">
           </div>
 
-          <!-- CHECKBOX DE REAPLICAR (SOLICITADO) -->
           <div class="form-check p-3 bg-light rounded border border-warning mt-4" style="background-color: #FFFBEB !important;">
             <input class="form-check-input ms-1" type="checkbox" id="chkReaplicar">
             <label class="form-check-label ms-2 fw-bold text-dark small" for="chkReaplicar">
-              Permitir Reaplicação (Zera a nota)
+              Permitir Reaplicação (Zera a nota antiga)
             </label>
-            <div class="small text-muted mt-1 ms-4">Marque isso se o aluno já fez a atividade, mas você quer apagar o histórico e dar uma nova chance para ele refazer a prova.</div>
+            <div class="small text-muted mt-1 ms-4">Se o aluno já fez e você quer dar uma nova chance, marque esta caixa. A prova será bloqueada e aguardará sua liberação final.</div>
           </div>
-
         </div>
         <div class="modal-footer border-top-0 bg-light">
           <button type="button" class="btn bg-white border text-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primario" onclick="salvarAtribuicaoAtividade()">Liberar para o Aluno</button>
+          <button type="button" class="btn btn-primario" onclick="salvarAtribuicaoAtividade()">Atribuir ao Aluno</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- INÍCIO DOS SCRIPTS -->
+  <!-- MODAL: IMPORTAR EM LOTE (EXCEL) -->
+  <div class="modal fade" id="modalImportarLote" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content border-0 shadow-lg" style="border-top: 5px solid var(--secundaria);">
+        <div class="modal-header border-bottom-0">
+          <h5 class="modal-title fw-bold text-dark"><i class="fas fa-file-excel text-success"></i> Importação Rápida de Alunos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">
+            Abra sua planilha do Excel, selecione as duas colunas (<strong>Matrícula</strong> e <strong>Nome</strong>), copie (Ctrl+C) e cole (Ctrl+V) na caixa abaixo. Não copie o cabeçalho.
+          </p>
+          <textarea id="textoImportacao" class="form-control bg-light input-box-destaque mb-2" rows="8" placeholder="202401    João da Silva&#10;202402    Maria Oliveira"></textarea>
+          <div class="small text-secondary"><i class="fas fa-info-circle"></i> O sistema ignora linhas vazias e não duplica matrículas que já existem.</div>
+        </div>
+        <div class="modal-footer border-top-0 bg-light">
+          <button type="button" class="btn bg-white border text-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-ouro text-dark" onclick="processarImportacao()"><i class="fas fa-cloud-upload-alt"></i> Importar Alunos Agora</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- INÍCIO DOS SCRIPTS GERAIS E AUTENTICAÇÃO -->
   <script>
     // =========================================================================
     // COLE AQUI A NOVA URL DE IMPLANTAÇÃO DO SEU GOOGLE APPS SCRIPT
@@ -465,26 +494,35 @@
     
     const colaboradores = { "2490": "Davi Felício", "123456789": "Convidado", "8895": "Convidado" };
     let usuarioAtual = "";
+    let baseAlunos = []; // Guarda os alunos para a busca em tempo real
+
+    // SISTEMA DE SESSÃO SALVA (LOCALSTORAGE)
+    window.onload = function() {
+        const coordSalvo = localStorage.getItem('coordLogado_LMS');
+        if (coordSalvo) {
+            usuarioAtual = coordSalvo;
+            document.getElementById('nomeColaboradorDisplay').innerText = usuarioAtual;
+            alternarTela('telaPortal');
+            carregarAlunosOculto(); // Carrega alunos no fundo para agilizar
+        }
+    };
 
     function fazerLogin() {
       const senha = document.getElementById('inputSenha').value;
       if (colaboradores[senha]) {
         usuarioAtual = colaboradores[senha];
+        localStorage.setItem('coordLogado_LMS', usuarioAtual);
         document.getElementById('nomeColaboradorDisplay').innerText = usuarioAtual;
         alternarTela('telaPortal');
-        atualizarPortalTabela();
+        carregarAlunosOculto();
       } else { 
-        Swal.fire({
-          title: 'Acesso Negado',
-          text: 'A chave de acesso é inválida.',
-          icon: 'error',
-          confirmButtonColor: '#F97316'
-        });
+        Swal.fire({ title: 'Acesso Negado', text: 'A chave de acesso é inválida.', icon: 'error', confirmButtonColor: '#F97316' });
       }
     }
 
     function sair() { 
         usuarioAtual = ""; 
+        localStorage.removeItem('coordLogado_LMS');
         document.getElementById('inputSenha').value = ""; 
         alternarTela('telaLogin'); 
     }
@@ -495,11 +533,16 @@
     }
   </script>
 
-  <!-- SCRIPTS DA GESTÃO DE ALUNOS -->
+  <!-- SCRIPTS DA GESTÃO DE ALUNOS E FICHA DO ALUNO -->
   <script>
     function abrirTelaGestaoAlunos() {
       alternarTela('telaGestaoAlunos');
+      document.getElementById('buscaAluno').value = '';
       carregarAlunos();
+    }
+
+    function carregarAlunosOculto() {
+        fetch(`${URL_API_GOOGLE}?api=obterAlunos`).then(res => res.json()).then(alunos => { baseAlunos = alunos; });
     }
 
     function carregarAlunos() {
@@ -509,100 +552,221 @@
       fetch(`${URL_API_GOOGLE}?api=obterAlunos`)
       .then(res => res.json())
       .then(alunos => {
+        baseAlunos = alunos;
+        renderizarTabelaAlunos(alunos);
+      }).catch(err => {
+          tabela.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-4">Erro ao carregar alunos.</td></tr>';
+      });
+    }
+
+    function renderizarTabelaAlunos(lista) {
+        const tabela = document.getElementById('corpoTabelaAlunos');
         tabela.innerHTML = "";
-        if(alunos.length === 0) {
-          tabela.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4"><i class="fas fa-inbox fs-3 mb-2"></i><br>Nenhum aluno cadastrado no sistema ainda.</td></tr>'; return;
+        
+        if(lista.length === 0) {
+            tabela.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4"><i class="fas fa-inbox fs-3 mb-2"></i><br>Nenhum aluno encontrado.</td></tr>'; 
+            return;
         }
         
-        alunos.forEach(a => {
-          let badgeStatus = a.status === 'Ativo' ? '<span class="badge bg-success">Ativo</span>' : '<span class="badge bg-danger">Bloqueado</span>';
-          let btnBloqueio = a.status === 'Ativo' ? 
-            `<button class="btn btn-sm btn-outline-danger shadow-sm me-2" onclick="bloquearAluno('${a.matricula}')" title="Bloquear Acesso"><i class="fas fa-ban"></i></button>` : 
-            `<button class="btn btn-sm btn-outline-success shadow-sm me-2" onclick="bloquearAluno('${a.matricula}')" title="Desbloquear Acesso"><i class="fas fa-unlock"></i></button>`;
-          
-          tabela.innerHTML += `
+        lista.forEach(a => {
+            let badgeStatus = a.status === 'Ativo' ? '<span class="badge bg-success">Acesso Livre</span>' : '<span class="badge bg-danger">Acesso Bloqueado</span>';
+            tabela.innerHTML += `
             <tr>
-              <td class="fw-bold text-dark">${a.matricula}</td>
-              <td class="text-secondary">${a.nome}</td>
-              <td class="text-center">${badgeStatus}</td>
-              <td class="text-center">
-                <div class="d-flex justify-content-center">
-                  ${btnBloqueio}
-                  <button class="btn btn-sm btn-ouro shadow-sm fw-bold" onclick="abrirModalLiberarAtividade('${a.matricula}', '${a.nome}')" title="Liberar Atividade"><i class="fas fa-paper-plane"></i> Liberar Prova</button>
-                </div>
-              </td>
+                <td class="fw-bold text-dark">${a.matricula}</td>
+                <td class="text-secondary fw-bold">${a.nome}</td>
+                <td class="text-center">${badgeStatus}</td>
+                <td class="text-center">
+                <button class="btn btn-sm btn-outline-primary fw-bold shadow-sm" onclick="abrirFichaAluno('${a.matricula}')">
+                    <i class="fas fa-id-card me-1"></i> Ver Ficha
+                </button>
+                </td>
             </tr>`;
         });
-      })
-      .catch(err => {
-          tabela.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-4">Erro ao carregar alunos. Verifique a URL do Google Apps Script.</td></tr>';
-      });
+    }
+
+    function filtrarAlunosGestao() {
+        const termo = document.getElementById('buscaAluno').value.toLowerCase();
+        const filtrados = baseAlunos.filter(a => a.nome.toLowerCase().includes(termo) || String(a.matricula).includes(termo));
+        renderizarTabelaAlunos(filtrados);
     }
 
     function cadastrarAluno() {
       const nome = document.getElementById('novoNomeAluno').value.trim();
       const matricula = document.getElementById('novaMatriculaAluno').value.trim();
       
-      if(!nome || !matricula) { 
-          Swal.fire('Atenção', 'Preencha o nome e a matrícula!', 'warning'); 
-          return; 
-      }
+      if(!nome || !matricula) { Swal.fire('Atenção', 'Preencha o nome e a matrícula!', 'warning'); return; }
       
-      document.getElementById('corpoTabelaAlunos').innerHTML = '<tr><td colspan="4" class="text-center text-primary py-4"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Salvando...</td></tr>';
+      Swal.fire({ title: 'Salvando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
       
       fetch(URL_API_GOOGLE, {
         method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ api: 'cadastrarAluno', matricula: matricula, nome: nome })
       }).then(res => res.json()).then(r => {
-        if(r.sucesso) Swal.fire('Sucesso!', r.msg, 'success');
-        else Swal.fire('Ops', r.msg, 'info');
-
-        document.getElementById('novoNomeAluno').value = ""; 
-        document.getElementById('novaMatriculaAluno').value = "";
-        carregarAlunos();
+        if(r.sucesso) {
+            Swal.fire('Sucesso!', r.msg, 'success');
+            document.getElementById('novoNomeAluno').value = ""; 
+            document.getElementById('novaMatriculaAluno').value = "";
+            carregarAlunos();
+        } else Swal.fire('Ops', r.msg, 'info');
       }).catch(err => Swal.fire('Erro', 'Falha ao cadastrar: ' + err.message, 'error'));
     }
 
-    function bloquearAluno(matricula) {
-      Swal.fire({
-        title: 'Tem certeza?',
-        text: "Deseja alterar o status de acesso deste aluno?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#F97316',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sim, alterar!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('corpoTabelaAlunos').innerHTML = '<tr><td colspan="4" class="text-center text-primary py-4"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Atualizando status...</td></tr>';
-            
-            fetch(URL_API_GOOGLE, {
-              method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ api: 'bloquearAluno', matricula: matricula })
-            }).then(res => res.json()).then(r => { 
-                Swal.fire('Atualizado!', r.msg, 'success');
-                carregarAlunos(); 
-            });
-        }
-      });
+    // --- LÓGICA DE IMPORTAÇÃO EM LOTE ---
+    function abrirModalImportarLote() {
+        document.getElementById('textoImportacao').value = '';
+        if(!window.modalImport) window.modalImport = new bootstrap.Modal(document.getElementById('modalImportarLote'));
+        window.modalImport.show();
     }
 
-    function abrirModalLiberarAtividade(matricula, nome) {
-      document.getElementById('lblNomeAlunoAtribuir').innerText = nome;
-      document.getElementById('hdnMatriculaAtribuir').value = matricula;
-      document.getElementById('chkReaplicar').checked = false; 
-      
-      const select = document.getElementById('selCadernoAtribuir');
-      select.innerHTML = '<option>Carregando banco de atividades...</option>';
-      
-      fetch(`${URL_API_GOOGLE}?api=obterCadernos`).then(res => res.json()).then(cadernos => {
-        window.listaCadernosGlobal = cadernos;
-        select.innerHTML = '<option value="">-- Selecione a Atividade --</option>';
-        cadernos.forEach(c => { select.innerHTML += `<option value="${c.id}">${c.titulo}</option>`; });
-      });
-      
-      if(!window.meuModalLiberar) { window.meuModalLiberar = new bootstrap.Modal(document.getElementById('modalLiberarAtividade')); }
-      window.meuModalLiberar.show();
+    function processarImportacao() {
+        const texto = document.getElementById('textoImportacao').value.trim();
+        if(!texto) { Swal.fire('Atenção', 'Cole os dados da planilha na caixa de texto.', 'warning'); return; }
+
+        const linhas = texto.split('\n');
+        const alunosParaImportar = [];
+
+        linhas.forEach(linha => {
+            const cols = linha.split('\t'); // Excel separa colunas copiadas por Tab
+            if(cols.length >= 2) {
+                const mat = cols[0].trim();
+                const nom = cols[1].trim();
+                if(mat !== '' && nom !== '') alunosParaImportar.push({matricula: mat, nome: nom});
+            }
+        });
+
+        if(alunosParaImportar.length === 0) {
+            Swal.fire('Formato Inválido', 'Não consegui ler os dados. Copie duas colunas (Matrícula e Nome) do Excel e tente novamente.', 'error');
+            return;
+        }
+
+        Swal.fire({ title: 'Importando...', text: `Processando ${alunosParaImportar.length} alunos.`, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+        fetch(URL_API_GOOGLE, {
+            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ api: 'importarAlunosLote', alunos: alunosParaImportar })
+        }).then(res => res.json()).then(r => {
+            window.modalImport.hide();
+            Swal.fire('Importação Concluída', r.msg, 'success');
+            carregarAlunos();
+        }).catch(err => Swal.fire('Erro', 'Falha na comunicação com o banco.', 'error'));
+    }
+
+
+    // --- LÓGICA DA FICHA DO ALUNO ---
+    let matriculaFichaAtual = "";
+    function abrirFichaAluno(matricula) {
+        matriculaFichaAtual = matricula;
+        document.getElementById('fichaAreaControle').innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin text-primary fs-3"></i></div>';
+        document.getElementById('fichaAreaBoletim').innerHTML = '<tr><td colspan="4" class="text-center py-4"><i class="fas fa-spinner fa-spin text-success fs-3"></i></td></tr>';
+        
+        alternarTela('telaFichaAluno');
+
+        fetch(`${URL_API_GOOGLE}?api=obterFichaAluno&matricula=${matricula}`)
+        .then(res => res.json())
+        .then(resp => {
+            if(!resp.sucesso) { Swal.fire('Erro', resp.erro, 'error'); alternarTela('telaGestaoAlunos'); return; }
+            
+            const al = resp.aluno;
+            document.getElementById('fichaNomeAluno').innerText = al.nome;
+            document.getElementById('fichaMatriculaAluno').innerText = al.matricula;
+            
+            let btnStatus = al.status === 'Ativo' ? 
+                `<button class="btn btn-sm btn-outline-danger fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-ban me-1"></i> Bloquear Acesso Geral</button>` : 
+                `<button class="btn btn-sm btn-success fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-unlock me-1"></i> Desbloquear Aluno</button>`;
+            document.getElementById('fichaStatusAluno').innerHTML = btnStatus;
+
+            renderizarListasFicha(resp.atividades);
+        });
+    }
+
+    function renderizarListasFicha(atividades) {
+        const areaControle = document.getElementById('fichaAreaControle');
+        const areaBoletim = document.getElementById('fichaAreaBoletim');
+        
+        areaControle.innerHTML = "";
+        areaBoletim.innerHTML = "";
+
+        let qtdControle = 0; let qtdBoletim = 0;
+
+        atividades.forEach(ativ => {
+            if(ativ.status === 'Concluído') {
+                qtdBoletim++;
+                areaBoletim.innerHTML += `
+                <tr>
+                    <td class="text-dark fw-bold small">${ativ.titulo}</td>
+                    <td class="text-center fw-bold text-success">${ativ.nota}</td>
+                    <td class="text-center text-muted small">${ativ.dataFim}</td>
+                    <td class="text-center text-secondary small">${ativ.tentativas}x</td>
+                </tr>`;
+            } else {
+                qtdControle++;
+                let badgeInfo = ""; let btnAcao = "";
+                
+                if(ativ.status === 'Bloqueada') {
+                    badgeInfo = `<span class="badge bg-danger"><i class="fas fa-lock"></i> Bloqueada</span>`;
+                    btnAcao = `<button class="btn btn-sm btn-success fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Pendente')"><i class="fas fa-unlock me-1"></i> Liberar P/ Aluno</button>`;
+                } else if(ativ.status === 'Pendente') {
+                    badgeInfo = `<span class="badge bg-primary"><i class="fas fa-clock"></i> Pendente</span>`;
+                    btnAcao = `<button class="btn btn-sm btn-outline-danger fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-lock me-1"></i> Travar Prova</button>`;
+                } else if(ativ.status === 'Em Andamento') {
+                    badgeInfo = `<span class="badge bg-warning text-dark"><i class="fas fa-running"></i> Em Andamento</span>`;
+                    btnAcao = `<button class="btn btn-sm btn-outline-danger fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-ban me-1"></i> Interromper/Travar</button>`;
+                }
+
+                areaControle.innerHTML += `
+                <div class="d-flex justify-content-between align-items-center p-3 bg-light border rounded shadow-sm mb-2">
+                    <div style="width: 60%;">
+                        <div class="fw-bold text-dark text-truncate mb-1" style="font-size: 14px;">${ativ.titulo}</div>
+                        ${badgeInfo}
+                    </div>
+                    <div style="width: 38%;">${btnAcao}</div>
+                </div>`;
+            }
+        });
+
+        if(qtdControle === 0) areaControle.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-check-circle fs-3 mb-2 opacity-50"></i><br>Nenhuma atividade pendente ou bloqueada.</div>';
+        if(qtdBoletim === 0) areaBoletim.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4"><i class="fas fa-medal fs-3 mb-2 opacity-50"></i><br>O aluno ainda não concluiu atividades.</td></tr>';
+    }
+
+    function alterarTravaProva(linha, novoStatus) {
+        Swal.fire({ title: 'Aguarde...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        fetch(URL_API_GOOGLE, {
+            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ api: 'alterarStatusAtividade', linhaPlanilha: linha, novoStatus: novoStatus })
+        }).then(res => res.json()).then(r => {
+            Swal.close();
+            abrirFichaAluno(matriculaFichaAtual); // Recarrega a ficha silenciosamente
+        });
+    }
+
+    function bloquearAlunoFicha(matricula) {
+        Swal.fire({ title: 'Alterando status...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        fetch(URL_API_GOOGLE, {
+            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ api: 'bloquearAluno', matricula: matricula })
+        }).then(res => res.json()).then(r => { 
+            carregarAlunosOculto(); 
+            abrirFichaAluno(matricula); 
+        });
+    }
+
+    function abrirModalAtribuirNaFicha() {
+        const nome = document.getElementById('fichaNomeAluno').innerText;
+        document.getElementById('lblNomeAlunoAtribuir').innerText = nome;
+        document.getElementById('hdnMatriculaAtribuir').value = matriculaFichaAtual;
+        document.getElementById('chkReaplicar').checked = false; 
+        
+        const select = document.getElementById('selCadernoAtribuir');
+        select.innerHTML = '<option>Carregando atividades...</option>';
+        
+        fetch(`${URL_API_GOOGLE}?api=obterCadernos`).then(res => res.json()).then(cadernos => {
+            window.listaCadernosGlobal = cadernos;
+            select.innerHTML = '<option value="">-- Selecione a Atividade --</option>';
+            cadernos.forEach(c => { select.innerHTML += `<option value="${c.id}">${c.titulo}</option>`; });
+        });
+        
+        if(!window.meuModalLiberar) { window.meuModalLiberar = new bootstrap.Modal(document.getElementById('modalLiberarAtividade')); }
+        window.meuModalLiberar.show();
     }
 
     function salvarAtribuicaoAtividade() {
@@ -611,35 +775,31 @@
       const prazo = document.getElementById('dataPrazoAtribuir').value;
       const resetar = document.getElementById('chkReaplicar').checked;
       
-      if(!idCad) { 
-          Swal.fire('Atenção', 'Selecione uma atividade da lista para enviar!', 'warning'); 
-          return; 
-      }
+      if(!idCad) { Swal.fire('Atenção', 'Selecione uma atividade!', 'warning'); return; }
 
-      // Calcular o tempo maximo (soma dos segundos de cada questao)
       let tempoMax = 0;
       if (window.listaCadernosGlobal) {
-          const cadernoSelecionado = window.listaCadernosGlobal.find(c => c.id === idCad);
-          if (cadernoSelecionado && cadernoSelecionado.questoes) {
-              tempoMax = cadernoSelecionado.questoes.reduce((acc, q) => acc + parseInt(q.tempo || 0), 0);
-          }
+          const caderno = window.listaCadernosGlobal.find(c => c.id === idCad);
+          if (caderno && caderno.questoes) tempoMax = caderno.questoes.reduce((acc, q) => acc + parseInt(q.tempo || 0), 0);
       }
       
+      Swal.fire({ title: 'Atribuindo...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
       fetch(URL_API_GOOGLE, {
         method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ api: 'liberarAtividade', matricula: matricula, idCaderno: idCad, prazo: prazo, resetar: resetar, tempoMaximo: tempoMax })
+        body: JSON.stringify({ api: 'liberarAtividade', matricula: matricula, idCaderno: idCad, prazo: prazo, resetar: resetar, tempoMaximo: tempoMax, statusInicial: 'Bloqueada' })
       }).then(res => res.json()).then(r => {
         if(r.sucesso) {
-            Swal.fire('Feito!', r.msg, 'success');
+            Swal.fire('Atribuída!', 'A prova foi vinculada ao aluno, mas está Bloqueada. Libere-a no Controle de Acesso.', 'success');
             window.meuModalLiberar.hide();
-        } else {
-            Swal.fire('Ops!', r.msg, 'info');
-        }
+            abrirFichaAluno(matriculaFichaAtual); // Atualiza a ficha para mostrar a nova prova
+        } else { Swal.fire('Ops!', r.msg, 'info'); }
       });
     }
+
   </script>
 
-  <!-- SCRIPTS DO GERADOR E DEMAIS FUNÇÕES -->
+  <!-- SCRIPTS INTOCÁVEIS DO GERADOR, REVISÃO, BANCO E SIMULADOR -->
   <script>
     let questoesDoCaderno = [];
     let idCadernoAtual = "";
@@ -683,15 +843,9 @@
         alternarTela('telaBancoCadernos'); 
     }
 
-    function abrirTelaHistorico() { 
-        alternarTela('telaHistoricoAluno'); 
-    }
-
     function voltarParaPortal() {
       alternarTela('telaPortal'); 
       clearInterval(timerIntervalo);
-      if(document.getElementById('inputBuscaMatricula')) document.getElementById('inputBuscaMatricula').value = '';
-      if(document.getElementById('corpoTabelaBusca')) document.getElementById('corpoTabelaBusca').innerHTML = '<tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-inbox fs-3 mb-2"></i><br>Digite a matrícula acima e clique em buscar.</td></tr>';
     }
     
     function voltarParaEditor() { 
@@ -1493,41 +1647,6 @@
       alternarTela('telaEditor');
     }
 
-    function buscarHistoricoPedagogico() {
-      const matricula = document.getElementById('inputBuscaMatricula').value.trim();
-      if(!matricula) { 
-          Swal.fire('Atenção', 'Digite a matrícula do aluno para buscar.', 'warning'); 
-          return; 
-      }
-
-      const corpo = document.getElementById('corpoTabelaBusca');
-      corpo.innerHTML = '<tr><td colspan="5" class="text-center text-primary py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Buscando histórico na base de dados...</td></tr>';
-
-      fetch(`${URL_API_GOOGLE}?api=buscarHistorico&matricula=${matricula}`)
-        .then(res => res.json())
-        .then(hist => {
-          corpo.innerHTML = "";
-          if(hist.length === 0) {
-            corpo.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-5"><i class="fas fa-box-open fs-3 mb-2"></i><br>Nenhuma atividade associada a esta matrícula.</td></tr>'; 
-            return;
-          }
-
-          hist.forEach(h => {
-            let corStatus = h.status === 'Concluído' ? 'success' : (h.status === 'Em Andamento' ? 'warning text-dark' : 'secondary');
-            corpo.innerHTML += `
-              <tr>
-                <td class="fw-bold text-dark">${h.titulo}</td>
-                <td class="text-center"><span class="badge bg-${corStatus}">${h.status}</span><br><small class="text-muted">Prazo: ${h.prazo}</small></td>
-                <td class="text-center text-secondary fw-bold">${h.tentativas}</td>
-                <td class="text-center fw-bold" style="color: var(--sucesso);">${h.nota}</td>
-                <td class="text-center text-muted">${h.dataFim}</td>
-              </tr>`;
-          });
-        })
-        .catch(err => {
-            corpo.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-5"><i class="fas fa-exclamation-triangle fs-3 mb-2"></i><br>Erro de conexão ao buscar histórico.</td></tr>';
-        });
-    }
   </script>
 </body>
 </html>
