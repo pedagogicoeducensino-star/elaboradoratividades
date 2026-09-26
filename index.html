@@ -750,7 +750,7 @@ let btnStatus = al.status === 'Ativo' ?
         });
     }
 
-    function renderizarListasFicha(atividades) {
+function renderizarListasFicha(atividades) {
         const areaControle = document.getElementById('fichaAreaControle');
         const areaBoletim = document.getElementById('fichaAreaBoletim');
         
@@ -760,19 +760,19 @@ let btnStatus = al.status === 'Ativo' ?
         let qtdControle = 0; let qtdBoletim = 0;
 
         atividades.forEach(ativ => {
-if(ativ.status === 'Concluído') {
+            if(ativ.status === 'Concluído') {
                 qtdBoletim++;
                 
-                // Formatar Data e Hora corretamente
+                // Arrumando a Data para o formato Brasileiro e tirando o "T"
                 let dataFormatada = ativ.dataFim;
                 if(dataFormatada && dataFormatada.includes("T")) {
                     let d = new Date(dataFormatada);
                     dataFormatada = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
                 }
 
-                // Separar Nota e Acertos (recebidos do Portal do Aluno)
+                // Separar Nota e Acertos (recebidos do Portal do Aluno na mesma string separados por "|")
                 let notaQuebrada = (ativ.nota || "0|0/0").split("|");
-                let notaExibir = notaQuebrada[0];
+                let notaExibir = notaQuebrada[0] ? notaQuebrada[0].replace('Nota: ', '') : "0";
                 let acertosExibir = notaQuebrada[1] || "-";
 
                 areaBoletim.innerHTML += `
@@ -783,7 +783,6 @@ if(ativ.status === 'Concluído') {
                     <td class="text-center text-muted small">${dataFormatada}</td>
                     <td class="text-center text-secondary small">${ativ.tentativas}x</td>
                 </tr>`;
-            }
             } else {
                 qtdControle++;
                 let badgeInfo = ""; let btnAcao = "";
@@ -811,7 +810,7 @@ if(ativ.status === 'Concluído') {
         });
 
         if(qtdControle === 0) areaControle.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-check-circle fs-3 mb-2 opacity-50"></i><br>Nenhuma atividade pendente ou bloqueada.</div>';
-        if(qtdBoletim === 0) areaBoletim.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4"><i class="fas fa-medal fs-3 mb-2 opacity-50"></i><br>O aluno ainda não concluiu atividades.</td></tr>';
+        if(qtdBoletim === 0) areaBoletim.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4"><i class="fas fa-medal fs-3 mb-2 opacity-50"></i><br>O aluno ainda não concluiu atividades.</td></tr>';
     }
 
     function alterarTravaProva(linha, novoStatus) {
@@ -1479,24 +1478,22 @@ if(ativ.status === 'Concluído') {
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    function finalizarTeste() {
+function finalizarTeste() {
       alternarTela('telaRelatorioTeste');
       document.getElementById('painelFimSimulado').classList.remove('escondido');
       document.getElementById('painelResultadoFinal').classList.add('escondido');
 
       let htmlGabarito = "";
-      let notaPontosInterna = 0; 
-      let somaAcertosParaPorcentagem = 0; 
+      let somaAcertosExatos = 0; 
       let totalQuestoes = questoesDoCaderno.length;
 
       questoesDoCaderno.forEach((q, i) => {
         let respAluno = respostasDoAluno[i] || "";
-        let ptsQuestao = parseFloat(q.pontos) || 0;
         let status = ""; 
         let corStatusHex = ""; 
         let icone = "";
         let respEsperadaParaExibir = q.resposta || ""; 
-        let acertoFracao = 0;
+        let acertouQuestao = 0; // Vai receber apenas 1 (Acerto) ou 0 (Erro)
 
         if(["dissertativa", "estudo_caso", "resposta_curta"].includes(q.tipo)) {
           let criterios = q.criterios || q.resposta || ""; 
@@ -1512,17 +1509,11 @@ if(ativ.status === 'Concluído') {
           
           let percentualItem = gruposChaves.length > 0 ? (encontradas / gruposChaves.length) : 0;
           
-          if (percentualItem >= 0.8) { 
-            status = "Excelente"; corStatusHex = "var(--sucesso)"; icone = "<i class='fas fa-star text-white'></i>"; acertoFracao = 1; 
-          } 
-          else if (percentualItem >= 0.5) { 
-            status = "Satisfatório"; corStatusHex = "#0EA5E9"; icone = "<i class='fas fa-check text-white'></i>"; acertoFracao = 0.75; 
-          } 
-          else if (percentualItem >= 0.25) { 
-            status = "Parcialmente Satisfatório"; corStatusHex = "var(--secundaria)"; icone = "<i class='fas fa-exclamation-triangle text-dark'></i>"; acertoFracao = 0.40; 
-          } 
-          else { 
-            status = "Insatisfatório"; corStatusHex = "var(--erro)"; icone = "<i class='fas fa-times text-white'></i>"; acertoFracao = 0; 
+          // Se encontrou mais de 50% das palavras chave, conta como 1 Acerto.
+          if (percentualItem >= 0.5) { 
+            status = "Satisfatório (Acerto)"; corStatusHex = "var(--sucesso)"; icone = "<i class='fas fa-check text-white'></i>"; acertouQuestao = 1; 
+          } else { 
+            status = "Insatisfatório (Erro)"; corStatusHex = "var(--erro)"; icone = "<i class='fas fa-times text-white'></i>"; acertouQuestao = 0; 
           }
         } else {
           if(q.tipo === 'assercao_razao') {
@@ -1534,13 +1525,13 @@ if(ativ.status === 'Concluído') {
           let gLimpo = respEsperadaParaExibir.replace(/\s/g, '').toLowerCase();
           
           if(aLimpo === gLimpo && aLimpo !== "") { 
-            status = "Exato"; corStatusHex = "var(--sucesso)"; icone = "<i class='fas fa-check-circle text-white'></i>"; acertoFracao = 1; 
+            status = "Exato (Acerto)"; corStatusHex = "var(--sucesso)"; icone = "<i class='fas fa-check-circle text-white'></i>"; acertouQuestao = 1; 
           } else { 
-            status = "Incorreto"; corStatusHex = "var(--erro)"; icone = "<i class='fas fa-times-circle text-white'></i>"; acertoFracao = 0; 
+            status = "Incorreto (Erro)"; corStatusHex = "var(--erro)"; icone = "<i class='fas fa-times-circle text-white'></i>"; acertouQuestao = 0; 
           }
         }
 
-        somaAcertosParaPorcentagem += acertoFracao;
+        somaAcertosExatos += acertouQuestao;
         notaPontosInterna += (acertoFracao * ptsQuestao);
 
         let textColorForBadge = corStatusHex === "var(--secundaria)" ? "#000" : "#fff";
@@ -1571,14 +1562,16 @@ if(ativ.status === 'Concluído') {
         `;
       });
       
-      document.getElementById('areaChecklistGabarito').innerHTML = htmlGabarito;
+document.getElementById('areaChecklistGabarito').innerHTML = htmlGabarito;
 
-// NOVO CÁLCULO: 10 dividido pelo total de questões = valor de cada questão
+      // CÁLCULO EXATO SOLICITADO: 10 / Quantidade de Questões = Valor de Cada.
       let valorQuestao = totalQuestoes > 0 ? (10 / totalQuestoes) : 0;
-      let notaFinal = somaAcertosParaPorcentagem * valorQuestao;
-      let notaFormatada = notaFinal.toFixed(1).replace('.0', ''); // Tira o .0 se for nota redonda
       
-      let aproveitamentoPct = totalQuestoes > 0 ? (somaAcertosParaPorcentagem / totalQuestoes) * 100 : 0;
+      // Multiplica o Valor * Quantidade de Acertos Inteiros
+      let notaFinal = somaAcertosExatos * valorQuestao;
+      let notaFormatada = notaFinal.toFixed(1).replace('.0', ''); 
+      
+      let aproveitamentoPct = totalQuestoes > 0 ? (somaAcertosExatos / totalQuestoes) * 100 : 0;
       let txtCriterio = ""; let descCriterio = ""; let corAproveitamento = "";
 
       if (aproveitamentoPct >= 80) {
@@ -1603,7 +1596,7 @@ if(ativ.status === 'Concluído') {
         <div class="card-3d text-center py-5 px-3 shadow-lg" style="border-top-width: 8px !important; border-top-color: var(--${corAproveitamento}); background-color: #ffffff;">
             <h5 class="text-secondary fw-bold mb-3 text-uppercase tracking-wide"><i class="fas fa-chart-pie me-2"></i> Desempenho na Atividade</h5>
             <div class="display-1 fw-bold mb-0" style="color: var(--${corAproveitamento}); font-size: 80px;">${notaFormatada}</div>
-            <div class="text-muted fw-bold mb-4">Acertos: ${somaAcertosParaPorcentagem}/${totalQuestoes}</div>
+            <div class="text-muted fw-bold mb-4">Acertos: ${somaAcertosExatos}/${totalQuestoes}</div>
             
             <div class="mt-4 p-4 rounded text-center mx-auto shadow-sm" style="max-width: 650px; background-color: var(--cinza-fundo); border: 1px solid var(--cinza-borda); border-bottom: 4px solid var(--${corAproveitamento});">
                 <h4 class="text-dark fw-bold mb-2">${txtCriterio}</h4>
