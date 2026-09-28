@@ -126,7 +126,7 @@
   </div>
 
   <!-- TELA GESTÃO DE ALUNOS (CENTRAL DO COORDENADOR) -->
-  <div id="telaGestaoAlunos" class="container py-4 escondido" style="max-width: 1050px;">
+  <div id="telaGestaoAlunos" class="container py-4 escondido" style="max-width: 1200px;">
     <div class="mb-3">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
     </div>
@@ -166,7 +166,7 @@
               <th class="text-secondary">Matrícula</th>
               <th class="text-secondary">Nome do Aluno</th>
               <th class="text-secondary text-center">Status no Portal</th>
-              <th class="text-center text-secondary">Controle</th>
+              <th class="text-center text-secondary">Ações e Controle</th>
             </tr>
           </thead>
           <tbody id="corpoTabelaAlunos">
@@ -178,8 +178,8 @@
   </div>
 
   <!-- TELA FICHA DO ALUNO (RAIO-X COMPLETO) -->
-  <div id="telaFichaAluno" class="container py-4 escondido" style="max-width: 1050px;">
-<div class="mb-3 d-flex justify-content-between align-items-center">
+  <div id="telaFichaAluno" class="container py-4 escondido" style="max-width: 1200px;">
+    <div class="mb-3 d-flex justify-content-between align-items-center">
       <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="alternarTela('telaGestaoAlunos')"><i class="fas fa-arrow-left"></i> Voltar à Lista</button>
     </div>
 
@@ -214,13 +214,14 @@
                 
                 <div class="table-responsive">
                     <table class="table table-sm table-hover align-middle border mb-0">
-<thead class="bg-light">
+                        <thead class="bg-light">
                             <tr>
                                 <th class="text-secondary small">Atividade</th>
                                 <th class="text-center text-secondary small">Nota (pontos)</th>
                                 <th class="text-center text-secondary small">Acertos</th>
                                 <th class="text-center text-secondary small">Data/hora</th>
                                 <th class="text-center text-secondary small">Tentativas</th>
+                                <th class="text-center text-secondary small">Ação</th>
                             </tr>
                         </thead>
                         <tbody id="fichaAreaBoletim">
@@ -357,7 +358,6 @@
     </div>
   </div>
 
-  <!-- TELA REVISÃO E TELA SIMULADOR ESTÃO AQUI INTACTAS -->
   <div id="telaRevisao" class="container py-4 escondido" style="max-width: 800px;">
     <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded border shadow-sm no-print">
       <button class="btn bg-light border text-secondary fw-bold" onclick="voltarParaEditor()"><i class="fas fa-pencil-alt"></i> Voltar p/ Edição</button>
@@ -583,9 +583,14 @@
                 <td class="text-secondary fw-bold">${a.nome}</td>
                 <td class="text-center">${badgeStatus}</td>
                 <td class="text-center">
-                <button class="btn btn-sm btn-outline-primary fw-bold shadow-sm" onclick="abrirFichaAluno('${a.matricula}')">
-                    <i class="fas fa-id-card me-1"></i> Ver Ficha
-                </button>
+                    <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-sm btn-outline-primary fw-bold shadow-sm" onclick="abrirFichaAluno('${a.matricula}')" title="Ver Ficha do Aluno">
+                            <i class="fas fa-id-card me-1"></i> Ficha
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary fw-bold shadow-sm" onclick="editarOuExcluirAluno('${a.matricula}', '${a.nome}')" title="Editar ou Excluir Aluno">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>`;
         });
@@ -616,6 +621,59 @@
             carregarAlunos();
         } else Swal.fire('Ops', r.msg, 'info');
       }).catch(err => Swal.fire('Erro', 'Falha ao cadastrar: ' + err.message, 'error'));
+    }
+
+    // NOVA FUNÇÃO PARA EDITAR OU EXCLUIR ALUNO
+    function editarOuExcluirAluno(matriculaAtual, nomeAtual) {
+        Swal.fire({
+            title: 'Gerenciar Aluno',
+            html: `
+                <input id="swal-mat" class="form-control mb-3" placeholder="Matrícula" value="${matriculaAtual}">
+                <input id="swal-nome" class="form-control mb-3" placeholder="Nome Completo" value="${nomeAtual}">
+            `,
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-save"></i> Salvar Edição',
+            denyButtonText: '<i class="fas fa-trash"></i> Excluir Aluno',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#28a745',
+            denyButtonColor: '#dc3545',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // EDITAR ALUNO
+                let novaMat = document.getElementById('swal-mat').value;
+                let novoNome = document.getElementById('swal-nome').value;
+                Swal.fire({ title: 'Salvando...', didOpen: () => Swal.showLoading() });
+                
+                fetch(URL_API_GOOGLE, {
+                    method: 'POST', body: JSON.stringify({ api: 'editarAluno', matriculaAntiga: matriculaAtual, novaMatricula: novaMat, novoNome: novoNome })
+                }).then(r => r.json()).then(res => {
+                    if(res.sucesso) { Swal.fire('Salvo!', 'Aluno atualizado.', 'success'); carregarAlunos(); } 
+                    else { Swal.fire('Erro', res.erro, 'error'); }
+                });
+                
+            } else if (result.isDenied) {
+                // EXCLUIR ALUNO
+                Swal.fire({
+                    title: 'Excluir definitivamente?',
+                    text: "Isso apagará o aluno do sistema. Tem certeza?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sim, excluir!',
+                    confirmButtonColor: '#dc3545'
+                }).then((del) => {
+                    if(del.isConfirmed) {
+                        Swal.fire({ title: 'Excluindo...', didOpen: () => Swal.showLoading() });
+                        fetch(URL_API_GOOGLE, {
+                            method: 'POST', body: JSON.stringify({ api: 'excluirAluno', matricula: matriculaAtual })
+                        }).then(r => r.json()).then(res => {
+                            if(res.sucesso) { Swal.fire('Excluído!', 'Aluno removido.', 'success'); carregarAlunos(); }
+                            else { Swal.fire('Erro', res.erro, 'error'); }
+                        });
+                    }
+                });
+            }
+        });
     }
 
     // --- LÓGICA DE IMPORTAÇÃO EM LOTE COM LEITOR DE PLANILHA (SHEETJS) ---
@@ -687,8 +745,7 @@
         
         reader.readAsArrayBuffer(file);
     }
-
-    function enviarAlunosParaBackend(alunosArray, btn) {
+function enviarAlunosParaBackend(alunosArray, btn) {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Salvando no sistema...';
         
         fetch(URL_API_GOOGLE, {
@@ -721,7 +778,7 @@
     function abrirFichaAluno(matricula) {
         matriculaFichaAtual = matricula;
         document.getElementById('fichaAreaControle').innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin text-primary fs-3"></i></div>';
-        document.getElementById('fichaAreaBoletim').innerHTML = '<tr><td colspan="4" class="text-center py-4"><i class="fas fa-spinner fa-spin text-success fs-3"></i></td></tr>';
+        document.getElementById('fichaAreaBoletim').innerHTML = '<tr><td colspan="6" class="text-center py-4"><i class="fas fa-spinner fa-spin text-success fs-3"></i></td></tr>';
         
         alternarTela('telaFichaAluno');
 
@@ -734,7 +791,7 @@
             document.getElementById('fichaNomeAluno').innerText = al.nome;
             document.getElementById('fichaMatriculaAluno').innerText = al.matricula;
             
-let btnStatus = al.status === 'Ativo' ? 
+            let btnStatus = al.status === 'Ativo' ? 
                 `<button class="btn btn-sm btn-outline-danger fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-ban me-1"></i> Bloquear Acesso</button>` : 
                 `<button class="btn btn-sm btn-success fw-bold shadow-sm" onclick="bloquearAlunoFicha('${al.matricula}')"><i class="fas fa-unlock me-1"></i> Desbloquear Acesso</button>`;
 
@@ -750,7 +807,7 @@ let btnStatus = al.status === 'Ativo' ?
         });
     }
 
-function renderizarListasFicha(atividades) {
+    function renderizarListasFicha(atividades) {
         const areaControle = document.getElementById('fichaAreaControle');
         const areaBoletim = document.getElementById('fichaAreaBoletim');
         
@@ -773,7 +830,6 @@ function renderizarListasFicha(atividades) {
                 let notaExibir = notaQuebrada[0] ? notaQuebrada[0].replace('Nota: ', '') : "0";
                 let acertosExibir = notaQuebrada[1] || "-";
 
-                // Adicionado a coluna com o botão da Lixeira
                 areaBoletim.innerHTML += `
                 <tr>
                     <td class="text-dark fw-bold small">${ativ.titulo}</td>
@@ -782,7 +838,7 @@ function renderizarListasFicha(atividades) {
                     <td class="text-center text-muted small">${dataFormatada}</td>
                     <td class="text-center text-secondary small">${ativ.tentativas}x</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-danger" onclick="excluirDoAluno(${ativ.linhaPlanilha})" title="Excluir Registro"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="excluirDoAluno(${ativ.linhaPlanilha}, '${matriculaFichaAtual}')" title="Excluir Registro"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>`;
             } else {
@@ -791,27 +847,26 @@ function renderizarListasFicha(atividades) {
                 
                 if(ativ.status === 'Bloqueada') {
                     badgeInfo = `<span class="badge bg-danger"><i class="fas fa-lock"></i> Bloqueada</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-success fw-bold px-3 shadow-sm w-100 mb-2" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Pendente')"><i class="fas fa-unlock me-1"></i> Liberar P/ Aluno</button>`;
+                    btnAcao = `<button class="btn btn-sm btn-success fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Pendente')"><i class="fas fa-unlock me-1"></i> Liberar P/ Aluno</button>`;
                 } else if(ativ.status === 'Pendente') {
                     badgeInfo = `<span class="badge bg-primary"><i class="fas fa-clock"></i> Pendente</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm w-100 mb-2" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-lock me-1"></i> Travar Prova</button>`;
+                    btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-lock me-1"></i> Travar Prova</button>`;
                 } else if(ativ.status === 'Em Andamento') {
                     badgeInfo = `<span class="badge bg-warning text-dark"><i class="fas fa-running"></i> Em Andamento</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm w-100 mb-2" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-ban me-1"></i> Travar</button>`;
+                    btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-ban me-1"></i> Travar</button>`;
                 }
 
-                // Adicionado o botão de Excluir abaixo do botão de Travar/Liberar
-                let btnExcluir = `<button class="btn btn-sm btn-danger fw-bold px-3 shadow-sm w-100" onclick="excluirDoAluno(${ativ.linhaPlanilha})"><i class="fas fa-trash-alt me-1"></i> Excluir</button>`;
+                let btnExcluir = `<button class="btn btn-sm btn-danger fw-bold shadow-sm px-3" onclick="excluirDoAluno(${ativ.linhaPlanilha}, '${matriculaFichaAtual}')" title="Excluir"><i class="fas fa-trash-alt me-1"></i> Excluir</button>`;
 
                 areaControle.innerHTML += `
                 <div class="d-flex justify-content-between align-items-center p-3 bg-light border rounded shadow-sm mb-2">
-                    <div style="width: 60%;">
+                    <div style="width: 55%;">
                         <div class="fw-bold text-dark text-truncate mb-1" style="font-size: 14px;">${ativ.titulo}</div>
                         ${badgeInfo}
                     </div>
-                    <div style="width: 38%;">
-                        ${btnAcao}
-                        ${btnExcluir}
+                    <div style="width: 43%;" class="d-flex gap-2 justify-content-end">
+                        <div class="flex-grow-1">${btnAcao}</div>
+                        <div>${btnExcluir}</div>
                     </div>
                 </div>`;
             }
@@ -821,7 +876,7 @@ function renderizarListasFicha(atividades) {
         if(qtdBoletim === 0) areaBoletim.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4"><i class="fas fa-medal fs-3 mb-2 opacity-50"></i><br>O aluno ainda não concluiu atividades.</td></tr>';
     }
 
-    function excluirDoAluno(linhaPlanilha) {
+    function excluirDoAluno(linhaPlanilha, matriculaSegura) {
         Swal.fire({
             title: 'Tem certeza?',
             text: "Isso apagará essa atividade (e as notas/respostas) DEFINITIVAMENTE da ficha deste aluno!",
@@ -835,13 +890,12 @@ function renderizarListasFicha(atividades) {
             if (result.isConfirmed) {
                 Swal.fire({ title: 'Excluindo...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
                 
-                // Mude URL_API_GOOGLE para o nome da sua constante caso seja diferente na coordenação (ex: URL_API)
                 fetch(URL_API_GOOGLE, { 
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({
                         api: 'excluirAtividadeAluno',
-                        matricula: alunoAtivo.matricula, // Usa a matrícula do aluno aberto na tela
+                        matricula: matriculaSegura,
                         linhaPlanilha: linhaPlanilha
                     })
                 })
@@ -849,7 +903,7 @@ function renderizarListasFicha(atividades) {
                 .then(resp => {
                     if(resp.sucesso) {
                         Swal.fire('Excluído!', 'O registro foi removido com sucesso.', 'success');
-                        abrirFichaAluno(alunoAtivo.matricula); // Atualiza a ficha do aluno na hora
+                        abrirFichaAluno(matriculaSegura); 
                     } else {
                         Swal.fire('Erro', resp.erro, 'error');
                     }
@@ -1065,8 +1119,7 @@ function renderizarListasFicha(atividades) {
                       '<button class="btn btn-sm btn-outline-danger px-2" onclick="document.getElementById(\'linhaB_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
       document.getElementById('containerAssocB').appendChild(div);
     }
-
-    function adicionarLinhaOrd(val="") {
+function adicionarLinhaOrd(val="") {
       const id = Date.now(); 
       const div = document.createElement('div'); 
       div.className = "d-flex gap-2 mb-2"; 
@@ -1579,7 +1632,6 @@ function finalizarTeste() {
         }
 
         somaAcertosExatos += acertouQuestao;
-        notaPontosInterna += (acertoFracao * ptsQuestao);
 
         let textColorForBadge = corStatusHex === "var(--secundaria)" ? "#000" : "#fff";
         htmlGabarito += `
