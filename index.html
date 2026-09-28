@@ -763,18 +763,17 @@ function renderizarListasFicha(atividades) {
             if(ativ.status === 'Concluído') {
                 qtdBoletim++;
                 
-                // Arrumando a Data para o formato Brasileiro e tirando o "T"
                 let dataFormatada = ativ.dataFim;
                 if(dataFormatada && dataFormatada.includes("T")) {
                     let d = new Date(dataFormatada);
                     dataFormatada = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
                 }
 
-                // Separar Nota e Acertos (recebidos do Portal do Aluno na mesma string separados por "|")
                 let notaQuebrada = (ativ.nota || "0|0/0").split("|");
                 let notaExibir = notaQuebrada[0] ? notaQuebrada[0].replace('Nota: ', '') : "0";
                 let acertosExibir = notaQuebrada[1] || "-";
 
+                // Adicionado a coluna com o botão da Lixeira
                 areaBoletim.innerHTML += `
                 <tr>
                     <td class="text-dark fw-bold small">${ativ.titulo}</td>
@@ -782,6 +781,9 @@ function renderizarListasFicha(atividades) {
                     <td class="text-center fw-bold text-primary">${acertosExibir}</td>
                     <td class="text-center text-muted small">${dataFormatada}</td>
                     <td class="text-center text-secondary small">${ativ.tentativas}x</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-danger" onclick="excluirDoAluno(${ativ.linhaPlanilha})" title="Excluir Registro"><i class="fas fa-trash"></i></button>
+                    </td>
                 </tr>`;
             } else {
                 qtdControle++;
@@ -789,14 +791,17 @@ function renderizarListasFicha(atividades) {
                 
                 if(ativ.status === 'Bloqueada') {
                     badgeInfo = `<span class="badge bg-danger"><i class="fas fa-lock"></i> Bloqueada</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-success fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Pendente')"><i class="fas fa-unlock me-1"></i> Liberar </button>`;
+                    btnAcao = `<button class="btn btn-sm btn-success fw-bold px-3 shadow-sm w-100 mb-2" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Pendente')"><i class="fas fa-unlock me-1"></i> Liberar P/ Aluno</button>`;
                 } else if(ativ.status === 'Pendente') {
                     badgeInfo = `<span class="badge bg-primary"><i class="fas fa-clock"></i> Pendente</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-outline-danger fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-lock me-1"></i> Travar </button>`;
+                    btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm w-100 mb-2" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-lock me-1"></i> Travar Prova</button>`;
                 } else if(ativ.status === 'Em Andamento') {
                     badgeInfo = `<span class="badge bg-warning text-dark"><i class="fas fa-running"></i> Em Andamento</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-outline-danger fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-ban me-1"></i> Bloquear </button>`;
+                    btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm w-100 mb-2" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-ban me-1"></i> Travar</button>`;
                 }
+
+                // Adicionado o botão de Excluir abaixo do botão de Travar/Liberar
+                let btnExcluir = `<button class="btn btn-sm btn-danger fw-bold px-3 shadow-sm w-100" onclick="excluirDoAluno(${ativ.linhaPlanilha})"><i class="fas fa-trash-alt me-1"></i> Excluir</button>`;
 
                 areaControle.innerHTML += `
                 <div class="d-flex justify-content-between align-items-center p-3 bg-light border rounded shadow-sm mb-2">
@@ -804,15 +809,57 @@ function renderizarListasFicha(atividades) {
                         <div class="fw-bold text-dark text-truncate mb-1" style="font-size: 14px;">${ativ.titulo}</div>
                         ${badgeInfo}
                     </div>
-                    <div style="width: 38%;">${btnAcao}</div>
+                    <div style="width: 38%;">
+                        ${btnAcao}
+                        ${btnExcluir}
+                    </div>
                 </div>`;
             }
         });
 
         if(qtdControle === 0) areaControle.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-check-circle fs-3 mb-2 opacity-50"></i><br>Nenhuma atividade pendente ou bloqueada.</div>';
-        if(qtdBoletim === 0) areaBoletim.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4"><i class="fas fa-medal fs-3 mb-2 opacity-50"></i><br>O aluno ainda não concluiu atividades.</td></tr>';
+        if(qtdBoletim === 0) areaBoletim.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4"><i class="fas fa-medal fs-3 mb-2 opacity-50"></i><br>O aluno ainda não concluiu atividades.</td></tr>';
     }
 
+    function excluirDoAluno(linhaPlanilha) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Isso apagará essa atividade (e as notas/respostas) DEFINITIVAMENTE da ficha deste aluno!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'Excluindo...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+                
+                // Mude URL_API_GOOGLE para o nome da sua constante caso seja diferente na coordenação (ex: URL_API)
+                fetch(URL_API_GOOGLE, { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        api: 'excluirAtividadeAluno',
+                        matricula: alunoAtivo.matricula, // Usa a matrícula do aluno aberto na tela
+                        linhaPlanilha: linhaPlanilha
+                    })
+                })
+                .then(res => res.json())
+                .then(resp => {
+                    if(resp.sucesso) {
+                        Swal.fire('Excluído!', 'O registro foi removido com sucesso.', 'success');
+                        abrirFichaAluno(alunoAtivo.matricula); // Atualiza a ficha do aluno na hora
+                    } else {
+                        Swal.fire('Erro', resp.erro, 'error');
+                    }
+                }).catch(err => {
+                    Swal.fire('Erro', 'Falha na comunicação com o servidor.', 'error');
+                });
+            }
+        });
+    }
+    
     function alterarTravaProva(linha, novoStatus) {
         Swal.fire({ title: 'Aguarde...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
         fetch(URL_API_GOOGLE, {
