@@ -261,10 +261,11 @@
     </div>
   </div>
 
-  <!-- TELA EDITOR (CRIAÇÃO DE ATIVIDADE) -->
+ <!-- TELA EDITOR (CRIAÇÃO DE ATIVIDADE) -->
   <div id="telaEditor" class="container py-4 escondido" style="max-width: 900px;">
     <div class="mb-3">
-      <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortal()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
+      <!-- BOTÃO ALTERADO: Agora aciona a trava de segurança -->
+      <button class="btn btn-sm bg-white border shadow-sm text-secondary" onclick="voltarParaPortalSeguro()"><i class="fas fa-arrow-left"></i> Voltar ao Painel</button>
     </div>
 
     <div class="card-3d mb-4 shadow-sm" style="border-top: none; background-color: white;">
@@ -289,6 +290,26 @@
         <div class="col-md-4 d-flex align-items-center pt-4">
             <button class="btn btn-ouro w-100 fs-6 py-3 shadow-sm" onclick="abrirGeradorQuestao()"><i class="fas fa-plus-circle"></i> Criar Questão</button>
         </div>
+
+        <!-- NOVO: PAINEL DE CONTABILIZAÇÃO (RESUMO) -->
+        <div class="col-md-12 mt-3 pt-3 border-top">
+            <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded border shadow-sm">
+                <div>
+                    <span class="text-muted small fw-bold text-uppercase"><i class="fas fa-chart-line text-success"></i> Resumo do Caderno</span>
+                </div>
+                <div class="d-flex gap-4">
+                    <div class="text-center">
+                        <div class="small text-muted fw-bold">Qtd. Questões</div>
+                        <div class="fs-4 fw-bold text-primary" id="resumoQtdQuestoes">0</div>
+                    </div>
+                    <div class="text-center border-start border-2 ps-4">
+                        <div class="small text-muted fw-bold">Tempo Estimado</div>
+                        <div class="fs-4 fw-bold text-secondary" id="resumoTempoTotal">0s</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FIM DO PAINEL NOVO -->
       </div>
     </div>
 
@@ -1013,7 +1034,39 @@ function enviarAlunosParaBackend(alunosArray, btn) {
     function togglePontos() { 
         document.getElementById('areaValorPontos').style.display = document.getElementById('tipoPontuacao').value === 'com' ? 'block' : 'none'; 
     }
+    
+// --- NOVO: TRAVA DE SEGURANÇA (EVITAR PERDER DADOS) ---
+    function voltarParaPortalSeguro() {
+        // Verifica se tem questões feitas
+        if (!document.getElementById('telaEditor').classList.contains('escondido') && questoesDoCaderno.length > 0) {
+            Swal.fire({
+                title: 'Tem certeza que deseja sair?',
+                text: "Você tem questões criadas. Se voltar sem salvar/publicar, perderá todo o caderno!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sair e perder tudo',
+                cancelButtonText: 'Cancelar e continuar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    voltarParaPortal();
+                }
+            });
+        } else {
+            voltarParaPortal();
+        }
+    }
 
+    // Trava do próprio navegador para caso você feche a aba (no X) ou aperte F5 sem querer
+    window.addEventListener('beforeunload', function (e) {
+        if (!document.getElementById('telaEditor').classList.contains('escondido') && questoesDoCaderno.length > 0) {
+            e.preventDefault();
+            e.returnValue = ''; // Ativa o aviso padrão do Google Chrome/Navegador
+        }
+    });
+    // --- FIM DA TRAVA DE SEGURANÇA ---
+    
     function iniciarNovoCaderno() {
       idCadernoAtual = ""; 
       document.getElementById('tituloCaderno').value = ""; 
@@ -1212,10 +1265,24 @@ function adicionarLinhaOrd(val="") {
         renderizarListaQuestoesCaderno();
     }
 
-    function renderizarListaQuestoesCaderno() {
+function renderizarListaQuestoesCaderno() {
       const container = document.getElementById('listaQuestoesVisual'); 
       container.innerHTML = "";
       
+      // --- INÍCIO DA LÓGICA DO NOVO PAINEL DE CONTABILIZAÇÃO ---
+      document.getElementById('resumoQtdQuestoes').innerText = questoesDoCaderno.length;
+      
+      // Soma todos os tempos e transforma em minutos/segundos
+      let tempoTotal = questoesDoCaderno.reduce((acc, q) => acc + parseInt(q.tempo || 0), 0);
+      let textoTempo = tempoTotal + "s";
+      if (tempoTotal >= 60) {
+          let min = Math.floor(tempoTotal / 60);
+          let seg = tempoTotal % 60;
+          textoTempo = min + "m " + (seg > 0 ? seg + "s" : "");
+      }
+      document.getElementById('resumoTempoTotal').innerText = textoTempo;
+      // --- FIM DA LÓGICA DO PAINEL ---
+
       if (questoesDoCaderno.length === 0) { 
           container.innerHTML = '<div class="text-center my-4 text-muted p-4 bg-light rounded border border-dashed"><i class="fas fa-box-open fs-3 mb-2 text-secondary"></i><br>Nenhuma questão adicionada ao caderno ainda.</div>'; 
           return; 
