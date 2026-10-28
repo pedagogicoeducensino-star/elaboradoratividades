@@ -1381,7 +1381,7 @@ function renderizarListaQuestoesCaderno() {
       }
     }
 
-    function visualizarRevisar() {
+function visualizarRevisar() {
       try {
         const titulo = document.getElementById('tituloCaderno').value;
         if(!titulo) { 
@@ -1419,7 +1419,8 @@ function renderizarListaQuestoesCaderno() {
           if(q.tipo === "multipla_escolha") {
             ['A','B','C','D','E'].forEach(l => {
               if(q.opcoes && q.opcoes[l]) {
-                  html += '<div class="form-check mb-2 p-2 rounded hover-bg-light"><input class="form-check-input ms-0 me-2" type="radio" name="q' + i + '"><label class="form-check-label text-dark" style="margin-left: 25px;"><strong>' + l + ')</strong> ' + q.opcoes[l] + '</label></div>';
+                  // CORREÇÃO DO ALINHAMENTO APLICADA AQUI (FLEXBOX)
+                  html += '<div class="d-flex align-items-center mb-2 p-2 rounded hover-bg-light"><input class="form-check-input m-0 me-3 flex-shrink-0" type="radio" name="q' + i + '"><label class="form-check-label text-dark mb-0"><strong>' + l + ')</strong> ' + q.opcoes[l] + '</label></div>';
               }
             });
           } else if (q.tipo === "certo_errado") {
@@ -1439,11 +1440,12 @@ function renderizarListaQuestoesCaderno() {
                 arrB = ["Coluna B (Vazia)"]; 
             }
 
-            html += '<div class="row g-4"><div class="col-sm-5 border-end pe-4">';
+            // CORREÇÃO DOS TÍTULOS COLUNA A E B APLICADA AQUI
+            html += '<div class="row g-4"><div class="col-sm-5 border-end pe-4"><h6 class="text-muted fw-bold text-center mb-3">Coluna A</h6>';
             arrA.forEach((item, idx) => { 
                 html += '<div class="mb-3 text-dark p-2 bg-light rounded border"><strong>' + (idx+1) + '.</strong> ' + item + '</div>'; 
             });
-            html += '</div><div class="col-sm-7 ps-4">';
+            html += '</div><div class="col-sm-7 ps-4"><h6 class="text-muted fw-bold text-center mb-3">Coluna B</h6>';
             arrB.forEach((item, idx) => { 
               let displayItem = (q.b_is_img && item.startsWith('http')) ? '<img src="' + item + '" class="rounded border shadow-sm" style="max-height: 55px; max-width: 150px;">' : '<span class="fw-bold">' + item + '</span>';
               html += '<div class="d-flex align-items-center mb-3 bg-white p-2 rounded border shadow-sm"><input type="text" class="form-control text-center input-box-destaque me-3 p-0" style="width:45px; height:40px; font-size: 18px;" readonly> ' + displayItem + '</div>'; 
@@ -1493,7 +1495,7 @@ function renderizarListaQuestoesCaderno() {
         document.getElementById('telaRevisao').classList.remove('escondido');
     }
 
-    function carregarQuestaoSimulador() {
+ function carregarQuestaoSimulador() {
       if(indiceTesteAtual >= questoesDoCaderno.length) { 
           finalizarTeste(); 
           return; 
@@ -1528,7 +1530,8 @@ function renderizarListaQuestoesCaderno() {
       if (q.tipo === "multipla_escolha") {
         ['A','B','C','D','E'].forEach(l => { 
             if(q.opcoes && q.opcoes[l]) {
-                html += '<div class="form-check mb-3 p-3 bg-light rounded border hover-shadow transition"><input class="form-check-input ms-0 me-3" type="radio" name="testeResp" value="' + l + '" id="opt_' + l + '" onclick="verificarInteracaoTeste()"><label class="form-check-label text-dark w-100" for="opt_' + l + '" style="cursor:pointer;"><strong>' + l + ')</strong> ' + q.opcoes[l] + '</label></div>'; 
+                // CORREÇÃO DO ALINHAMENTO APLICADA AQUI (FLEXBOX)
+                html += '<div class="d-flex align-items-center mb-3 p-3 bg-light rounded border hover-shadow transition"><input class="form-check-input m-0 me-3 flex-shrink-0" type="radio" name="testeResp" value="' + l + '" id="opt_' + l + '" onclick="verificarInteracaoTeste()"><label class="form-check-label text-dark w-100 mb-0" for="opt_' + l + '" style="cursor:pointer;"><strong>' + l + ')</strong> ' + q.opcoes[l] + '</label></div>'; 
             }
         });
       } else if (q.tipo === "certo_errado") {
@@ -1553,9 +1556,10 @@ function renderizarListaQuestoesCaderno() {
         if(q.pares && arrA.length===0) { q.pares.forEach(p => { arrA.push(p.a); arrB.push(p.b); }); }
         if(arrA.length===0 && arrB.length===0) { arrA = ["Item A1"]; arrB = ["Item B1"]; } 
 
-        html += '<div class="row g-4"><div class="col-sm-5 border-end pe-4">';
+        // CORREÇÃO DOS TÍTULOS COLUNA A E B APLICADA AQUI
+        html += '<div class="row g-4"><div class="col-sm-5 border-end pe-4"><h6 class="text-muted fw-bold text-center mb-3">Coluna A</h6>';
         arrA.forEach((item, idx) => { html += '<div class="mb-3 text-dark p-2 bg-light rounded border shadow-sm"><strong>' + (idx+1) + '.</strong> ' + item + '</div>'; });
-        html += '</div><div class="col-sm-7 ps-4">';
+        html += '</div><div class="col-sm-7 ps-4"><h6 class="text-muted fw-bold text-center mb-3">Coluna B</h6>';
         arrB.forEach((item, idx) => { 
           let displayItem = (q.b_is_img && item.startsWith('http')) ? '<img src="' + item + '" class="rounded border shadow-sm" style="max-height: 65px; max-width: 150px;">' : '<span class="fw-bold">' + item + '</span>';
           html += '<div class="d-flex align-items-center mb-3 bg-white p-2 rounded border shadow-sm transition hover-shadow"><input type="text" class="form-control text-center in-teste-multi input-box-destaque me-3 p-0" style="width:45px; height:45px; font-size: 18px;" oninput="verificarInteracaoTeste()"> ' + displayItem + '</div>'; 
