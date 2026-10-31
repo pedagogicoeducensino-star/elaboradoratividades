@@ -69,6 +69,16 @@
     .input-box-destaque:focus { outline: none; border-color: var(--primaria); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); background-color: white;}
     .form-control, .form-select { border-color: var(--cinza-borda); border-radius: 8px; padding: 10px 15px; transition: all 0.2s;}
     .form-control:focus, .form-select:focus { border-color: var(--primaria); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1); }
+
+    /* ======================================================= */
+    /* CORREÇÃO PARA MANTER OS PARÁGRAFOS E QUEBRAS DE LINHA   */
+    /* ======================================================= */
+    p.fw-bold.text-dark,
+    .preview-questao p.fw-bold,
+    .estudo-caso-box,
+    .card-body .p-3.border.rounded {
+        white-space: pre-wrap !important;
+    }
   </style>
 </head>
 <body>
