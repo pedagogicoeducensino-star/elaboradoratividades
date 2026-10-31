@@ -1822,7 +1822,7 @@ document.getElementById('areaChecklistGabarito').innerHTML = htmlGabarito;
       });
     }
 
-    function atualizarPortalTabela() {
+function atualizarPortalTabela() {
       const tabela = document.getElementById('corpoTabelaPortal');
       tabela.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Carregando banco de dados...</td></tr>';
       
@@ -1839,9 +1839,35 @@ document.getElementById('areaChecklistGabarito').innerHTML = htmlGabarito;
           
           cadernos.forEach(c => {
             let safeTitulo = c.titulo.replace(/'/g, "\\'");
+            
+            // --- NOVO: CÁLCULO E FORMATAÇÃO DO TEMPO TOTAL ---
+            let tempoTotalSeg = 0;
+            if (c.questoes && c.questoes.length > 0) {
+                tempoTotalSeg = c.questoes.reduce((acc, q) => acc + parseInt(q.tempo || 0), 0);
+            }
+            
+            let tempoFormatado = "0s";
+            if (tempoTotalSeg > 0) {
+                let horas = Math.floor(tempoTotalSeg / 3600);
+                let minutos = Math.floor((tempoTotalSeg % 3600) / 60);
+                let seg = tempoTotalSeg % 60;
+                
+                if (horas > 0) {
+                    tempoFormatado = horas + "h " + minutos + "m";
+                } else if (minutos > 0) {
+                    tempoFormatado = minutos + "m " + (seg > 0 ? seg + "s" : "");
+                } else {
+                    tempoFormatado = seg + "s";
+                }
+            }
+            // --------------------------------------------------
+
             tabela.innerHTML += '<tr>' +
                                 '<td class="fw-bold align-middle text-dark">' + c.titulo + '</td>' +
-                                '<td class="align-middle"><span class="badge bg-light text-secondary border px-2 py-1 shadow-sm">' + c.questoes.length + ' itens</span></td>' +
+                                '<td class="align-middle">' +
+                                    '<span class="badge bg-light text-secondary border px-2 py-1 shadow-sm me-2">' + (c.questoes ? c.questoes.length : 0) + ' itens</span>' +
+                                    '<span class="badge bg-light text-primary border px-2 py-1 shadow-sm" title="Tempo estimado do caderno"><i class="far fa-clock"></i> ' + tempoFormatado + '</span>' +
+                                '</td>' +
                                 '<td class="text-muted align-middle">' + new Date(c.data).toLocaleDateString('pt-BR') + '</td>' +
                                 '<td class="text-center align-middle">' +
                                     '<div class="d-flex justify-content-center gap-2">' +
