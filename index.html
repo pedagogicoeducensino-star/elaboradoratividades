@@ -900,17 +900,17 @@
                 let badgeInfo = ""; let btnAcao = "";
                 
                 if(ativ.status === 'Bloqueada') {
-                    badgeInfo = `<span class="badge bg-danger"><i class="fas fa-lock"></i> Bloqueada</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-success fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Pendente')"><i class="fas fa-unlock me-1"></i> Liberar P/ Aluno</button>`;
-                } else if(ativ.status === 'Pendente') {
-                    badgeInfo = `<span class="badge bg-primary"><i class="fas fa-clock"></i> Pendente</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-lock me-1"></i> Travar Prova</button>`;
-                } else if(ativ.status === 'Em Andamento') {
-                    badgeInfo = `<span class="badge bg-warning text-dark"><i class="fas fa-running"></i> Em Andamento</span>`;
-                    btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm w-100" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')"><i class="fas fa-ban me-1"></i> Travar</button>`;
-                }
+                badgeInfo = `<span class="badge bg-danger"><i class="fas fa-lock"></i> Bloqueada</span>`;
+                btnAcao = `<button class="btn btn-sm btn-success fw-bold px-3 shadow-sm" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Pendente')" title="Liberar Acesso"><i class="fas fa-unlock"></i></button>`;
+            } else if(ativ.status === 'Pendente') {
+                badgeInfo = `<span class="badge bg-primary"><i class="fas fa-clock"></i> Pendente</span>`;
+                btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')" title="Travar Prova"><i class="fas fa-lock"></i></button>`;
+            } else if(ativ.status === 'Em Andamento') {
+                badgeInfo = `<span class="badge bg-warning text-dark"><i class="fas fa-running"></i> Em Andamento</span>`;
+                btnAcao = `<button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 shadow-sm" onclick="alterarTravaProva(${ativ.linhaPlanilha}, 'Bloqueada')" title="Travar"><i class="fas fa-ban"></i></button>`;
+            }
 
-                let btnExcluir = `<button class="btn btn-sm btn-danger fw-bold shadow-sm px-3" onclick="excluirDoAluno(${ativ.linhaPlanilha}, '${matriculaFichaAtual}')" title="Excluir"><i class="fas fa-trash-alt me-1"></i> Excluir</button>`;
+            let btnExcluir = `<button class="btn btn-sm btn-danger fw-bold shadow-sm px-3" onclick="excluirDoAluno(${ativ.linhaPlanilha}, '${matriculaFichaAtual}')" title="Excluir Atividade"><i class="fas fa-trash-alt"></i></button>`;
 
                 areaControle.innerHTML += `
                 <div class="d-flex justify-content-between align-items-center p-3 bg-light border rounded shadow-sm mb-2">
