@@ -528,7 +528,7 @@
     // =========================================================================
     // COLE AQUI A NOVA URL DE IMPLANTAÇÃO DO SEU GOOGLE APPS SCRIPT
     // =========================================================================
-    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbzEjn_R54vUXpglydH_z669p53Smxw84wt7gm9KPdQSlp5rMHovbxb7-pq7MSWv6Mfd/exec";
+    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwssItIe18UoEZoQq9EL6-WcfX_KQqa5JzuFcxqM4eAV1Qnke4UfV9ojKXwovhCA-O2/exec";
     
     const colaboradores = { "08041994": "Davi Felício", "031792": "Wesley Luiz", "300820092795": "Daniel", "06082007": "Lorena" };
     let usuarioAtual = "";
@@ -776,7 +776,8 @@
         
         reader.readAsArrayBuffer(file);
     }
-function enviarAlunosParaBackend(alunosArray, btn) {
+
+    function enviarAlunosParaBackend(alunosArray, btn) {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Salvando no sistema...';
         
         fetch(URL_API_GOOGLE, {
@@ -1045,7 +1046,7 @@ function enviarAlunosParaBackend(alunosArray, btn) {
         document.getElementById('areaValorPontos').style.display = document.getElementById('tipoPontuacao').value === 'com' ? 'block' : 'none'; 
     }
     
-// --- NOVO: TRAVA DE SEGURANÇA (EVITAR PERDER DADOS) ---
+    // --- NOVO: TRAVA DE SEGURANÇA (EVITAR PERDER DADOS) ---
     function voltarParaPortalSeguro() {
         // Verifica se tem questões feitas
         if (!document.getElementById('telaEditor').classList.contains('escondido') && questoesDoCaderno.length > 0) {
@@ -1182,7 +1183,8 @@ function enviarAlunosParaBackend(alunosArray, btn) {
                       '<button class="btn btn-sm btn-outline-danger px-2" onclick="document.getElementById(\'linhaB_' + id + '\').remove()"><i class="fas fa-times"></i></button>';
       document.getElementById('containerAssocB').appendChild(div);
     }
-function adicionarLinhaOrd(val="") {
+
+    function adicionarLinhaOrd(val="") {
       const id = Date.now(); 
       const div = document.createElement('div'); 
       div.className = "d-flex gap-2 mb-2"; 
@@ -1275,7 +1277,7 @@ function adicionarLinhaOrd(val="") {
         renderizarListaQuestoesCaderno();
     }
 
-function renderizarListaQuestoesCaderno() {
+    function renderizarListaQuestoesCaderno() {
       const container = document.getElementById('listaQuestoesVisual'); 
       container.innerHTML = "";
       
@@ -1391,7 +1393,7 @@ function renderizarListaQuestoesCaderno() {
       }
     }
 
-function visualizarRevisar() {
+    function visualizarRevisar() {
       try {
         const titulo = document.getElementById('tituloCaderno').value;
         if(!titulo) { 
@@ -1505,7 +1507,7 @@ function visualizarRevisar() {
         document.getElementById('telaRevisao').classList.remove('escondido');
     }
 
- function carregarQuestaoSimulador() {
+    function carregarQuestaoSimulador() {
       if(indiceTesteAtual >= questoesDoCaderno.length) { 
           finalizarTeste(); 
           return; 
@@ -1659,7 +1661,7 @@ function visualizarRevisar() {
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-function finalizarTeste() {
+    function finalizarTeste() {
       alternarTela('telaRelatorioTeste');
       document.getElementById('painelFimSimulado').classList.remove('escondido');
       document.getElementById('painelResultadoFinal').classList.add('escondido');
@@ -1742,7 +1744,7 @@ function finalizarTeste() {
         `;
       });
       
-document.getElementById('areaChecklistGabarito').innerHTML = htmlGabarito;
+      document.getElementById('areaChecklistGabarito').innerHTML = htmlGabarito;
 
       // CÁLCULO EXATO SOLICITADO: 10 / Quantidade de Questões = Valor de Cada.
       let valorQuestao = totalQuestoes > 0 ? (10 / totalQuestoes) : 0;
@@ -1822,7 +1824,7 @@ document.getElementById('areaChecklistGabarito').innerHTML = htmlGabarito;
       });
     }
 
-function atualizarPortalTabela() {
+    function atualizarPortalTabela() {
       const tabela = document.getElementById('corpoTabelaPortal');
       tabela.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fs-3 mb-2"></i><br>Carregando banco de dados...</td></tr>';
       
