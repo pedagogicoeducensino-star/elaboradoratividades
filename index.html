@@ -239,11 +239,33 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-    </div>
-  </div>
+ </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- NOVA SEÇÃO: HISTÓRICO DE FREQUÊNCIA -->
+    <div class="row g-4 mt-1">
+        <div class="col-12">
+            <div class="card-3d" style="border-top-color: #0EA5E9; padding: 20px;">
+                <h5 class="text-dark mb-3"><i class="fas fa-history text-info"></i> Frequência e Acessos Recentes</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle border mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-secondary small">Data e Hora do Acesso</th>
+                                <th class="text-secondary small">Ação Registrada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fichaAreaAcessos">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
 
   <!-- RESTANTE DAS TELAS INTOCÁVEIS (BANCO, EDITOR, REVISÃO E SIMULADOR) -->
   <!-- TELA BANCO DE CADERNOS -->
@@ -528,7 +550,7 @@
     // =========================================================================
     // COLE AQUI A NOVA URL DE IMPLANTAÇÃO DO SEU GOOGLE APPS SCRIPT
     // =========================================================================
-    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbzEjn_R54vUXpglydH_z669p53Smxw84wt7gm9KPdQSlp5rMHovbxb7-pq7MSWv6Mfd/exec";
+    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbzZgOFub_CByC4jEBll-TDTdDl-7ug6qzMRLlVHG78ykEKv6NH8qbuCPPLS5fULDBVl/exec";
     
     const colaboradores = { "08041994": "Davi Felício", "031792": "Wesley Luiz", "300820092795": "Daniel", "06082007": "Lorena" };
     let usuarioAtual = "";
@@ -834,9 +856,10 @@ function enviarAlunosParaBackend(alunosArray, btn) {
                 </div>
             `;
 
-            renderizarListasFicha(resp.atividades);
-        });
-    }
+renderizarListasFicha(resp.atividades);
+            if(resp.acessos) { renderizarAcessosFicha(resp.acessos); }
+        });
+    }
 
     function renderizarListasFicha(atividades) {
         const areaControle = document.getElementById('fichaAreaControle');
@@ -906,6 +929,30 @@ function enviarAlunosParaBackend(alunosArray, btn) {
         if(qtdControle === 0) areaControle.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-check-circle fs-3 mb-2 opacity-50"></i><br>Nenhuma atividade pendente ou bloqueada.</div>';
         if(qtdBoletim === 0) areaBoletim.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4"><i class="fas fa-medal fs-3 mb-2 opacity-50"></i><br>O aluno ainda não concluiu atividades.</td></tr>';
     }
+
+    function renderizarAcessosFicha(acessos) {
+        const areaAcessos = document.getElementById('fichaAreaAcessos');
+        if(!areaAcessos) return;
+        
+        areaAcessos.innerHTML = "";
+        
+        if(!acessos || acessos.length === 0) {
+            areaAcessos.innerHTML = '<tr><td colspan="2" class="text-center text-muted py-4"><i class="fas fa-eye-slash fs-3 mb-2 opacity-50"></i><br>Nenhum acesso registrado no portal ainda.</td></tr>';
+            return;
+        }
+        
+        acessos.forEach(acc => {
+            // Suporta tanto formato de Objeto quanto de Array (Matrícula, Nome, Data/Hora, Ação)
+            let dataHora = acc.data || (Array.isArray(acc) ? acc[2] : "-");
+            let acao = acc.acao || (Array.isArray(acc) ? acc[3] : "Acesso ao Portal");
+            
+            areaAcessos.innerHTML += `
+            <tr>
+                <td class="text-dark small fw-bold">${dataHora}</td>
+                <td class="text-secondary small">${acao}</td>
+            </tr>`;
+        });
+    }
 
     function excluirDoAluno(linhaPlanilha, matriculaSegura) {
         Swal.fire({
