@@ -832,6 +832,7 @@
         matriculaFichaAtual = matricula;
         document.getElementById('fichaAreaControle').innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin text-primary fs-3"></i></div>';
         document.getElementById('fichaAreaBoletim').innerHTML = '<tr><td colspan="6" class="text-center py-4"><i class="fas fa-spinner fa-spin text-success fs-3"></i></td></tr>';
+        if(document.getElementById('fichaAreaAcessos')) document.getElementById('fichaAreaAcessos').innerHTML = '<tr><td colspan="2" class="text-center py-4"><i class="fas fa-spinner fa-spin text-info fs-3"></i><br><span class="small text-muted mt-2 d-block">Atualizando Acessos...</span></td></tr>';
         
         alternarTela('telaFichaAluno');
 
@@ -914,13 +915,13 @@
 
                 areaControle.innerHTML += `
                 <div class="d-flex justify-content-between align-items-center p-3 bg-light border rounded shadow-sm mb-2">
-                    <div style="width: 55%;">
+                    <div style="width: 65%;">
                         <div class="fw-bold text-dark text-truncate mb-1" style="font-size: 14px;">${ativ.titulo}</div>
                         ${badgeInfo}
                     </div>
-                    <div style="width: 43%;" class="d-flex gap-2 justify-content-end">
-                        <div class="flex-grow-1">${btnAcao}</div>
-                        <div>${btnExcluir}</div>
+                    <div class="d-flex gap-2 justify-content-end align-items-center">
+                        ${btnAcao}
+                        ${btnExcluir}
                     </div>
                 </div>`;
             }
