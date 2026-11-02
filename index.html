@@ -931,7 +931,7 @@
         if(qtdBoletim === 0) areaBoletim.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4"><i class="fas fa-medal fs-3 mb-2 opacity-50"></i><br>O aluno ainda não concluiu atividades.</td></tr>';
     }
 
-    function renderizarAcessosFicha(acessos) {
+ function renderizarAcessosFicha(acessos) {
         const areaAcessos = document.getElementById('fichaAreaAcessos');
         if(!areaAcessos) return;
         
@@ -943,9 +943,37 @@
         }
         
         acessos.forEach(acc => {
-            // Suporta tanto formato de Objeto quanto de Array (Matrícula, Nome, Data/Hora, Ação)
-            let dataHora = acc.data || (Array.isArray(acc) ? acc[2] : "-");
-            let acao = acc.acao || (Array.isArray(acc) ? acc[3] : "Acesso ao Portal");
+            let dataHora = "-";
+            let acao = "Acesso ao Portal";
+
+            if (Array.isArray(acc)) {
+                // Se a planilha enviar no formato de Linha pura:
+                // [0] = Matrícula | [1] = Nome | [2] = Data e Hora | [3] = Ação
+                dataHora = acc[2] || "-";
+                acao = acc[3] || "Acesso ao Portal";
+            } else {
+                // Se a planilha enviar no formato de Objeto buscando pelos cabeçalhos
+                dataHora = acc["Data e Hora"] || acc["Data"] || acc.dataHora || acc.data || "-";
+                acao = acc["Ação"] || acc["Acao"] || acc.acao || "Acesso ao Portal";
+                
+                // Varredura de segurança caso o Google Apps Script altere o nome dos cabeçalhos
+                if (dataHora === "-") {
+                    let chaveData = Object.keys(acc).find(k => k.toLowerCase().includes('data') || k.toLowerCase().includes('hora'));
+                    if (chaveData) dataHora = acc[chaveData];
+                }
+                if (acao === "Acesso ao Portal") {
+                    let chaveAcao = Object.keys(acc).find(k => k.toLowerCase().includes('aç') || k.toLowerCase().includes('ac'));
+                    if (chaveAcao) acao = acc[chaveAcao];
+                }
+            }
+            
+            // Tratamento caso a data venha no formato padrão do banco de dados (ISO)
+            try {
+                if (typeof dataHora === 'string' && dataHora.includes('T') && dataHora.includes('Z')) {
+                    let d = new Date(dataHora);
+                    dataHora = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+                }
+            } catch(e) {}
             
             areaAcessos.innerHTML += `
             <tr>
